@@ -42,11 +42,8 @@ function setTimer(end) {
     timeLeft.s = totRmn%60; //sec left less whole min
     totRmn = (totRmn - timeLeft.s)/60; //whole min left
     timeLeft.m = totRmn%60; //min left less whole hrs
-    console.log('m', totRmn);
     totRmn = (totRmn - timeLeft.m)/60; //whole hrs left
-    console.log('h', totRmn);
     timeLeft.h = totRmn%24; //hrs left less whole days
-    console.log(timeLeft.h);
     timeLeft.d = (totRmn - timeLeft.h)/24; //whole days left
   }
 
