@@ -34,7 +34,6 @@ function setTimer(end) {
   displayCt = document.querySelector('.countdown'),
   ctStr = '',
   intID = window.setInterval(updateTimer, 1000);
-  console.log(curTime, endTime, sRmn);
 
   function countDown() {
     var totRmn;
@@ -43,8 +42,11 @@ function setTimer(end) {
     timeLeft.s = totRmn%60; //sec left less whole min
     totRmn = (totRmn - timeLeft.s)/60; //whole min left
     timeLeft.m = totRmn%60; //min left less whole hrs
+    console.log('m', totRmn);
     totRmn = (totRmn - timeLeft.m)/60; //whole hrs left
-    timeLeft.h = timeLeft%24; //hrs left less whole days
+    console.log('h', totRmn);
+    timeLeft.h = totRmn%24; //hrs left less whole days
+    console.log(timeLeft.h);
     timeLeft.d = (totRmn - timeLeft.h)/24; //whole days left
   }
 
