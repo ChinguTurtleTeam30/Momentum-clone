@@ -39,64 +39,42 @@ function setTimer(end) {
     var totRmn;
     sRmn--;
     totRmn = sRmn;
+    timeLeft = [];
     timeLeft.push(totRmn%60); //sec left less whole min
     totRmn = (totRmn - timeLeft[0])/60; //whole min left
     timeLeft.push(totRmn%60); //min left less whole hrs
     totRmn = (totRmn - timeLeft[1])/60; //whole hrs left
     timeLeft.push(totRmn%24); //hrs left less whole days
-    timeLeft.push((totRmn - timeLeft.h)/24); //whole days left
+    timeLeft.push((totRmn - timeLeft[2])/24); //whole days left
   }
 
   function updateTimer() {
     countDown();
     ctStr = [];
-    ctStr.unshift(function(timeLeft[0]) { //this function should take i
-      if(timeLeft[0]) {
-        if(timeLeft[1] || timeLeft[2] || timeLeft[3]) { //this drilling down should work with recursion
-          return timeLeft[0] < 10 ? '0' + timeLeft[0] : timeLeft[0];
-        }
-        else return timeLeft[0];
-      }
-      else if(timeLeft[1] || timeLeft[2] || timeLeft[3]) {
-        return '00';
-      }
-      else return; //how to exit early if this statement is reached on first iteration?
-    });
-    ctStr.unshift(function(timeLeft[1]) {
-      if(timeLeft[1]) {
-        if(timeLeft[2] || timeLeft[3]) {
-          return timeLeft[1] < 10 ? '0' + timeLeft[1] : timeLeft[1];
-        }
-        else return timeLeft[2];
-      }
-      else if(timeLeft[1] || timeLeft[0]) {
-        return '00';
-      }
-      else return;
-    });
-    ctStr.unshift(function(timeLeft[2]) {
-      if(timeLeft[2]) {
-        if(timeLeft[3]) {
-          return timeLeft[2] < 10 ? '0' + timeLeft[2] : timeLeft[2];
-        }
-        else return timeLeft[2];
-      }
-      else if(timeLeft[3]) {
-        return '00';
-      }
-      else return;
-    });
-    ctStr.unshift(function(timeLeft[3])) {
-      if(timeLeft[3]) {
-        return timeLeft[3];
-      }
-    }
-    ctStr.join(':');
+    ctStr[0] = unitVal(timeLeft, 0);
+    ctStr[1] = unitVal(timeLeft, 1);
+    ctStr[2] = unitVal(timeLeft, 2);
+    ctStr[3] = unitVal(timeLeft, 3);
+    ctStr.reverse();
+    console.log(ctStr);
     if(!ctStr) {
       displayCt.innerHTML = "time's up!";
       window.clearInterval(intID);
     }
     else displayCt.innerHTML = ctStr;
+
+    function unitVal(arr, i) {
+      if(arr[i]) {
+        if(arr[i + 1] || arr[i + 2] || arr[i + 3]) {
+          return arr[i] < 10 ? '0' + arr[i] : arr[i];
+        }
+        else return arr[i];
+      }
+      else if(arr[i + 1]) {
+        return '00';
+      }
+      else return;
+    }
   }
 }
 
