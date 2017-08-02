@@ -51,9 +51,9 @@ function setTimer(end) {
     countDown();
     ctStr = '';
     ctStr += timeLeft.d ? timeLeft.d + ':' : '';
-    ctStr += timeLeft.h ? timeLeft.h + ':' : '';
-    ctStr += timeLeft.m ? timeLeft.m + ':' : '';
-    ctStr += timeLeft.s ? timeLeft.s : '';
+    ctStr += timeLeft.h ? (timeLeft.d ? (timeLeft.h < 10 ? '0' + timeLeft.h + ':' : timeLeft.h + ':') : timeLeft.h) : timeLeft.d ? '00:' : '';
+    ctStr += timeLeft.m ? timeLeft.h ? timeLeft.m < 10 ? '0' + timeLeft.m + ':' : timeLeft.m + ':' : timeLeft.d ? timeLeft.m < 10 ? '0' + timeLeft.m + ':' : timeLeft.m + ':' : timeLeft.h ? '00:' : '';
+    ctStr += timeLeft.s ? (timeLeft.m ? (timeLeft.s < 10 ? '0' + timeLeft.s + ':' : timeLeft.s + ':') : timeLeft.s) : timeLeft.m ? '00' : '';
     if(!ctStr) {
       displayCt.innerHTML = "time's up!";
       window.clearInterval(intID);
