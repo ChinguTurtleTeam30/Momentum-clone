@@ -30,30 +30,68 @@ function setTimer(end) {
   endTime = new Date(splitEnd[1], splitEnd[2] - 1, splitEnd[3], splitEnd[4], splitEnd[5]),
   curTime = date;
   sRmn = Math.round((endTime.valueOf() - curTime.valueOf())/1000),
-  timeLeft = {},
+  timeLeft = [],
   displayCt = document.querySelector('.countdown'),
-  ctStr = '',
+  ctStr = [],
   intID = window.setInterval(updateTimer, 1000);
 
   function countDown() {
     var totRmn;
     sRmn--;
     totRmn = sRmn;
-    timeLeft.s = totRmn%60; //sec left less whole min
-    totRmn = (totRmn - timeLeft.s)/60; //whole min left
-    timeLeft.m = totRmn%60; //min left less whole hrs
-    totRmn = (totRmn - timeLeft.m)/60; //whole hrs left
-    timeLeft.h = totRmn%24; //hrs left less whole days
-    timeLeft.d = (totRmn - timeLeft.h)/24; //whole days left
+    timeLeft.push(totRmn%60); //sec left less whole min
+    totRmn = (totRmn - timeLeft[0])/60; //whole min left
+    timeLeft.push(totRmn%60); //min left less whole hrs
+    totRmn = (totRmn - timeLeft[1])/60; //whole hrs left
+    timeLeft.push(totRmn%24); //hrs left less whole days
+    timeLeft.push((totRmn - timeLeft.h)/24); //whole days left
   }
 
   function updateTimer() {
     countDown();
-    ctStr = '';
-    ctStr += timeLeft.d ? timeLeft.d + ':' : '';
-    ctStr += timeLeft.h ? (timeLeft.d ? (timeLeft.h < 10 ? '0' + timeLeft.h + ':' : timeLeft.h + ':') : timeLeft.h) : timeLeft.d ? '00:' : '';
-    ctStr += timeLeft.m ? timeLeft.h ? timeLeft.m < 10 ? '0' + timeLeft.m + ':' : timeLeft.m + ':' : timeLeft.d ? timeLeft.m < 10 ? '0' + timeLeft.m + ':' : timeLeft.m + ':' : timeLeft.h ? '00:' : '';
-    ctStr += timeLeft.s ? (timeLeft.m ? (timeLeft.s < 10 ? '0' + timeLeft.s + ':' : timeLeft.s + ':') : timeLeft.s) : timeLeft.m ? '00' : '';
+    ctStr = [];
+    ctStr.unshift(function(timeLeft[0]) { //this function should take i
+      if(timeLeft[0]) {
+        if(timeLeft[1] || timeLeft[2] || timeLeft[3]) { //this drilling down should work with recursion
+          return timeLeft[0] < 10 ? '0' + timeLeft[0] : timeLeft[0];
+        }
+        else return timeLeft[0];
+      }
+      else if(timeLeft[1] || timeLeft[2] || timeLeft[3]) {
+        return '00';
+      }
+      else return; //how to exit early if this statement is reached on first iteration?
+    });
+    ctStr.unshift(function(timeLeft[1]) {
+      if(timeLeft[1]) {
+        if(timeLeft[2] || timeLeft[3]) {
+          return timeLeft[1] < 10 ? '0' + timeLeft[1] : timeLeft[1];
+        }
+        else return timeLeft[2];
+      }
+      else if(timeLeft[1] || timeLeft[0]) {
+        return '00';
+      }
+      else return;
+    });
+    ctStr.unshift(function(timeLeft[2]) {
+      if(timeLeft[2]) {
+        if(timeLeft[3]) {
+          return timeLeft[2] < 10 ? '0' + timeLeft[2] : timeLeft[2];
+        }
+        else return timeLeft[2];
+      }
+      else if(timeLeft[3]) {
+        return '00';
+      }
+      else return;
+    });
+    ctStr.unshift(function(timeLeft[3])) {
+      if(timeLeft[3]) {
+        return timeLeft[3];
+      }
+    }
+    ctStr.join(':');
     if(!ctStr) {
       displayCt.innerHTML = "time's up!";
       window.clearInterval(intID);
