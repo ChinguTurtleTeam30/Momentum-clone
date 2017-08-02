@@ -56,12 +56,11 @@ function setTimer(end) {
     ctStr[2] = unitVal(timeLeft, 2);
     ctStr[3] = unitVal(timeLeft, 3);
     ctStr.reverse();
-    console.log(ctStr);
     if(!ctStr) {
       displayCt.innerHTML = "time's up!";
       window.clearInterval(intID);
     }
-    else displayCt.innerHTML = ctStr;
+    else displayCt.innerHTML = ctStr.join(':');
 
     function unitVal(arr, i) {
       if(arr[i]) {
