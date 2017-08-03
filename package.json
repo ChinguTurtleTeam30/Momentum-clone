@@ -1,23 +1,16 @@
 {
   "name": "momentum-clone",
-  "version": "1.0.0",
-  "description": "a clone of Momentum Chrome extension",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "node-sass mockup/scss/style.scss mockup/css/style.css"
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.10"
   },
-  "keywords": [
-    "Momentum",
-    "Chingu",
-    "FCC",
-    "art",
-    "timer",
-    "Chrome-extension"
-  ],
-  "author": "ckb",
-  "license": "MIT",
-  "devDependencies": {
-    "node-sass": "^4.5.3"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
