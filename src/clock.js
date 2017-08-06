@@ -1,18 +1,39 @@
 import React, { Component } from 'react';
 
-class Clock extends Component {
-  render() {
+class Clock extends React.Component {
+  renderTime() {
     const date = new Date();
+    function renderHours(time) {
+      return (
+        time.getHours() > 12 ? (time.getHours() - 12).toString() : time.getHours() !== 0 ? time.getHours().toString() : '12';
+      );
+    }
+    function renderMins(time) {
+      return (
+        time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes().toString();
+      );
+    }
+    function renderSign(time) {
+      return (
+        time.getHours() >= 12 ? 'pm' : 'am';
+      );
+    }
+    return (
+      renderHours(date) + renderMins(date) + renderSign(date);
+    );
+  }
+  render() {
     return (
       <div className="clock">
-        <p className="time">{ (date.getHours() > 12 ? date.getHours() - 12 : date.getHours() !== 0 ? date.getHours() : 12) } : { (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()), (date.getHours() >=12 ? 'pm' : 'am' ) }
+        <p className="time">
+          { this.renderHours(); }
         </p>
       </div>
     )
   }
 }
 
-class Timer extends Component {
+class Timer extends React.Component {
   render() {
     return (
       <div class="timer main-flex-item">
