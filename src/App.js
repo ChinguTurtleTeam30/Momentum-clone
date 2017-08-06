@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // use like: <img src={logo} className="App-logo" alt="logo" />
 import './App.css';
 import { Clock } from './clock';
+import { Art } from './art';
 
 class App extends Component {
   render() {
@@ -11,6 +12,7 @@ class App extends Component {
         <div className="main">
           <Clock />
         </div>
+        <Art />
       </div>
     );
   }
