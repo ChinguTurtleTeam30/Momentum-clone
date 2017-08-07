@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 
 class Clock extends Component {
+  constructor() {
+    super();
+    this.state = {
+      time: '',
+    };
+  }
+
   renderTime() {
     const date = new Date();
     function renderHours(time) {
@@ -22,11 +29,16 @@ class Clock extends Component {
       renderHours(date) + ':' + renderMins(date) + ' ' + renderSign(date)
     );
   }
+
+  componentDidMount() {
+    setInterval(this.setState({ time: this.renderTime()}), 60000);
+  }
+
   render() {
     return (
       <div className="clock">
         <p className="time">
-          { this.renderTime() }
+          { this.state.time }
         </p>
       </div>
     )
