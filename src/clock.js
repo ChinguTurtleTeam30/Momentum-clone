@@ -31,14 +31,16 @@ class Clock extends Component {
   }
 
   componentDidMount() {
-    setInterval(this.setState({ time: this.renderTime()}), 60000);
+    setInterval(() => {
+      this.setState({ time: new Date()})
+    }, 1000);
   }
 
   render() {
     return (
       <div className="clock">
         <p className="time">
-          { this.state.time }
+          { this.state.time.toLocaleString() }
         </p>
       </div>
     )
