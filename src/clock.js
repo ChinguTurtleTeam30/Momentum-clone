@@ -4,12 +4,12 @@ class Clock extends Component {
   constructor() {
     super();
     this.state = {
-      time: '',
+      now: new Date(),
     };
   }
 
   renderTime() {
-    const date = new Date();
+    const date = this.state.now;
     function renderHours(time) {
       return (
         time.getHours() > 12 ? (time.getHours() - 12).toString() : time.getHours() !== 0 ? time.getHours().toString() : '12'
@@ -32,7 +32,7 @@ class Clock extends Component {
 
   componentDidMount() {
     setInterval(() => {
-      this.setState({ time: new Date()})
+      this.setState({ now: new Date()})
     }, 1000);
   }
 
@@ -40,7 +40,7 @@ class Clock extends Component {
     return (
       <div className="clock">
         <p className="time">
-          { this.state.time.toLocaleString() }
+          { this.renderTime() }
         </p>
       </div>
     )
