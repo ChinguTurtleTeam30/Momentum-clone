@@ -61,4 +61,4 @@ class Timer extends Component {
   }
 }
 
-export { Clock, Timer };
+export { Clock };
