@@ -25,16 +25,37 @@ class Timer extends Component {
     };
   }
 
-  jsFormatTime(htmlDateString) {
+  jsFormatTime(htmlDateStr) {
     //split up html date string
+    //into format [yyyy, mm, dd, hh, mm]
     //and input it into new JS Date obj
-    const dateArr = htmlDateString.match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
+    const dateArr = htmlDateStr.match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
           jsDate = new Date(dateArr[1], dateArr[2] - 1, dateArr[3], dateArr[4], dateArr[5]);
     return jsDate;
   }
 
-  htmlFormatDate(jsDateString) {
-    const jsDate = typeof jsDateString !== 'string' ? jsDateString.toString : jsDateString;
+  htmlFormatDate(jsDate) {
+    //split up js date string
+    //into format [(m)m, (d)d, yyyy, (h)h, mm, ss, "am"/"pm"]
+    //and make it a string in the html date format
+    const jsDateStr = jsDate.toLocaleString(),
+          dateArr = jsDateStr.match(/^(\d{1,2})(?:\/)(\d{1,2})(?:\/)(\d{4})(?:,\s)(\d{1,2})(?::)(\d{2})(?::)(\d{2})(?:\s)([ap]m)/i),
+          htmlDateStr = dateArr[3] +
+                        '-' +
+                        (dateArr[1].length < 2 ? '0' + dateArr[1] : dateArr[1]) +
+                        '-' +
+                        (dateArr[2].length < 2 ? '0' + dateArr[2] : dateArr[2]) +
+                        'T' +
+                        to24hr(dateArr[4], dateArr[7]) +
+                        ':' +
+                        dateArr[5];
+
+    function to24hr(hours, ampm) {
+      if (hours !== '12') {
+        return ampm === 'am' ? hours : +hours + 12;
+      }
+      else return ampm === 'am' ? '00' : hours;
+    }
   }
 
   handleClick() {
