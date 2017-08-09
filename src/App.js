@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 // use like: <img src={logo} className="App-logo" alt="logo" />
 import './App.css';
-import { Clock } from './clock';
+import Clock from './clock';
 
 class App extends Component {
   render() {
