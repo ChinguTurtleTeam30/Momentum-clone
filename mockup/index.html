@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Momentum-clone mock-up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css'>
+
+      <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+
+<body>
+  <div class="links component corner">Links</div>
+<div class="weather component corner"><p class="temperature">60&deg;</p><p class="location">San Francisco</p></div>
+<div class="main">
+  <div class="clock main-flex-item">
+    <p class="time">XX:XX</p>
+  </div>
+  <div class="timer main-flex-item">
+    <form name="set-timer">
+      <input id="timer-cal" name="timer-cal" type="datetime-local" value="2017-08-04T17:05">
+      <input id="submit-timer" name="submit-timer" type="submit">
+    </form>
+    <p class="countdown"></p>
+  </div>
+  <div class="goal main-flex-item">
+    <form name="goal-form">
+      <label><input id="set-goal" name="set-goal" type="text" autocomplete="off"><br>What's your goal today?</label>
+    </form>
+  </div>
+</div>
+<div class="settings component corner"><i class="fa fa-cog"></i></div>
+<div class="quote component"><p>"Twas brillig and the slithy toves"<p></div>
+<div class="todo component corner">Todo</div>
+
+<script src="js/clock.js"></script>
+</body>
+</html>
