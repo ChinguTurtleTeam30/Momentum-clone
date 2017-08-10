@@ -25,30 +25,31 @@ class Timer extends Component {
     };
   }
 
-  jsFormatTime(htmlDateStr) {
+  jsFormatDate(htmlDateFormat) {
     //split up html date string
     //into format [yyyy, mm, dd, hh, mm]
     //and input it into new JS Date obj
-    const dateArr = htmlDateStr.match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
-          jsDate = new Date(dateArr[1], dateArr[2] - 1, dateArr[3], dateArr[4], dateArr[5]);
+    const htmlDateArr =
+      htmlDateFormat
+        .match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
+      jsDate = new Date(htmlDateArr[1], htmlDateArr[2] - 1, htmlDateArr[3],
+        htmlDateArr[4], htmlDateArr[5]);
     return jsDate;
   }
 
-  htmlFormatDate(jsDate) {
+  htmlFormatDate(jsDateFormat) {
     //split up js date string
     //into format [(m)m, (d)d, yyyy, (h)h, mm, ss, "am"/"pm"]
     //and make it a string in the html date format
-    const jsDateStr = jsDate.toLocaleString(),
-          dateArr = jsDateStr.match(/^(\d{1,2})(?:\/)(\d{1,2})(?:\/)(\d{4})(?:,\s)(\d{1,2})(?::)(\d{2})(?::)(\d{2})(?:\s)([ap]m)/i),
-          htmlDateStr = dateArr[3] +
-                        '-' +
-                        (dateArr[1].length < 2 ? '0' + dateArr[1] : dateArr[1]) +
-                        '-' +
-                        (dateArr[2].length < 2 ? '0' + dateArr[2] : dateArr[2]) +
-                        'T' +
-                        to24hr(dateArr[4], dateArr[7]) +
-                        ':' +
-                        dateArr[5];
+    const jsDateArr =
+            jsDateFormat
+              .toLocaleString()
+              .match(/^(\d{1,2})(?:\/)(\d{1,2})(?:\/)(\d{4})(?:,\s)(\d{1,2})(?::)(\d{2})(?::)(\d{2})(?:\s)([ap]m)/i),
+          htmlDateStr = jsDateArr[3] + '-' +
+            (jsDateArr[1].length < 2 ? '0' + jsDateArr[1] : jsDateArr[1]) +
+            '-' +
+            (jsDateArr[2].length < 2 ? '0' + jsDateArr[2] : jsDateArr[2]) +
+            'T' + to24hr(jsDateArr[4], jsDateArr[7]) + ':' + jsDateArr[5];
 
     function to24hr(hours, ampm) {
       if (hours !== '12') {
@@ -56,6 +57,8 @@ class Timer extends Component {
       }
       else return ampm === 'am' ? '00' : hours;
     }
+
+    return htmlDateStr
   }
 
   handleClick() {
@@ -67,7 +70,7 @@ class Timer extends Component {
       <div className="timer">
         <CountdownDisplay countdown={ this.state.countdown } />
         <form className="timer-form">
-          <Calendar endTime={ this.state.endTime } />
+          <Calendar endTime={ this.htmlFormatDate(this.state.endTime) } />
           <input id="start-timer" name="start-timer" type="submit" onClick={ this.handleClick }/>
           <input id="stop-timer" name="stop-timer" type="button"/>
           <input id="reset-timer" name="reset-timer" type="button"/>
