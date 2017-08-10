@@ -30,6 +30,11 @@ class Clock extends Component {
     );
   }
 
+//this updates every second
+//but it doesn't need to
+//the clock only displays minutes
+//try updating every 2, 3, 20, or 30 secs
+//and see how it works
   componentDidMount() {
     setInterval(() => {
       this.setState({ now: new Date()})
