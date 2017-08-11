@@ -45,7 +45,9 @@ class Clock extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    if (!this.state.countDown) { this.setState({ countDown: this.runTimer() }) }
+    if (!this.state.countDown) {
+      setInterval(() => this.runTimer(), 1000)
+    }
   }
 
   jsFormatDate(htmlDateFormat) {
@@ -61,7 +63,9 @@ class Clock extends Component {
   }
 
   runTimer() {
-    return (this.state.endTime - this.state.curTime);
+    this.setState({
+      countDown: Math.round((this.state.endTime - this.state.curTime)/1000)
+    });
   }
 
   render() {
