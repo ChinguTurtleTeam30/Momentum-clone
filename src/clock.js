@@ -6,7 +6,8 @@ class Clock extends Component {
     this.state = {
       curTime: new Date(),
       endTime: new Date(),
-      countDown: '',
+      countDown: null,
+      intervalID: null,
     };
   }
 
@@ -43,12 +44,18 @@ class Clock extends Component {
     this.setState({ endTime: new Date(this.jsFormatDate(event.target.value)) });
   }
 
-  handleClick(event) {}
+  handleClick(event) {
+    clearInterval(this.state.intervalID);
+    this.setState({ intervalID: null });
+    if(event.target.name === 'reset') {
+      this.setState({ countDown: null });
+    }
+  }
 
   handleSubmit(event) {
     event.preventDefault();
-    if (!this.state.countDown) {
-      setInterval(() => this.runTimer(), 1000)
+    if (!this.state.intervalID) {
+      this.setState({ intervalID: setInterval(() => this.runTimer(), 1000) });
     }
   }
 
@@ -104,7 +111,13 @@ class Clock extends Component {
         <p className="time">
           { this.renderTime() }
         </p>
-        <Timer initTime={ new Date() } onChange={ (event) => this.handleChange(event) } onSubmit={ (event) => this.handleSubmit(event) } countDown={ this.state.countDown } />
+        <Timer
+          initTime={ new Date() }
+          onChange={ (event) => this.handleChange(event) }
+          onClick={ (event) => this.handleClick(event) }
+          onSubmit={ (event) => this.handleSubmit(event) }
+          countDown={ this.state.countDown }
+        />
       </div>
     )
   }
@@ -142,8 +155,8 @@ class Timer extends Component {
         <form className="timer-form" onSubmit={ (event) => this.props.onSubmit(event) }>
           <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.props.initTime) } onChange={ (event) => this.props.onChange(event) } />
           <input id="start-timer" name="start" type="submit" value="start" />
-          <input id="stop-timer" name="stop" type="button" value="stop" />
-          <input id="reset-timer" name="reset" type="button" value="reset" />
+          <input id="stop-timer" name="stop" type="button" value="stop" onClick={ (event) => this.props.onClick(event) } />
+          <input id="reset-timer" name="reset" type="button" value="reset" onClick={ (event) => this.props.onClick(event) } />
         </form>
       </div>
     )
