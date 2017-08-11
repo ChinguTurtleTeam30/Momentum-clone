@@ -88,9 +88,9 @@ class Clock extends Component {
             else if(arr[i - 1]) {
               return '00';
             }
-            else return;
+            else return null;
           }).filter(function(val) {
-            return val;
+            return val && val >= 0;
           });
 
     return displayCount.join(':');
