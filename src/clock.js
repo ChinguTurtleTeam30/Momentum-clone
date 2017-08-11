@@ -63,19 +63,35 @@ class Clock extends Component {
   }
 
   runTimer() {
-    const curCount = this.renderTimer((this.state.endTime - this.state.curTime)/1000);
+    const curCount = this.renderTimer(
+      (this.state.endTime - this.state.curTime)/1000
+    );
     this.setState({
-      countDown: curCount
+      countDown: curCount ? curCount : "Time's up!"
     });
   }
 
   renderTimer(count) {
-    const s = count%60,
-          m = ((count - s) / 60)%60,
-          h = ((((count - s) / 60) - m) / 60)%24,
-          d = (((((count - s) / 60) - m) / 60) - h) / 24;
+    const s = count%60;
+    count = (count - s)/60;
+    const m = count%60;
+    count = (count - m)/60;
+    const h = count%24,
+          d = (count - h) / 24,
+          displayCount = [d, h, m, Math.round(s)].map(function(val, i, arr) {
+            if(val) {
+              if(arr[i - 1]) {
+                return val < 10 ? '0' + val : val;
+              }
+              else return val;
+            }
+            else if(arr[i - 1]) {
+              return '00';
+            }
+            else return;
+          });
 
-    return d + ':' + h + ':' + m + ':' + Math.round(s);
+    return displayCount.join(':');
   }
 
   render() {
