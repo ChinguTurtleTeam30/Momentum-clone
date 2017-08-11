@@ -63,9 +63,19 @@ class Clock extends Component {
   }
 
   runTimer() {
+    const curCount = this.renderTimer((this.state.endTime - this.state.curTime)/1000);
     this.setState({
-      countDown: Math.round((this.state.endTime - this.state.curTime)/1000)
+      countDown: curCount
     });
+  }
+
+  renderTimer(count) {
+    const s = count%60,
+          m = ((count - s) / 60)%60,
+          h = ((((count - s) / 60) - m) / 60)%24,
+          d = (((((count - s) / 60) - m) / 60) - h) / 24;
+
+    return d + ':' + h + ':' + m + ':' + Math.round(s);
   }
 
   render() {
@@ -103,10 +113,6 @@ class Timer extends Component {
     }
 
     return htmlDateStr
-  }
-
-  handleClick() {
-
   }
 
   render() {
