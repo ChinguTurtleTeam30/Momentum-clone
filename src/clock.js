@@ -43,7 +43,9 @@ class Clock extends Component {
     this.setState({ endTime: new Date(this.jsFormatDate(event.target.value)) });
   }
 
-  handleClick(event) {
+  handleClick(event) {}
+
+  handleSubmit(event) {
     event.preventDefault();
     if (!this.state.countDown) {
       setInterval(() => this.runTimer(), 1000)
@@ -102,7 +104,7 @@ class Clock extends Component {
         <p className="time">
           { this.renderTime() }
         </p>
-        <Timer initTime={ new Date() } onChange={ (event) => this.handleChange(event) } onClick={ (event) => this.handleClick(event) } countDown={ this.state.countDown } />
+        <Timer initTime={ new Date() } onChange={ (event) => this.handleChange(event) } onSubmit={ (event) => this.handleSubmit(event) } countDown={ this.state.countDown } />
       </div>
     )
   }
@@ -137,11 +139,11 @@ class Timer extends Component {
     return (
       <div className="timer">
         <p className="countdown">{ this.props.countDown }</p>
-        <form className="timer-form">
+        <form className="timer-form" onSubmit={ (event) => this.props.onSubmit(event) }>
           <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.props.initTime) } onChange={ (event) => this.props.onChange(event) } />
-          <input id="start-timer" name="start-timer" type="submit" onClick={ (event) => this.props.onClick(event) } />
-          <input id="stop-timer" name="stop-timer" type="button" />
-          <input id="reset-timer" name="reset-timer" type="button" />
+          <input id="start-timer" name="start" type="submit" value="start" />
+          <input id="stop-timer" name="stop" type="button" value="stop" />
+          <input id="reset-timer" name="reset" type="button" value="reset" />
         </form>
       </div>
     )
