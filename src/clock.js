@@ -5,6 +5,7 @@ class Clock extends Component {
     super();
     this.state = {
       curTime: new Date(),
+      endTime: new Date(),
     };
   }
 
@@ -37,27 +38,35 @@ class Clock extends Component {
     }, 1000);
   }
 
+  handleChange(event) {
+    this.setState({ endTime: new Date(this.jsFormatDate(event.target.value)) });
+  }
+
+  jsFormatDate(htmlDateFormat) {
+    //split up html date string
+    //into format [yyyy, mm, dd, hh, mm]
+    //and input it into new JS Date obj
+    const htmlDateArr =
+      htmlDateFormat
+        .match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
+      jsDate = new Date(htmlDateArr[1], htmlDateArr[2] - 1, htmlDateArr[3],
+        htmlDateArr[4], htmlDateArr[5]);
+    return jsDate;
+  }
+
   render() {
     return (
       <div className="clock">
         <p className="time">
           { this.renderTime() }
         </p>
-        <Timer initTime={ new Date() }/>
+        <Timer initTime={ new Date() } onChange={ (event) => this.handleChange(event) } />
       </div>
     )
   }
 }
 
 class Timer extends Component {
-  constructor() {
-    super();
-    this.state = {
-      countdown: '00:00',
-      endTime: new Date(),
-    };
-  }
-
   jsFormatDate(htmlDateFormat) {
     //split up html date string
     //into format [yyyy, mm, dd, hh, mm]
@@ -107,7 +116,7 @@ class Timer extends Component {
       <div className="timer">
         <p className="countdown"></p>
         <form className="timer-form">
-          <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.props.initTime) } onChange={ (event) => this.handleChange(event) } />
+          <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.props.initTime) } onChange={ (event) => this.props.onChange(event) } />
           <input id="start-timer" name="start-timer" type="submit" onClick={ this.handleClick }/>
           <input id="stop-timer" name="stop-timer" type="button"/>
           <input id="reset-timer" name="reset-timer" type="button"/>
