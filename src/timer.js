@@ -1,21 +1,5 @@
 import React, { Component } from 'react';
 
-class Calendar extends Component {
-  render() {
-    return (
-      <input id="select-end-time" name="select-end-time" type="datetime-local" defaultValue={ this.props.defaultValue } onChange={ this.props.onChange }/>
-    )
-  }
-}
-
-class CountdownDisplay extends Component {
-  render() {
-    return (
-      <p className="countdown-display">{ this.props.countdown }</p>
-    )
-  }
-}
-
 class Timer extends Component {
   constructor() {
     super();
@@ -24,7 +8,7 @@ class Timer extends Component {
       endTime: new Date(),
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    //this.handleChange = this.handleChange.bind(this);
   }
 
   jsFormatDate(htmlDateFormat) {
@@ -74,9 +58,9 @@ class Timer extends Component {
   render() {
     return (
       <div className="timer">
-        <CountdownDisplay countdown={ this.state.countdown } />
+        <p class="countdown"></p>
         <form className="timer-form">
-          <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.state.endTime) } onChange={ this.handleChange } />
+          <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.state.endTime) } onChange={ (event) => this.handleChange(event) } />
           <input id="start-timer" name="start-timer" type="submit" onClick={ this.handleClick }/>
           <input id="stop-timer" name="stop-timer" type="button"/>
           <input id="reset-timer" name="reset-timer" type="button"/>
