@@ -89,6 +89,8 @@ class Clock extends Component {
               return '00';
             }
             else return;
+          }).filter(function(val) {
+            return val;
           });
 
     return displayCount.join(':');
