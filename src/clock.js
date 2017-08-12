@@ -5,8 +5,8 @@ class Clock extends Component {
     super();
     this.state = {
       curTime: new Date(),
-      endTime: new Date(),
-      countDown: null,
+      endTime: null,
+      countdown: null,
       intervalID: null,
     };
   }
@@ -14,26 +14,9 @@ class Clock extends Component {
   renderTime() {
     const now = this.state.curTime.toLocaleTimeString();
     return now.match(/^\d{1,2}:\d{2}/)[0];
-    /*function renderHours(time) {
-      return (
-        time.getHours() > 12 ? (time.getHours() - 12).toString() : time.getHours() !== 0 ? time.getHours().toString() : '12'
-      );
-    }
-    function renderMins(time) {
-      return (
-        time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes().toString()
-      );
-    }
-    function renderSign(time) {
-      return (
-        time.getHours() >= 12 ? 'pm' : 'am'
-      );
-    }
-    return (
-      renderHours(date) + ':' + renderMins(date) + ' ' + renderSign(date)
-    );*/
   }
 
+  //start clock on load
   componentDidMount() {
     setInterval(() => {
       this.setState({ curTime: new Date()})
@@ -48,13 +31,18 @@ class Clock extends Component {
     clearInterval(this.state.intervalID);
     this.setState({ intervalID: null });
     if(event.target.name === 'reset') {
-      this.setState({ countDown: null });
+      this.setState({ countdown: null });
     }
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    if (!this.state.intervalID) {
+    if(!this.state.countdown) {
+      this.setState({
+        countdown: (this.state.endTime - this.state.curTime)/1000
+      });
+    }
+    if(!this.state.intervalID) {
       this.setState({ intervalID: setInterval(() => this.runTimer(), 1000) });
     }
   }
@@ -72,15 +60,16 @@ class Clock extends Component {
   }
 
   runTimer() {
-    const curCount = this.renderTimer(
-      (this.state.endTime - this.state.curTime)/1000
-    );
+    const count = Math.round(this.state.countdown - 1);
+    this.setState({ countdown: count });
+
+    /*const curCount = this.renderCountdown(this.state.countDown);
     this.setState({
       countDown: curCount ? curCount : "Time's up!"
-    });
+    });*/
   }
 
-  renderTimer(count) {
+  renderCountdown(count) {
     const s = count%60;
     count = (count - s)/60;
     const m = count%60;
@@ -116,7 +105,7 @@ class Clock extends Component {
           onChange={ (event) => this.handleChange(event) }
           onClick={ (event) => this.handleClick(event) }
           onSubmit={ (event) => this.handleSubmit(event) }
-          countDown={ this.state.countDown }
+          countdown={ this.renderCountdown(this.state.countdown) }
         />
       </div>
     )
@@ -151,7 +140,7 @@ class Timer extends Component {
   render() {
     return (
       <div className="timer">
-        <p className="countdown">{ this.props.countDown }</p>
+        <p className="countdown">{ this.props.countdown }</p>
         <form className="timer-form" onSubmit={ (event) => this.props.onSubmit(event) }>
           <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.props.initTime) } onChange={ (event) => this.props.onChange(event) } />
           <input id="start-timer" name="start" type="submit" value="start" />
