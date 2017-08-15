@@ -19,8 +19,14 @@ buildQry(qryObj, function(qryStr) {
     else {
       const lat = 'lat=' + loc.coords.latitude.toFixed(2);
       const long = 'lon=' + loc.coords.longitude.toFixed(2);
-      getWeather([qryStr, lat, long], function(str) {
-        return str.join('&');
+      const urlStr = [qryStr, lat, long].join('&');
+      getWeather(urlStr, function(json) {
+        const htmlEl = document.querySelector('.weather')
+        const temp = (json.main.temp * 9)/5 - 459.67;
+        return (
+          displayIt(htmlEl.firstElementChild, temp),
+          displayIt(htmlEl.lastElementChild, json.name)
+        );
       })
     }
   })
@@ -36,13 +42,11 @@ function getWeather(obj, callback) {
   const init = { method: 'GET',
                  headers: hdr,
                };*/
-  fetch(callback(obj))
+  fetch(obj)
   .then(function(res){
     return res.json();
   })
-  .then(function(res) {
-    return console.log(res);
-  });
+  .then(callback(res));
 }
 
 function getLoc(func) {
