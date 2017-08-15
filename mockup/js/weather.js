@@ -8,32 +8,28 @@ const tempEl = weatherEl.querySelector('.temperature');
 const locEl = weatherEl.querySelector('.location');
 //const latlon = getLoc(returnLoc);
 
-getWeather(
-  qryObj,
-  function(obj) {
-    const qryPcs = obj;
-    qryPcs.urlStr = qryPcs.apiSrc + qryPcs.qryType + '?';
-    if ('geolocation' in navigator) {
-      qryPcs.loc = navigator.geolocation.getCurrentPosition(
-        function(pos) {
-          return (
-            'lat=' + pos.coords.latitude.toFixed(0) +
-            '&lon=' + pos.coords.longitude.toFixed(0) + '&'
-          );
-        },
-        function(err) {
-          return console.error(err);
-        }
-      );
-      qryPcs.urlStr = qryPcs.loc ?
-      qryPcs.urlStr + qryPcs.loc + qryPcs.apiKey :
-      qryPcs.loc;
-      console.log(qryPcs);
-      return qryPcs;
+buildQry(qryObj, function(qryStr) {
+  getLoc(function(err, loc) {
+    if (err) {
+      if (err.__proto__.constructor === Error) {
+        return console.error(err);
+      }
+      else return console.error(Error(err));
     }
-    else return console.error(Error('geolocation unavailable'));
-  }
-);
+    else {
+      const lat = 'lat=' + loc.coords.latitude.toFixed(2);
+      const long = 'lon=' + loc.coords.longitude.toFixed(2);
+      getWeather([qryStr, lat, long], function(str) {
+        return str.join('&');
+      })
+    }
+  })
+});
+
+function buildQry(parts, callback) {
+  let qryStr = parts.apiSrc + parts.qryType + '?' + parts.apiKey;
+  callback(qryStr);
+}
 
 function getWeather(obj, callback) {
   /*const hdr = new Headers({ 'accept' : 'application/JSON', });
@@ -41,14 +37,17 @@ function getWeather(obj, callback) {
                  headers: hdr,
                };*/
   fetch(callback(obj))
+  .then(function(res){
+    return res.json();
+  })
   .then(function(res) {
-      return console.log(res);
+    return console.log(res);
   });
 }
 
 function getLoc(func) {
   if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition(
+    return navigator.geolocation.getCurrentPosition(
       function(pos) {
         return func(null, pos);
       },
@@ -75,5 +74,5 @@ function displayIt(selector, content) {
   if(content && selector) {
     return selector.innerHTML = content;
   }
-  else return;
+  else return console.error(Error('nav.geo.position.coords unavail'));
 }
