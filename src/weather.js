@@ -53,11 +53,43 @@ class Weather extends Component {
     }
   }
 
+  convertTemp(tempIn, tempOut, num) {
+    const rat = 5/9;
+    const adj = {
+      k: 273.15,
+      f: 32,
+    }
+    let [input, output] = [{},{}];
+    input[tempIn.toLowerCase()] = true;
+    output[tempOut.toLowerCase()] = true;
+    return (
+      input.k ?
+        output.f ?
+          (num - adj.k) / rat + adj.f :
+          output.c ? num - adj.k : num :
+        input.f ?
+          output.k ?
+            (num - adj.f) * rat + adj.k :
+            output.c ? (num - adj.f) * rat : num :
+          input.c ?
+            output.k ?
+              num + adj.k :
+              output.f ? num / rat + adj.f : num :
+            num
+    );
+  }
+
   componentWillMount() {
     this.getLoc(this, function(comp) {
       return comp.getWeather(comp, function(json) {
         return (
-          console.log(json)
+          comp.setState({
+            location: json.name,
+            temperature: comp
+              .convertTemp('k', 'f', json.main.temp)
+              .toFixed(0) + '\xb0 F',
+            weatherType: json.weather[0].main,
+          })
         );
       });
     });
