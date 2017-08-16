@@ -90,7 +90,7 @@ class Weather extends Component {
             location: json.name,
             temperature: json.main.temp + '\xb0 F',
             weatherType: json.weather[0].main,
-            icon: comp.state.iconSrc + json.weather[0].icon + '.png',
+            icon: 'owi owi-' + json.weather[0].icon,
           })
         );
       });
@@ -100,7 +100,7 @@ class Weather extends Component {
   render() {
     return (
       <div className="weather">
-        <img src={ this.state.icon }/>
+        <i className={ this.state.icon }></i>
         <p className="temperature">{ this.state.temperature }</p>
         <p className="location">{ this.state.location }</p>
       </div>
