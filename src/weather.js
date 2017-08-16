@@ -9,13 +9,16 @@ class Weather extends Component {
       weatherType: null,
       apiSrc: 'http://api.openweathermap.org/data/2.5/',
       qryType: 'weather',
+      units: 'imperial',
       apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
+      iconSrc: 'http://openweathermap.org/img/w/',
     }
   }
 
   getWeather(obj, callback) {
     const src = obj.state;
-    let qryUrl = src.apiSrc + src.qryType + '?lat=' + src.coords[0] +
+    let qryUrl = src.apiSrc + src.qryType + '?units=' + src.units +
+      '&lat=' + src.coords[0] +
       '&lon=' + src.coords[1] + '&' + src.apiKey;
     fetch(qryUrl)
     .then(function(res) {
@@ -85,10 +88,9 @@ class Weather extends Component {
         return (
           comp.setState({
             location: json.name,
-            temperature: comp
-              .convertTemp('k', 'f', json.main.temp)
-              .toFixed(0) + '\xb0 F',
+            temperature: json.main.temp + '\xb0 F',
             weatherType: json.weather[0].main,
+            icon: comp.state.iconSrc + json.weather[0].icon + '.png',
           })
         );
       });
@@ -98,6 +100,7 @@ class Weather extends Component {
   render() {
     return (
       <div className="weather">
+        <img src={ this.state.icon }/>
         <p className="temperature">{ this.state.temperature }</p>
         <p className="location">{ this.state.location }</p>
       </div>
