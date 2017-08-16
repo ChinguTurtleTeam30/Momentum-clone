@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import './clock.css';
 import Clock from './clock';
-//import Timer from './timer';
+import Weather from './weather';
 
 class App extends Component {
   //test for availability of Storage
@@ -37,6 +36,7 @@ class App extends Component {
         <div className="main">
           <Clock localStorageAvailable={ this.state.locStorAvail }/>
         </div>
+        <Weather />
       </div>
     );
   }
