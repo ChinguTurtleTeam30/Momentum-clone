@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
-// use like: <img src={logo} className="App-logo" alt="logo" />
 import './App.css';
-import { Clock } from './clock';
+import Clock from './clock';
+import Weather from './weather';
 
 class App extends Component {
   render() {
@@ -11,6 +10,7 @@ class App extends Component {
         <div className="main">
           <Clock />
         </div>
+        <Weather />
       </div>
     );
   }
