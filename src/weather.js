@@ -6,24 +6,34 @@ class Weather extends Component {
     this.state = {
       temperature: null,
       location: null,
-      coords: [],
       weatherType: null,
+      apiSrc: 'http://api.openweathermap.org/data/2.5/',
+      qryType: 'weather',
       apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
     }
   }
 
-  qryParams = []
+  getWeather(obj, callback) {
+    const src = obj.state;
+    let qryUrl = src.apiSrc + src.qryType + '?lat=' + src.coords[0] +
+      '&lon=' + src.coords[1] + '&' + src.apiKey;
+    fetch(qryUrl)
+    .then(function(res) {
+      return res.json();
+    })
+    .then(function(res) {
+      return callback(res);
+    })
+  }
 
-  getLoc = (obj) => {
-    console.log(obj);
+  getLoc = (obj, callback) => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         function(pos) {
-          console.log('001', pos.coords);
           return (
             obj.setState({ coords: [pos.coords.latitude.toFixed(2),
               pos.coords.longitude.toFixed(2)] }),
-            console.log('002', pos.coords.latitude, pos.coords.longitude)
+            callback(obj)
           );
         },
         function(err) {
@@ -44,14 +54,20 @@ class Weather extends Component {
   }
 
   componentWillMount() {
-    this.getLoc(this);
+    this.getLoc(this, function(comp) {
+      return comp.getWeather(comp, function(json) {
+        return (
+          console.log(json)
+        );
+      });
+    });
   }
 
   render() {
     return (
       <div className="weather">
         <p className="temperature">{ this.state.temperature }</p>
-        <p className="location"> { this.state.location }</p>
+        <p className="location">{ this.state.location }</p>
       </div>
     )
   }
