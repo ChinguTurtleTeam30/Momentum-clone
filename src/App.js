@@ -10,7 +10,7 @@ class App extends Component {
         <div className="main">
           <Clock />
         </div>
-        <Weather src='http://api.openweathermap.org/data/2.5/weather?' />
+        <Weather />
       </div>
     );
   }
