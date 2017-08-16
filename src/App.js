@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import '../node_modules/open-weather-icons/dist/css/open-weather-icons.css';
 import Clock from './clock';
 import Weather from './weather';
 
