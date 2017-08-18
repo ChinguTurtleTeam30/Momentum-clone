@@ -85,12 +85,15 @@ class Weather extends Component {
   componentWillMount() {
     this.getLoc(this, function(comp) {
       return comp.getWeather(comp, function(json) {
+        //only because open-weather-icon's 50-series icons are wrong:
+        var icon = /^50/.test(json.weather[0].icon) ? '50d' :
+          json.weather[0].icon;
         return (
           comp.setState({
             location: json.name,
             temperature: json.main.temp + '\xb0 F',
             weatherType: json.weather[0].main,
-            icon: 'owi owi-' + json.weather[0].icon,
+            icon: 'owi owi-' + icon,
           })
         );
       });
