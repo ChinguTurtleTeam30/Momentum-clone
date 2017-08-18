@@ -10,7 +10,7 @@ class App extends Component {
     try {
       let x = '___storageTest___';
       storage.setItem(x, x);
-      x = storage.getItem(x); //will return out of fcn?
+      x = storage.getItem(x);
       storage.removeItem(x);
       return true;
     }
