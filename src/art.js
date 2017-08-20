@@ -1,31 +1,29 @@
 import React, { Component } from 'react';
 
-// TODO: use access token to get new art and set as imageURL
-function getNewArt() {
-	var myImage
-	fetch('https://i.imgur.com/A2osoec.jpg').then(function(response) {
-		return response.blob();
-	}).then(function(response) {
-		var objectURL = URL.createObjectURL(response);
-		console.log(objectURL);
-		myImage = objectURL;
-	});
-	return myImage;
-}
+var Art = React.createClass ({
+	getInitialState: function() {
+		return { img: null };
+	},
 
-function ArtDiv(props) {
-	if (props.imgUrl === "1") {
-		let currentArt = getNewArt();
-		return <div id="art" className="art overlay" style={{backgroundImage: 'url('+ currentArt + ')'}} />
+	componentDidMount: function() {
+		fetch('https://i.imgur.com/A2osoec.jpg').then(function(response) {
+			return response.blob();
+		}).then(function(response) {
+			var objectURL = URL.createObjectURL(response);
+			console.log(objectURL);
+			this.setState( {img: objectURL});
+			console.log(objectURL, this.state);
+		}.bind(this));
+	},
+
+	render: function() {
+		if (this.state.img) {
+			return <div id="art" className="art overlay" style={{backgroundImage: 'url('+ this.state.img + ')'}} />
+		}
+
+		return <div>Getting art...</div>;
 	}
-}
 
-class Art extends Component {
-  render() {
-    return (
-      <ArtDiv imgUrl="1" />
-    )
-  }
-}
+});
 
 export { Art };
