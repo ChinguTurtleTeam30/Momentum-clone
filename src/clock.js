@@ -8,18 +8,19 @@ class Clock extends Component {
       endTime: null,
       countdown: 0,
       timeIsUp: false,
-      intervalID: null,
+      timerID: null,
     };
   }
 
   renderTime() {
     const now = this.state.curTime.toLocaleTimeString();
+    //return only hrs & mins
     return now.match(/^\d{1,2}:\d{2}/)[0];
   }
 
   //start clock on load
   componentDidMount() {
-    setInterval(() => {
+    this.clockID = setInterval(() => {
       this.setState({ curTime: new Date()})
     }, 1000);
   }
@@ -29,9 +30,9 @@ class Clock extends Component {
   }
 
   handleClick(event) {
-    clearInterval(this.state.intervalID);
-    this.setState({ intervalID: null });
-    if(event.target.name === 'reset') {
+    clearInterval(this.state.timerID);
+    this.setState({ timerID: null });
+    if (event.target.name === 'reset') {
       this.setState({ countdown: 0, timeIsUp: false });
     }
   }
@@ -43,21 +44,10 @@ class Clock extends Component {
         countdown: (this.state.endTime - this.state.curTime)/1000
       });
     }
-    if(!this.state.intervalID) {
-      this.setState({ intervalID: setInterval(() => this.runTimer(), 1000) });
+    if(!this.state.timerID) {
+      this.setState({ timerID: setInterval(() => this.runTimer(), 1000) });
+      this.storeTimer();
     }
-  }
-
-  jsFormatDate(htmlDateFormat) {
-    //split up html date string
-    //into format [yyyy, mm, dd, hh, mm]
-    //and input it into new JS Date obj
-    const htmlDateArr =
-      htmlDateFormat
-        .match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
-      jsDate = new Date(htmlDateArr[1], htmlDateArr[2] - 1, htmlDateArr[3],
-        htmlDateArr[4], htmlDateArr[5]);
-    return jsDate;
   }
 
   runTimer() {
@@ -65,8 +55,8 @@ class Clock extends Component {
                   Math.round(this.state.countdown - 1) : 0 ;
     this.setState({ countdown: count });
     if (!count) {
-      clearInterval(this.state.intervalID);
-      this.setState({ timeIsUp: true, intervalID: null });
+      clearInterval(this.state.timerID);
+      this.setState({ timeIsUp: true, timerID: null });
     }
   }
 
@@ -94,6 +84,26 @@ class Clock extends Component {
           });
 
     return displayCount.join(':');
+  }
+
+  storeTimer() {
+    if (this.props.localStorageAvailable) {
+      const storage = window.localStorage;
+      return storage.setItem('endTimer', this.state.endTime);
+    }
+    else return;
+  }
+
+  jsFormatDate(htmlDateFormat) {
+    //split up html date string
+    //into format [yyyy, mm, dd, hh, mm]
+    //and input it into new JS Date obj
+    const htmlDateArr =
+      htmlDateFormat
+        .match(/^(\d{4})(?:-)(\d{2})(?:-)(\d{2})(?:T)(\d{2})(?::)(\d{2})/),
+      jsDate = new Date(htmlDateArr[1], htmlDateArr[2] - 1, htmlDateArr[3],
+        htmlDateArr[4], htmlDateArr[5]);
+    return jsDate;
   }
 
   render() {
