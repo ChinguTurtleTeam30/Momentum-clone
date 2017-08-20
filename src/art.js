@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 
-var Art = React.createClass ({
-	getInitialState: function() {
-		return { img: null };
-	},
+class Art extends Component {
 
-	componentDidMount: function() {
+	constructor(props) {
+		super(props);
+		this.state = { img: null };
+	}
+
+	componentDidMount() {
 		fetch('https://i.imgur.com/A2osoec.jpg').then(function(response) {
 			return response.blob();
 		}).then(function(response) {
@@ -14,16 +16,15 @@ var Art = React.createClass ({
 			this.setState( {img: objectURL});
 			console.log(objectURL, this.state);
 		}.bind(this));
-	},
+	}
 
-	render: function() {
+	render() {
 		if (this.state.img) {
 			return <div id="art" className="art overlay" style={{backgroundImage: 'url('+ this.state.img + ')'}} />
 		}
 
 		return <div>Getting art...</div>;
 	}
-
-});
+};
 
 export { Art };
