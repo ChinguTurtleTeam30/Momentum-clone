@@ -2,6 +2,7 @@
   text-decoration: line-through;
 }
 
-.hidden {
-  visiblity: hidden;
+.hide {
+  display: none;
+  /*visibility: hidden;*/
 }
