@@ -1,5 +1,66 @@
 import React, { Component } from 'react';
 
+function Goal(props) {
+  return (
+    <div className="goal">
+      <span className="goalOutput">{ props.goal }</span>
+      <form
+        id="goalForm"
+        name="goalForm"
+        onSubmit={ (event) => props.onSubmit(event)
+        }>
+        <input id="goalInput" name="goalInput" type="text" />
+        <label htmlFor="goalInput">What is your goal?</label>
+      </form>
+    </div>
+  );
+}
+
+class Timer extends Component {
+  htmlFormatDate(jsDateFormat) {
+    //split up js date string
+    //into format [(m)m, (d)d, yyyy, (h)h, mm, ss, "am"/"pm"]
+    //and make it a string in the html date format
+    const jsDateArr =
+            jsDateFormat
+              .toLocaleString()
+              .match(/^(\d{1,2})(?:\/)(\d{1,2})(?:\/)(\d{4})(?:,\s)(\d{1,2})(?::)(\d{2})(?::)(\d{2})(?:\s)([ap]m)/i),
+          htmlDateStr = jsDateArr[3] + '-' +
+            (jsDateArr[1].length < 2 ? '0' + jsDateArr[1] : jsDateArr[1]) +
+            '-' +
+            (jsDateArr[2].length < 2 ? '0' + jsDateArr[2] : jsDateArr[2]) +
+            'T' + to24hr(jsDateArr[4], jsDateArr[7]) + ':' + jsDateArr[5];
+
+    function to24hr(hours, ampm) {
+      if (hours !== '12') {
+        return ampm === 'am' ? hours : +hours + 12;
+      }
+      else return ampm === 'am' ? '00' : hours;
+    }
+
+    return htmlDateStr
+  }
+
+  render() {
+    return (
+      <div className="timer">
+        <p className="countdown">{ this.props.countdown }</p>
+        <form className="timer-form"
+              onSubmit={ (event) => this.props.onSubmit(event) }>
+          <input type="datetime-local"
+                  defaultValue={ this.htmlFormatDate(this.props.initTime) }
+                  onChange={ (event) => this.props.onChange(event) } />
+          <input id="start-timer" name="start" type="submit" value="start" />
+          <input id="stop-timer" name="stop" type="button" value="stop"
+                  onClick={ (event) => this.props.onClick(event) } />
+          <input id="reset-timer" name="reset" type="button" value="reset"
+                  onClick={ (event) => this.props.onClick(event) } />
+        </form>
+      </div>
+    )
+  }
+}
+
 class Clock extends Component {
   constructor() {
     super();
@@ -25,11 +86,11 @@ class Clock extends Component {
     }, 1000);
   }
 
-  handleChange(event) {
+  calendarChange(event) {
     this.setState({ endTime: new Date(this.jsFormatDate(event.target.value)) });
   }
 
-  handleClick(event) {
+  timerClick(event) {
     clearInterval(this.state.timerID);
     this.setState({ timerID: null });
     if (event.target.name === 'reset') {
@@ -37,7 +98,7 @@ class Clock extends Component {
     }
   }
 
-  handleSubmit(event) {
+  timerSubmit(event) {
     event.preventDefault();
     if(!this.state.countdown) {
       this.setState({
@@ -46,8 +107,17 @@ class Clock extends Component {
     }
     if(!this.state.timerID) {
       this.setState({ timerID: setInterval(() => this.runTimer(), 1000) });
-      this.storeTimer();
+      if(window.localStorage.getItem('endTime') !== this.state.endTime) {
+        this.store('endTime');
+      }
     }
+  }
+
+  goalSubmit(event) {
+    const val = event.target['goalInput'].value;
+    event.preventDefault();
+    this.setState({ goal: val });
+    this.store('goal', val);
   }
 
   runTimer() {
@@ -86,10 +156,10 @@ class Clock extends Component {
     return displayCount.join(':');
   }
 
-  storeTimer() {
+  store(prop, val) {
     if (this.props.localStorageAvailable) {
       const storage = window.localStorage;
-      return storage.setItem('endTimer', this.state.endTime);
+      return storage.setItem(prop, val ? val : this.state[prop]);
     }
     else return;
   }
@@ -114,56 +184,15 @@ class Clock extends Component {
         </p>
         <Timer
           initTime={ new Date() }
-          onChange={ (event) => this.handleChange(event) }
-          onClick={ (event) => this.handleClick(event) }
-          onSubmit={ (event) => this.handleSubmit(event) }
+          onChange={ (event) => this.calendarChange(event) }
+          onClick={ (event) => this.timerClick(event) }
+          onSubmit={ (event) => this.timerSubmit(event) }
           countdown={ this.renderCountdown(this.state.countdown) }
         />
-      </div>
-    )
-  }
-}
-
-class Timer extends Component {
-  htmlFormatDate(jsDateFormat) {
-    //split up js date string
-    //into format [(m)m, (d)d, yyyy, (h)h, mm, ss, "am"/"pm"]
-    //and make it a string in the html date format
-    const jsDateArr =
-            jsDateFormat
-              .toLocaleString()
-              .match(/^(\d{1,2})(?:\/)(\d{1,2})(?:\/)(\d{4})(?:,\s)(\d{1,2})(?::)(\d{2})(?::)(\d{2})(?:\s)([ap]m)/i),
-          htmlDateStr = jsDateArr[3] + '-' +
-            (jsDateArr[1].length < 2 ? '0' + jsDateArr[1] : jsDateArr[1]) +
-            '-' +
-            (jsDateArr[2].length < 2 ? '0' + jsDateArr[2] : jsDateArr[2]) +
-            'T' + to24hr(jsDateArr[4], jsDateArr[7]) + ':' + jsDateArr[5];
-
-    function to24hr(hours, ampm) {
-      if (hours !== '12') {
-        return ampm === 'am' ? hours : +hours + 12;
-      }
-      else return ampm === 'am' ? '00' : hours;
-    }
-
-    return htmlDateStr
-  }
-
-  render() {
-    return (
-      <div className="timer">
-        <p className="countdown">{ this.props.countdown }</p>
-        <form className="timer-form"
-              onSubmit={ (event) => this.props.onSubmit(event) }>
-          <input type="datetime-local"
-            defaultValue={ this.htmlFormatDate(this.props.initTime) }
-            onChange={ (event) => this.props.onChange(event) } />
-          <input id="start-timer" name="start" type="submit" value="start" />
-          <input id="stop-timer" name="stop" type="button" value="stop"
-            onClick={ (event) => this.props.onClick(event) } />
-          <input id="reset-timer" name="reset" type="button" value="reset"
-            onClick={ (event) => this.props.onClick(event) } />
-        </form>
+        <Goal
+          onSubmit={ (event) => this.goalSubmit(event) }
+          goal={ this.state.goal }
+        />
       </div>
     )
   }
