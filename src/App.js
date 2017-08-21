@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import './clock.css';
 import Clock from './clock';
 //import Timer from './timer';
 

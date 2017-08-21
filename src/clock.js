@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 
 function Goal(props) {
   return (
-    <div className="goal">
-      <span className="goalOutput">{ props.goal }</span>
-      <form
-        id="goalForm"
-        name="goalForm"
-        onSubmit={ (event) => props.onSubmit(event)
-        }>
-        <input id="goalInput" name="goalInput" type="text" />
-        <label htmlFor="goalInput">What is your goal?</label>
-      </form>
-    </div>
+    <form
+      id="goalForm"
+      name="goalForm"
+      onSubmit={ (event) => props.onSubmit(event)
+      }>
+      <p className="showGoal">
+        <input id="goalComplete" name="goalComplete" type="checkbox"
+                value="complete" onChange={ (event) => props.onCheck(event) }
+        />
+        { props.goal }
+      </p>
+      <input id="setGoal" name="setGoal" type="text" />
+      <label htmlFor="setGoal">What is your goal?</label>
+    </form>
   );
 }
 
@@ -84,6 +87,9 @@ class Clock extends Component {
     this.clockID = setInterval(() => {
       this.setState({ curTime: new Date()})
     }, 1000);
+    if (window.localStorage.getItem('goal')) {
+      this.setState({ goal: window.localStorage.getItem('goal') });
+    }
   }
 
   calendarChange(event) {
@@ -114,10 +120,18 @@ class Clock extends Component {
   }
 
   goalSubmit(event) {
-    const val = event.target['goalInput'].value;
+    const val = event.target['setGoal'].value;
     event.preventDefault();
     this.setState({ goal: val });
     this.store('goal', val);
+  }
+
+  goalCheck(event) {
+    const showGoal = document.querySelector('p.showGoal');
+    if (event.target.checked) {
+      showGoal.classList.add('strike');
+    }
+    else showGoal.classList.remove('strike');
   }
 
   runTimer() {
@@ -191,6 +205,7 @@ class Clock extends Component {
         />
         <Goal
           onSubmit={ (event) => this.goalSubmit(event) }
+          onCheck={ (event) => this.goalCheck(event) }
           goal={ this.state.goal }
         />
       </div>
