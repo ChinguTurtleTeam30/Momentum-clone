@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 
-function Goal(props) {
-  return (
-    <form
-      id="goalForm"
-      name="goalForm"
-      onSubmit={ (event) => props.onSubmit(event)
+ function Goal(props) {
+   if (!props.goal) {
+    return (
+      <form
+        id="setGoal"
+        name="goalForm"
+        onSubmit={ (event) => props.onSubmit(event)
       }>
-      <div className="goalBox hide">
+        <input id="goalInput" name="goalInput" type="text" />
+        <label htmlFor="goalInput">What is your goal?</label>
+      </form>
+    );
+  }
+  else {
+    return (
+      <div className="displayGoal">
         <input id="goalComplete" name="goalComplete" type="checkbox"
                 value="complete" onChange={ (event) => props.onCheck(event) }
         />
-        <span className="showGoal">{ props.goal }</span>
+        <span id="goalLine" className={ props.strike }>{ props.goal }</span>
         <input id="xGoal" name="xGoal" type="button" value="x"
-                onClick={ (event) => props.onClickX(event) } />
+                onClick={ (event) => props.onClickX(event) }
+        />
       </div>
-      <input id="setGoal" name="setGoal" type="text" />
-      <label htmlFor="setGoal">What is your goal?</label>
-    </form>
-  );
+    );
+  }
 }
 
 class Timer extends Component {
@@ -91,7 +98,6 @@ class Clock extends Component {
     }, 1000);
     if (window.localStorage.getItem('goal')) {
       this.setState({ goal: window.localStorage.getItem('goal') });
-      document.querySelector('.goalBox').classList.remove('hide');
     }
   }
 
@@ -123,27 +129,23 @@ class Clock extends Component {
   }
 
   goalSubmit(event) {
-    const val = event.target['setGoal'].value,
-          goalBox = document.querySelector('.goalBox');
+    const val = event.target['goalInput'].value;
     event.preventDefault();
     if (val) {
       this.setState({ goal: val });
-      goalBox.classList.remove('hide');
       this.store('goal', val);
+      event.target['goalInput'].value = '';
     }
   }
 
   goalCheck(event) {
-    const showGoal = document.querySelector('.showGoal');
     if (event.target.checked) {
-      showGoal.classList.add('strike');
+      this.setState({ strikeGoal: 'strike' });
     }
-    else showGoal.classList.remove('strike');
+    else this.setState({ strikeGoal: null });
   }
 
   goalClickX(event) {
-    const goalBox = document.querySelector('.goalBox');
-    goalBox.classList.add('hide');
     this.setState({ goal: null });
     this.unstore('goal');
   }
@@ -230,6 +232,7 @@ class Clock extends Component {
           onCheck={ (event) => this.goalCheck(event) }
           onClickX={ (event) => this.goalClickX(event) }
           goal={ this.state.goal }
+          strike={ this.state.strikeGoal }
         />
       </div>
     )
