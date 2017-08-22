@@ -20,7 +20,7 @@ import React, { Component } from 'react';
                 value="complete" onChange={ (event) => props.onCheck(event) }
         />
         <span id="goalLine" className={ props.strike }>{ props.goal }</span>
-        <input id="xGoal" name="xGoal" type="button" value="x"
+        <input id="xGoal" name="xGoal" type="button" value="&times;"
                 onClick={ (event) => props.onClickX(event) }
         />
       </div>
