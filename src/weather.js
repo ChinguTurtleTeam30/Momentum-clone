@@ -4,12 +4,14 @@ class Weather extends Component {
   constructor() {
     super();
     this.state = {
-      temperature: null,
+      temperature: '',
+      degrees: '',
+      units: '',
       location: null,
       weatherType: null,
       apiSrc: 'http://api.openweathermap.org/data/2.5/',
       qryType: 'weather',
-      units: 'imperial',
+      qryUnits: 'imperial',
       apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
       iconSrc: 'http://openweathermap.org/img/w/',
     }
@@ -17,7 +19,7 @@ class Weather extends Component {
 
   getWeather(obj, callback) {
     const src = obj.state;
-    let qryUrl = src.apiSrc + src.qryType + '?units=' + src.units +
+    let qryUrl = src.apiSrc + src.qryType + '?units=' + src.qryUnits +
       '&lat=' + src.coords[0] +
       '&lon=' + src.coords[1] + '&' + src.apiKey;
     fetch(qryUrl)
@@ -86,12 +88,18 @@ class Weather extends Component {
     this.getLoc(this, function(comp) {
       return comp.getWeather(comp, function(json) {
         //only because open-weather-icon's 50-series icons are wrong:
-        var icon = /^50/.test(json.weather[0].icon) ? '50d' :
-          json.weather[0].icon;
+        const icon = /^50/.test(json.weather[0].icon) ? '50d' :
+                      json.weather[0].icon,
+              units = !comp.state.qryUnits ? 'K' :
+                        comp.state.qryUnits === 'imperial' ? 'F' :
+                          comp.state.qryUnits === 'metric' ? 'C' : 'K',
+              degrees = units === 'C' || units === 'F' ? '\xb0' : '';
         return (
           comp.setState({
             location: json.name,
-            temperature: json.main.temp + '\xb0 F',
+            temperature: json.main.temp.toFixed(0),
+            units: units,
+            degrees: degrees,
             weatherType: json.weather[0].main,
             icon: 'owi owi-' + icon,
           })
@@ -102,9 +110,14 @@ class Weather extends Component {
 
   render() {
     return (
-      <div className="weather">
-        <i className={ this.state.icon }></i>
-        <p className="temperature">{ this.state.temperature }</p>
+      <div className="weather corner top right">
+        <p className="weatherData">
+          <i className={ this.state.icon }></i>
+          <span className="temperature">
+            { this.state.temperature + this.state.degrees }
+          </span>
+          <span className="tempUnits">{ this.state.units }</span>
+        </p>
         <p className="location">{ this.state.location }</p>
       </div>
     )
