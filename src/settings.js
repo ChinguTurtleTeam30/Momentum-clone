@@ -58,6 +58,12 @@ function SettingsButton(props) {
   );
 }
 
+function SettingsPanel(props) {
+  return (
+    <div className="settingsPanel"></div>
+  );
+}
+
 class Settings extends Component {
   constructor(props) {
     super();
@@ -114,7 +120,7 @@ class Settings extends Component {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
-          <div className="settingsPanel"></div>
+          <SettingsPanel />
           <SettingsButton handleClick={ () => this.handleClick() }/>
         </div>
       );
