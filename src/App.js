@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // can we put all the css in one folder and have App import the whole folder?
 import './App.css';
 import './clock.css';
+import './settings.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css'
 import Clock from './clock';
 import Links from './links';
