@@ -32,7 +32,7 @@
   background-color: rgba(20,20,20,.8);
   padding: .5rem;
   height: 12rem;
-  width: max-content;
+  width: 20rem;
   box-sizing: border-box;
   position: absolute;
   top: -11.5rem;
@@ -95,4 +95,22 @@ ul.settingsTab {
 
 .toggleIcon {
   display: inline;
+}
+
+.settingsPanelNav {
+  margin: 0;
+  padding: 0 .5rem;
+  height: 100%;
+  width: fit-content;
+  list-style-type: none;
+  font-size: large;
+  color: gainsboro;
+  text-align: left;
+  border-right: 2px solid darkGrey;
+}
+
+.settingsPanelNav li {
+  margin: .125rem;
+  font-size: 1.05rem;
+  cursor: pointer;
 }

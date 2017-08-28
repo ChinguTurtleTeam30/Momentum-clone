@@ -58,10 +58,38 @@ function SettingsButton(props) {
   );
 }
 
-function SettingsPanel(props) {
+function SettingsCategory(props) {
   return (
-    <div className="settingsPanel"></div>
+    <li
+      onClick={ (event) => props.onClick(event) }
+      name={ props.name }
+    >
+      { props.name }
+    </li>
   );
+}
+
+class SettingsPanel extends Component {
+  renderSetCat(name) {
+    return (
+      <SettingsCategory
+        name={ name }
+        onClick={ (event) => this.props.handleClickCat(event)}
+      />
+    );
+  }
+
+  render() {
+    return (
+      <div className="settingsPanel">
+        <ul className="settingsPanelNav">
+          { this.renderSetCat('general') }
+          { this.renderSetCat('clock & timer') }
+          { this.renderSetCat('weather') }
+        </ul>
+      </div>
+    );
+  }
 }
 
 class Settings extends Component {
@@ -71,48 +99,52 @@ class Settings extends Component {
       panelOpen: false,
     }
   }
-  settings = [
-    { username: '' },
-    { show: [
-        { links: [
-            { links: true },
-            { bookmarks: false },
-            { mostVisited: false },
-            { recentlyVisited: false },
-          ]
-        },
-        { weather: true },
-        { todo: true },
-        { quotes: true },
-        { greeting: true },
-        { clock: true },
-        { timer: true },
-        { goal: true },
-        { staticBG: false},
-    ]},
-    { weather: [
-      { weatherUnits: 'imperial' },
-      { weatherLocation: [
-        { weatherLocation: '' },
-        { setLocationAsDefault: false }
-      ]}
-    ]},
-    { clock_timer: [
-      { clockFormat: '12hr' },
-      { showAM_PM: false },
-      { timezone: [
-        { timezone: '' },
-        { setTimezoneAsDefault: false }
-      ]},
-      { timer: [
-        { timerFormat: '12hr' },
-        { timerInputFormat: 'calendar' },
-        { saveCountdown: true }
-      ]}
-    ]}
-  ];
+  settings = {
+    username: '' ,
+    show: {
+      links: {
+        links: true,
+        bookmarks: false,
+        mostVisited: false,
+        recentlyVisited: false,
+      },
+      weather: true,
+      todo: true,
+      quotes: true,
+      greeting: true,
+      clock: true,
+      timer: true,
+      goal: true,
+      staticBG: false,
+    },
+    weather: {
+      weatherUnits: 'imperial',
+      weatherLocation: '',
+      setLocationAsDefault: false
+    },
+    clock_timer: {
+      clockFormat: '12hr',
+      showAM_PM: false,
+      timezone: '',
+      setTimezoneAsDefault: false,
+      timer: {
+        timerFormat: '12hr',
+        timerInputFormat: 'calendar',
+        saveCountdown: true
+      }
+    }
+  };
 
-  handleClick() {
+  selectSettingsCategory(event) {
+    const target = event.target.name + 'isSelected';
+    console.log(event);
+    if (!this.state[target]) {
+      return this.setState({ [target]: true });
+    }
+    else return this.setState({ [target]: ![target] });
+  }
+
+  toggleSettingsPanel() {
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
 
@@ -120,14 +152,14 @@ class Settings extends Component {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
-          <SettingsPanel />
-          <SettingsButton handleClick={ () => this.handleClick() }/>
+          <SettingsPanel handleClickCat={ (event) => this.selectSettingsCategory(event) }/>
+          <SettingsButton handleClick={ () => this.toggleSettingsPanel() }/>
         </div>
       );
     }
     else return (
       <div className="settings bottom left corner">
-        <SettingsButton handleClick={ () => this.handleClick() }/>
+        <SettingsButton handleClick={ () => this.toggleSettingsPanel() }/>
       </div>
     )
   }
