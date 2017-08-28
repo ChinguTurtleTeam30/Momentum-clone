@@ -54,7 +54,7 @@ import React, { Component } from 'react';
   */
 function SettingsButton(props) {
   return (
-    <i className="fa fa-cog" onClick={ () => props.handleClick() }></i>
+    <i className="fa fa-cog" onClick={ (event) => props.handleClick(event) }></i>
   );
 }
 
@@ -63,6 +63,7 @@ function SettingsCategory(props) {
     <li
       onClick={ (event) => props.onClick(event) }
       name={ props.name }
+      id={ props.name }
     >
       { props.name }
     </li>
@@ -136,15 +137,16 @@ class Settings extends Component {
   };
 
   selectSettingsCategory(event) {
-    const target = event.target.name + 'isSelected';
-    console.log(event);
+    const target = event.target.id + 'IsSelected';
+    console.log('selectCat event:', event.target.id);
     if (!this.state[target]) {
       return this.setState({ [target]: true });
     }
     else return this.setState({ [target]: ![target] });
   }
 
-  toggleSettingsPanel() {
+  toggleSettingsPanel(event) {
+    console.log('settingsPanel event:', event.target);
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
 
@@ -153,13 +155,13 @@ class Settings extends Component {
       return (
         <div className="settings bottom left corner">
           <SettingsPanel handleClickCat={ (event) => this.selectSettingsCategory(event) }/>
-          <SettingsButton handleClick={ () => this.toggleSettingsPanel() }/>
+          <SettingsButton handleClick={ (event) => this.toggleSettingsPanel(event) }/>
         </div>
       );
     }
     else return (
       <div className="settings bottom left corner">
-        <SettingsButton handleClick={ () => this.toggleSettingsPanel() }/>
+        <SettingsButton handleClick={ (event) => this.toggleSettingsPanel(event) }/>
       </div>
     )
   }
