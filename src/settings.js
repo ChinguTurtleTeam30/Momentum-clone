@@ -66,7 +66,7 @@ function SettingsButton(props) {
   );
 }
 
-function SettingsTab(props) {
+function SettingsHeading(props) {
   if (props.tabOpen) {
     return (
       <li
@@ -92,11 +92,24 @@ function SettingsTab(props) {
   }
 }
 
+function SettingsTab(props) {
+  return (
+    <ul className="settingsTab">
+      <li className="fa fa-toggle-on">
+      </li>
+      <li className="fa fa-toggle-on">
+      </li>
+      <li className="fa fa-toggle-off">
+      </li>
+    </ul>
+  );
+}
+
 class SettingsPanel extends Component {
-  renderSettingsTab(name) {
+  renderSettingsHeading(name) {
     if (this.props.tabOpen === name) {
       return (
-        <SettingsTab
+        <SettingsHeading
           name={ name }
           tabOpen
           onClick={ (event) => this.props.handleClickTab(event)}
@@ -105,7 +118,7 @@ class SettingsPanel extends Component {
     }
     else {
       return (
-        <SettingsTab
+        <SettingsHeading
           name={ name }
           onClick={ (event) => this.props.handleClickTab(event)}
         />
@@ -116,11 +129,12 @@ class SettingsPanel extends Component {
   render() {
     return (
       <div className="settingsPanel">
-        <ul className="settingsPanelNav">
-          { this.renderSettingsTab('general') }
-          { this.renderSettingsTab('clock & timer') }
-          { this.renderSettingsTab('weather') }
+        <ul className="settingsNav">
+          { this.renderSettingsHeading('general') }
+          { this.renderSettingsHeading('clock & timer') }
+          { this.renderSettingsHeading('weather') }
         </ul>
+        <SettingsTab />
       </div>
     );
   }
@@ -133,43 +147,8 @@ class Settings extends Component {
       panelOpen: false,
     }
   }
-  settings = {
-    username: '' ,
-    show: {
-      links: {
-        links: true,
-        bookmarks: false,
-        mostVisited: false,
-        recentlyVisited: false,
-      },
-      weather: true,
-      todo: true,
-      quotes: true,
-      greeting: true,
-      clock: true,
-      timer: true,
-      goal: true,
-      staticBG: false,
-    },
-    weather: {
-      weatherUnits: 'imperial',
-      weatherLocation: '',
-      setLocationAsDefault: false
-    },
-    clock_timer: {
-      clockFormat: '12hr',
-      showAM_PM: false,
-      timezone: '',
-      setTimezoneAsDefault: false,
-      timer: {
-        timerFormat: '12hr',
-        timerInputFormat: 'calendar',
-        saveCountdown: true
-      }
-    }
-  };
 
-  selectSettingsTab(event) {
+  selectSettingsHeading(event) {
     const target = event.target.id;
     if (!this.state.hasOwnProperty('tabOpen')) {
       return this.setState({ tabOpen: target });
@@ -185,7 +164,7 @@ class Settings extends Component {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
-          <SettingsPanel tabOpen={ this.state.tabOpen } handleClickTab={ (event) => this.selectSettingsTab(event) } />
+          <SettingsPanel tabOpen={ this.state.tabOpen } handleClickTab={ (event) => this.selectSettingsHeading(event) } />
           <SettingsButton
             handleClick={ (event) => this.toggleSettingsPanel(event) }
             isActive={ this.state.panelOpen }

@@ -12,13 +12,43 @@ import Weather from './weather';
 import { Art } from './art';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      localStorageAvailable: this.storageAvailable(localStorage),
-      sessionStorageAvailable: this.storageAvailable(sessionStorage),
-    }
-  }
+  preferences = {
+    username: '' ,
+    show: {
+      links: {
+        links: true,
+        bookmarks: false,
+        mostVisited: false,
+        recentlyVisited: false,
+      },
+      weather: true,
+      todo: true,
+      quotes: true,
+      greeting: true,
+      clock: true,
+      timer: true,
+      goal: true,
+      staticBG: false,
+    },
+    weather: {
+      weatherUnits: 'imperial',
+      weatherLocation: '',
+      setLocationAsDefault: false
+    },
+    clock_timer: {
+      clockFormat: '12hr',
+      showAM_PM: false,
+      timezone: '',
+      setTimezoneAsDefault: false,
+      timer: {
+        timerFormat: '12hr',
+        timerInputFormat: 'calendar',
+        saveCountdown: true
+      }
+    },
+    localStorageAvailable: this.storageAvailable(localStorage),
+    sessionStorageAvailable: this.storageAvailable(sessionStorage)
+  };
   //test for availability of Storage
   storageAvailable(type) {
     const storage = window[type];

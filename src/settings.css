@@ -97,11 +97,11 @@ ul.settingsTab {
   display: inline;
 }
 
-.settingsPanelNav {
+.settingsNav {
   margin: 0;
   padding: 0 .5rem;
   height: 100%;
-  width: fit-content;
+  width: 20%;
   list-style-type: none;
   font-size: large;
   color: gainsboro;
@@ -109,7 +109,14 @@ ul.settingsTab {
   border-right: 2px solid darkGrey;
 }
 
+.settingsPanelNav > ul {
+  display: inline-block;
+  -webkit-margin-before: 0;
+  -webkit-padding-start: 0;
+}
+
 .settingsPanelNav li {
+  display: list-item;
   margin: .125rem;
   font-size: 1.05rem;
   cursor: pointer;
@@ -117,4 +124,15 @@ ul.settingsTab {
 
 .settingsPanelNav li.tabOpen {
   color: white;
+}
+
+.settingsTab {
+  color: rgb(235,235,235);
+  font-size: medium;
+  font-weight: 100;
+  margin: 0;
+  padding: 0 .5rem;
+  height: 100%;
+  width: 65%;
+  list-style-type: none;
 }
