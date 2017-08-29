@@ -130,7 +130,6 @@ class Clock extends Component {
 
   goalSubmit(event) {
     event.preventDefault();
-    console.log('submit event:', event.target);
     const val = event.target['goalInput'].value;
     if (val) {
       this.setState({ goal: val });
@@ -140,7 +139,6 @@ class Clock extends Component {
   }
 
   goalCheck(event) {
-    console.log('check event:', event.target);
     if (event.target.checked) {
       this.setState({ strikeGoal: 'strike' });
     }
@@ -148,7 +146,6 @@ class Clock extends Component {
   }
 
   goalClickX(event) {
-    console.log('click x event:', event.target);
     this.setState({ goal: null });
     this.unstore('goal');
   }

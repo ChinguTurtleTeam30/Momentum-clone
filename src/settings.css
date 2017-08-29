@@ -114,3 +114,7 @@ ul.settingsTab {
   font-size: 1.05rem;
   cursor: pointer;
 }
+
+.settingsPanelNav li.tabOpen {
+  color: white;
+}

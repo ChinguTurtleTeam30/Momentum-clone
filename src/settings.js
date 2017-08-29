@@ -53,40 +53,73 @@ import React, { Component } from 'react';
     blah blah blah I don't know what these will be
   */
 function SettingsButton(props) {
+  if (props.isActive) {
+    return (
+      <i
+        className="fa fa-cog active"
+        onClick={ (event) => props.handleClick(event) }
+      ></i>
+    )
+  }
   return (
     <i className="fa fa-cog" onClick={ (event) => props.handleClick(event) }></i>
   );
 }
 
-function SettingsCategory(props) {
-  return (
-    <li
-      onClick={ (event) => props.onClick(event) }
-      name={ props.name }
-      id={ props.name }
-    >
-      { props.name }
-    </li>
-  );
+function SettingsTab(props) {
+  if (props.tabOpen) {
+    return (
+      <li
+        onClick={ (event) => props.onClick(event) }
+        name={ props.name }
+        id={ props.name }
+        className="tabOpen"
+      >
+        { props.name }
+      </li>
+    );
+  }
+  else {
+    return (
+      <li
+        onClick={ (event) => props.onClick(event) }
+        name={ props.name }
+        id={ props.name }
+      >
+        { props.name }
+      </li>
+    );
+  }
 }
 
 class SettingsPanel extends Component {
-  renderSetCat(name) {
-    return (
-      <SettingsCategory
-        name={ name }
-        onClick={ (event) => this.props.handleClickCat(event)}
-      />
-    );
+  renderSettingsTab(name) {
+    if (this.props.tabOpen === name) {
+      return (
+        <SettingsTab
+          name={ name }
+          tabOpen
+          onClick={ (event) => this.props.handleClickTab(event)}
+        />
+      );
+    }
+    else {
+      return (
+        <SettingsTab
+          name={ name }
+          onClick={ (event) => this.props.handleClickTab(event)}
+        />
+      );
+    }
   }
 
   render() {
     return (
       <div className="settingsPanel">
         <ul className="settingsPanelNav">
-          { this.renderSetCat('general') }
-          { this.renderSetCat('clock & timer') }
-          { this.renderSetCat('weather') }
+          { this.renderSettingsTab('general') }
+          { this.renderSettingsTab('clock & timer') }
+          { this.renderSettingsTab('weather') }
         </ul>
       </div>
     );
@@ -136,17 +169,15 @@ class Settings extends Component {
     }
   };
 
-  selectSettingsCategory(event) {
-    const target = event.target.id + 'IsSelected';
-    console.log('selectCat event:', event.target.id);
-    if (!this.state[target]) {
-      return this.setState({ [target]: true });
+  selectSettingsTab(event) {
+    const target = event.target.id;
+    if (!this.state.hasOwnProperty('tabOpen')) {
+      return this.setState({ tabOpen: target });
     }
-    else return this.setState({ [target]: ![target] });
+    else return this.setState({ tabOpen: target });
   }
 
   toggleSettingsPanel(event) {
-    console.log('settingsPanel event:', event.target);
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
 
@@ -154,8 +185,11 @@ class Settings extends Component {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
-          <SettingsPanel handleClickCat={ (event) => this.selectSettingsCategory(event) }/>
-          <SettingsButton handleClick={ (event) => this.toggleSettingsPanel(event) }/>
+          <SettingsPanel tabOpen={ this.state.tabOpen } handleClickTab={ (event) => this.selectSettingsTab(event) } />
+          <SettingsButton
+            handleClick={ (event) => this.toggleSettingsPanel(event) }
+            isActive={ this.state.panelOpen }
+          />
         </div>
       );
     }
