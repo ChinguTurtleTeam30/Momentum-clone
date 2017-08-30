@@ -1,68 +1,21 @@
 import React, { Component } from 'react';
-//general
-  /*
-  USER NAME
-  SHOW:
-    links
-    bookmarks
-    weather
-    todo
-    quotes
-    greeting
-    clock
-    timer
-    goal
-    static background image
-  */
 
-//links
-  /*
-  show links
-  show bookmarks
-  show most visited
-  show recently visited
-  */
-
-//weather
-  /*
-  show weather
-  weather units
-  weather location
-  set this location as default
-  */
-
-
-//quotes
-
-//clock & timer
-  /*
-  clock format
-  show am/pm
-  clock timezone
-  set this timezone as default
-  TIMER:
-    show timer
-    timer format
-    input format ... calendar ... hh:mm:ss
-    save countdown b/w sessions
-  */
-
-//background
-  /*
-  art tags:
-    blah blah blah I don't know what these will be
-  */
 function SettingsButton(props) {
   if (props.isActive) {
     return (
       <i
+        tabIndex="0"
         className="fa fa-cog active"
         onClick={ (event) => props.handleClick(event) }
       ></i>
     )
   }
   return (
-    <i className="fa fa-cog" onClick={ (event) => props.handleClick(event) }></i>
+    <i
+      tabIndex="0"
+      className="fa fa-cog"
+      onClick={ (event) => props.handleClick(event) }
+    ></i>
   );
 }
 
@@ -95,11 +48,11 @@ function SettingsHeading(props) {
 function SettingsTab(props) {
   return (
     <ul className="settingsTab">
-      <li className="fa fa-toggle-on">
+      <li className="fa fa-toggle-on">toggle something
       </li>
-      <li className="fa fa-toggle-on">
+      <li className="fa fa-toggle-on">toggle something else
       </li>
-      <li className="fa fa-toggle-off">
+      <li className="fa fa-toggle-off">make another choice
       </li>
     </ul>
   );
@@ -174,7 +127,9 @@ class Settings extends Component {
     }
     else return (
       <div className="settings bottom left corner">
-        <SettingsButton handleClick={ (event) => this.toggleSettingsPanel(event) }/>
+        <SettingsButton
+          handleClick={ (event) => this.toggleSettingsPanel(event) }
+        />
       </div>
     )
   }
