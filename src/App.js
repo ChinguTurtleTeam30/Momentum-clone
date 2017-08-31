@@ -16,48 +16,33 @@ class App extends Component {
     super(props);
     this.state = {
       username: '' ,
-      general: {
-        showLinks: true,
-        showBookmarks: false,
-        showMostVisited: false,
-        showRecentlyVisited: false,
-        showWeather: true,
-        showTodo: true,
-        showQuotes: true,
-        showGreeting: true,
-        showClock: true,
-        showTimer: true,
-        showGoal: true,
-        showStaticBG: false,
-      },
-      weather: true,
-      todo: true,
-      quotes: true,
-      greeting: true,
-      clock: true,
-      timer: true,
-      goal: true,
-      staticBG: false,
-    },
-    weather: {
+      showLinks: true,
+      showBookmarks: false,
+      showMostVisited: false,
+      showRecentlyVisited: false,
+      showWeather: true,
+      showTodo: true,
+      showQuotes: true,
+      showGreeting: true,
+      showClock: true,
+      showTimer: true,
+      showGoal: true,
+      showStaticBG: false,
       weatherUnits: 'imperial',
       weatherLocation: '',
       setLocationAsDefault: false
-    },
-    clock_timer: {
       clockFormat: '12hr',
       showAM_PM: false,
       timezone: '',
       setTimezoneAsDefault: false,
-      timer: {
-        timerFormat: '12hr',
-        timerInputFormat: 'calendar',
-        saveCountdown: true
-      }
-    },
-    localStorageAvailable: this.storageAvailable(localStorage),
-    sessionStorageAvailable: this.storageAvailable(sessionStorage)
-  };
+      timerFormat: '12hr',
+      timerInputFormat: 'calendar',
+      saveCountdown: true,
+      localStorageAvailable: this.storageAvailable(localStorage),
+      sessionStorageAvailable: this.storageAvailable(sessionStorage)
+    };
+  }
+
   //test for availability of Storage
   storageAvailable(type) {
     const storage = window[type];
