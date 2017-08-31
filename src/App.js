@@ -12,14 +12,23 @@ import Weather from './weather';
 import { Art } from './art';
 
 class App extends Component {
-  preferences = {
-    username: '' ,
-    show: {
-      links: {
-        links: true,
-        bookmarks: false,
-        mostVisited: false,
-        recentlyVisited: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '' ,
+      general: {
+        showLinks: true,
+        showBookmarks: false,
+        showMostVisited: false,
+        showRecentlyVisited: false,
+        showWeather: true,
+        showTodo: true,
+        showQuotes: true,
+        showGreeting: true,
+        showClock: true,
+        showTimer: true,
+        showGoal: true,
+        showStaticBG: false,
       },
       weather: true,
       todo: true,
@@ -98,23 +107,6 @@ class App extends Component {
     this.setState({ localStorageAvailable: this.storageAvailable('localStorage'),
                     sessionStorageAvailable: this.storageAvailable('sessionStorage')
                   });
-  }
-
-  // storage functions
-  store(prop, val) {
-    if (this.state.localStorageAvailable) {
-      const storage = window.localStorage;
-      return storage.setItem(prop, val);
-    }
-    else return;
-  }
-
-  unstore(prop) {
-    if (this.state.localStorageAvailable) {
-      const storage = window.localStorage;
-      return storage.removeItem(prop);
-    }
-    else return;
   }
 
   render() {
