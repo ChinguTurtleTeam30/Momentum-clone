@@ -93,13 +93,19 @@ class App extends Component {
   }
 
   render() {
+    const displayable = this.state.show; //is this a reference to show, or a copy of it?
+    let [mainCenter, topLeft, topRight, bottomLeft, bottomRight, bottomCenter] =
+      Array(3).fill(null);
     return (
       <div className="App">
-        <div className="main">
-          <Clock localStorageAvailable={ this.state.localStorageAvailable }
-                store={ this.store }
-                unstore={ this.unstore }
-          />
+        <div className="container main center">
+          { this.state.show.Clock ? <Clock /> : null }
+          { this.state.show.Timer ? <Timer /> : null }
+          { this.state.show.Goal ?
+            <Goal checkStorage={
+              (key) => this.checkStorage('localStorage', key)
+            }/> :
+            null }
         </div>
         <div className="top left corner">
           <Links />
