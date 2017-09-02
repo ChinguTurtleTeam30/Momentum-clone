@@ -60,10 +60,24 @@ class Timer extends Component {
       <div className="timer">
         <p className="countdown"></p>
         <form className="timer-form">
-          <input type="datetime-local" defaultValue={ this.htmlFormatDate(this.state.endTime) } onChange={ (event) => this.handleChange(event) } />
-          <input id="start-timer" name="start-timer" type="submit" onClick={ this.handleClick }/>
-          <input id="stop-timer" name="stop-timer" type="button"/>
-          <input id="reset-timer" name="reset-timer" type="button"/>
+          <input type="datetime-local"
+                defaultValue={ this.state.endTime }
+                onChange={ (event) => this.handleChange(event) }
+          />
+          <input id="start-timer"
+                name="start-timer"
+                type="submit"
+                onClick={ this.handleClick }/>
+          <input id="stop-timer"
+                name="stop-timer"
+                type="button"
+                value="stop"
+          />
+          <input id="reset-timer"
+                name="reset-timer"
+                type="button"
+                value="reset"
+          />
         </form>
       </div>
     )

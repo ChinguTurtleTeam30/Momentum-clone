@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './clock.css';
 
  function Goal(props) {
    if (!props.goal) {

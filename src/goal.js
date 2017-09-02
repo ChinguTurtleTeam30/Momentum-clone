@@ -34,40 +34,31 @@ export default class Goal extends Component {
     else this.setState({ strikeGoal: false });
   }
 
-  /*componentDidMount() {
-    if (this.props.checkStorage('goal')) {
-      const storage = window.localStorage;
-      this.setState({ goal: storage.getItem('goal') });
-    }
-  }*/
-
   render() {
-    if (!this.state.goal) {
-     return (
-       <form
-         id="setGoal"
-         name="goalForm"
-         onSubmit={ (event) => this.handleSubmit(event) }
-       >
-         <input id="goalInput" name="goalInput" type="text" />
-         <label htmlFor="goalInput">What is your goal?</label>
-       </form>
-     );
-   }
-   else {
-     return (
-       <div className="displayGoal">
-         <input id="goalComplete" name="goalComplete" type="checkbox"
-               value="complete" onChange={ (event) => this.handleCheck(event) }
-         />
-         <span id="goalLine"
-               className={ this.state.strikeGoal ? "strikeGoal" : "" }
-         >{ this.state.goal }</span>
-         <input id="xGoal" name="xGoal" type="button" value="&times;"
-                 onClick={ (event) => this.handleClick(event) }
-         />
-       </div>
-     );
-   }
+   return (
+     <div className="goal">
+       { !this.state.goal ?
+         <form
+           id="setGoal"
+           name="goalForm"
+           onSubmit={ (event) => this.handleSubmit(event) }
+         >
+           <input id="goalInput" name="goalInput" type="text" />
+           <label htmlFor="goalInput">What is your goal?</label>
+         </form> :
+         <div className="displayGoal">
+           <input id="goalComplete" name="goalComplete" type="checkbox"
+                 value="complete" onChange={ (event) => this.handleCheck(event) }
+           />
+           <span id="goalLine"
+                 className={ this.state.strikeGoal ? "strikeGoal" : "" }
+           >{ this.state.goal }</span>
+           <input id="xGoal" name="xGoal" type="button" value="&times;"
+                   onClick={ (event) => this.handleClick(event) }
+           />
+         </div>
+       }
+     </div>
+   );
  }
 }

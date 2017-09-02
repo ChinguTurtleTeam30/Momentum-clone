@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './settings.css';
 
 function SettingsButton(props) {
   if (props.isActive) {
@@ -102,6 +103,25 @@ class SettingsPanel extends Component {
       </div>
     );
   }
+}
+
+function SettingsButton(props) {
+  if (props.isActive) {
+    return (
+      <i
+        tabIndex="0"
+        className="settingsButton fa fa-cog active"
+        onClick={ (event) => props.handleClick(event) }
+      ></i>
+    )
+  }
+  else return (
+    <i
+      tabIndex="0"
+      className="settingsButton fa fa-cog"
+      onClick={ (event) => props.handleClick(event) }
+    ></i>
+  );
 }
 
 class Settings extends Component {
