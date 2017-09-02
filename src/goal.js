@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import './goal.css';
 
-class Goal extends Component {
+export default class Goal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -70,5 +71,3 @@ class Goal extends Component {
    }
  }
 }
-
-export default Goal;
