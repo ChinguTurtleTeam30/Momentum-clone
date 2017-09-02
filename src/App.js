@@ -38,8 +38,12 @@ class App extends Component {
       timerFormat: '12hr',
       timerInputFormat: 'calendar',
       saveCountdown: true,
+      currentTime: new Date(),
+      endTime: null,
+      countdown: 0,
+      timeIsUp: false,
       localStorageAvailable: this.storageAvailable(localStorage),
-      sessionStorageAvailable: this.storageAvailable(sessionStorage)
+      sessionStorageAvailable: this.storageAvailable(sessionStorage),
     };
   }
 
@@ -94,11 +98,41 @@ class App extends Component {
                   });
   }
 
+  /*-------- Refactor Zone ------------
+    These event handlers need rewriting to be widely applicable
+  -------------------------------------*/
+  handleSettingsToggle(event) {
+    console.log(event.target);
+  }
+
+  runClock() {
+    this.clockID = setInterval(() => {
+      this.setState({ currentTime: new Date() })
+    }, 1000);
+  }
+
+  componentDidMount() {
+    this.runClock();
+    if (window.localStorage.getItem('goal')) {
+      this.setState({ goal: window.localStorage.getItem('goal') });
+    }
+  }
+  /*<Center localStorageAvailable={ this.state.localStorageAvailable }
+          handleClick={ (event) => this.handleClick(event) }
+          username={ this.state.username }
+          store={ (key, val) => this.store(key,val) }
+          unstore={ (key) => this.unstore(key) }
+          checkStorage={ (key) => this.checkStorage('localStorage', key) }
+  />*/
+
   render() {
     return (
       <div className="App">
         <div className="container main center">
-          { this.state.show.Clock ? <Clock /> : null }
+          { this.state.show.Clock ? <Clock
+              currentTime={ this.state.currentTime }
+
+            /> : null }
           { this.state.show.Timer ? <Timer /> : null }
           { this.state.show.Goal ? <Goal
               localStorageAvailable={ this.state.localStorageAvailable }
