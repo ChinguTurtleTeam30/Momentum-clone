@@ -104,7 +104,22 @@ class App extends Component {
   handleSettingsToggle(event) {
     console.log(event.target);
   }
+  /*------------------------------------*/
+  // event handlers
+  handleClick(event) {
+    if (event.target.parentNode.className === 'settingsTab') {
+      const setting = event.target.id.match(/[A-Z]{1}[a-z]+/)[0];
+      const curState = this.state.show[setting];
+      console.log(curState);
+      this.setState((prevState) => {
+        const prevShow = prevState.show;
+        Object.assign(prevShow, { [setting]: !prevShow[setting] })
+        return prevShow
+      });
+    }
+  }
 
+  // fcns for Clock
   runClock() {
     this.clockID = setInterval(() => {
       this.setState({ currentTime: new Date() })
@@ -131,7 +146,6 @@ class App extends Component {
         <div className="container main center">
           { this.state.show.Clock ? <Clock
               currentTime={ this.state.currentTime }
-
             /> : null }
           { this.state.show.Timer ? <Timer /> : null }
           { this.state.show.Goal ? <Goal
@@ -151,7 +165,10 @@ class App extends Component {
                 unstore={ (key) => this.unstore(key) }
           />
         </div>
-        <Settings />
+        <Settings handleClick={ (event) => this.handleClick(event) }
+                  localStorageAvailable={ this.state.localStorageAvailable }
+                  sessionStorageAvailable={ this.state.sessionStorageAvailable }
+        />
         <Art />
       </div>
     );

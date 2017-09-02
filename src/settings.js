@@ -11,11 +11,20 @@ function SettingsButton(props) {
     )
   }
   return (
-    <i
-      tabIndex="0"
-      className="fa fa-cog"
-      onClick={ (event) => props.handleClick(event) }
-    ></i>
+    <ul id="general" className="settingsTab">
+      <li id="showClock"
+          onClick={ (event) => props.handleClick(event) }
+          className="fa fa-toggle-on">toggle Clock
+      </li>
+      <li id="showTimer"
+          onClick={ (event) => props.handleClick(event) }
+          className="fa fa-toggle-on">toggle Timer
+      </li>
+      <li id="showGoal"
+          onClick={ (event) => props.handleClick(event) }
+          className="fa fa-toggle-off">toggle Goal
+      </li>
+    </ul>
   );
 }
 
@@ -87,7 +96,9 @@ class SettingsPanel extends Component {
           { this.renderSettingsHeading('clock & timer') }
           { this.renderSettingsHeading('weather') }
         </ul>
-        <SettingsTab />
+        <SettingsTab
+          handleClick={ (event) => this.props.handleClick(event) }
+        />
       </div>
     );
   }
@@ -117,7 +128,11 @@ class Settings extends Component {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
-          <SettingsPanel tabOpen={ this.state.tabOpen } handleClickTab={ (event) => this.selectSettingsHeading(event) } />
+          <SettingsPanel
+            tabOpen={ this.state.tabOpen }
+            handleClickTab={ (event) => this.selectSettingsCategory(event) }
+            handleClick={ (event) => this.props.handleClick(event) }
+          />
           <SettingsButton
             handleClick={ (event) => this.toggleSettingsPanel(event) }
             isActive={ this.state.panelOpen }
