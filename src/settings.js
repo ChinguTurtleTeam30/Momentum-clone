@@ -6,10 +6,14 @@ function SettingsToggle(props) {
     <li id={ "show" + props.toggleFor }
         data-settingsrole="toggle"
         data-togglefor={ props.toggleFor }
+        data-toggleon={ props.toggleon }
         onClick={ (event) => props.handleClick(event) }
         className="settingsToggle">
       <span className="settingsToggleLabel">{ "show " + props.toggleFor }</span>
-      <i className="fa fa-toggle-on toggleIcon toggleOn"></i>
+      <i className={ "toggleIcon fa" +
+                      (props.activeWidgets[props.toggleFor] ?
+                        " fa-toggle-on toggleOn" : " fa-toggle-off toggleOff")
+                   }></i>
     </li>
   );
 }
@@ -17,13 +21,13 @@ function SettingsToggle(props) {
 function SettingsTab(props) {
   return (
     <ul id="general" className="settingsTab">
-      <SettingsToggle toggleFor="Clock"
+      <SettingsToggle toggleFor="Clock" activeWidgets={ props.activeWidgets }
           handleClick={ (event) => props.handleClick(event) }
       />
-      <SettingsToggle toggleFor="Timer"
+      <SettingsToggle toggleFor="Timer" activeWidgets={ props.activeWidgets }
           handleClick={ (event) => props.handleClick(event) }
       />
-      <SettingsToggle toggleFor="Goal"
+      <SettingsToggle toggleFor="Goal" activeWidgets={ props.activeWidgets }
           handleClick={ (event) => props.handleClick(event) }
       />
     </ul>
@@ -100,6 +104,7 @@ class SettingsPanel extends Component {
         </ul>
         <SettingsTab
           handleClick={ (event) => this.props.handleClick(event) }
+          activeWidgets={ this.props.activeWidgets }
         />
       </div>
     );
@@ -154,6 +159,7 @@ class Settings extends Component {
             tabOpen={ this.state.tabOpen }
             handleClickTab={ (event) => this.selectSettingsCategory(event) }
             handleClick={ (event) => this.props.handleClick(event) }
+            activeWidgets={ this.props.activeWidgets }
           />
           <SettingsButton
             handleClick={ (event) => this.toggleSettingsPanel(event) }
