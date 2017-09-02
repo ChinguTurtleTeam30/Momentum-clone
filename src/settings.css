@@ -106,11 +106,14 @@ ul.settingsNav {
   border-right: 2px solid darkGrey;
 }
 
-.settingsNav li {
+.settingsNav li, .settingsTab li {
   display: list-item;
   margin: .125rem;
-  font-size: 1.05rem;
   cursor: pointer;
+}
+
+.settingsNav li {
+  font-size: 1.05rem;
 }
 
 .settingsNav li.tabOpen {
@@ -131,4 +134,17 @@ ul.settingsTab {
 .settingsTab li {
   display: list-item;
 }
+<<<<<<< HEAD
 */
+=======
+
+.settingsToggleLabel {
+  font-weight: lighter;
+  font-size: normal;
+  margin-right: 1rem;
+}
+
+.toggleIcon {
+  display: inline;
+}
+>>>>>>> d9b470d... settingsToggle now uses data- attribute to toggle components

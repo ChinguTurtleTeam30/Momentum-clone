@@ -96,19 +96,17 @@ class App extends Component {
                   });
   }
 
-  /*-------- Refactor Zone ------------
-    These event handlers need rewriting to be widely applicable
-  -------------------------------------*/
-  handleSettingsToggle(event) {
-    console.log(event.target);
-  }
-  /*------------------------------------*/
   // event handlers
   handleClick(event) {
-    if (event.target.parentNode.className === 'settingsTab') {
-      const setting = event.target.id.match(/[A-Z]{1}[a-z]+/)[0];
-      const curState = this.state.show[setting];
-      console.log(curState);
+    // currently uses the parentEl, which seems cheesy
+    // find a way to make click target desired element
+    if (event.target.dataset.settingsrole === 'toggle' ||
+        event.target.parentElement.dataset.settingsrole === 'toggle') {
+      const target = event.target.dataset.togglefor ? event.target :
+                    event.target.parentElement;
+      const setting = target.dataset.togglefor;
+      console.log(setting);
+      //  /[A-Z]{1}[a-z]+/)[0];
       this.setState((prevState) => {
         const prevShow = prevState.show;
         Object.assign(prevShow, { [setting]: !prevShow[setting] })

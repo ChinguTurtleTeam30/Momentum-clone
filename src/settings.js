@@ -1,30 +1,31 @@
 import React, { Component } from 'react';
 import './settings.css';
 
-function SettingsButton(props) {
-  if (props.isActive) {
-    return (
-      <i
-        tabIndex="0"
-        className="fa fa-cog active"
+function SettingsToggle(props) {
+  return (
+    <li id={ "show" + props.toggleFor }
+        data-settingsrole="toggle"
+        data-togglefor={ props.toggleFor }
         onClick={ (event) => props.handleClick(event) }
-      ></i>
-    )
-  }
+        className="settingsToggle">
+      <span className="settingsToggleLabel">{ "show " + props.toggleFor }</span>
+      <i className="fa fa-toggle-on toggleIcon toggleOn"></i>
+    </li>
+  );
+}
+
+function SettingsTab(props) {
   return (
     <ul id="general" className="settingsTab">
-      <li id="showClock"
-          onClick={ (event) => props.handleClick(event) }
-          className="fa fa-toggle-on">toggle Clock
-      </li>
-      <li id="showTimer"
-          onClick={ (event) => props.handleClick(event) }
-          className="fa fa-toggle-on">toggle Timer
-      </li>
-      <li id="showGoal"
-          onClick={ (event) => props.handleClick(event) }
-          className="fa fa-toggle-off">toggle Goal
-      </li>
+      <SettingsToggle toggleFor="Clock"
+          handleClick={ (event) => props.handleClick(event) }
+      />
+      <SettingsToggle toggleFor="Timer"
+          handleClick={ (event) => props.handleClick(event) }
+      />
+      <SettingsToggle toggleFor="Goal"
+          handleClick={ (event) => props.handleClick(event) }
+      />
     </ul>
   );
 }
@@ -110,7 +111,7 @@ function SettingsButton(props) {
     return (
       <i
         tabIndex="0"
-        className="settingsButton fa fa-cog active"
+        className="settingsButton active fa fa-cog"
         onClick={ (event) => props.handleClick(event) }
       ></i>
     )
@@ -141,6 +142,7 @@ class Settings extends Component {
   }
 
   toggleSettingsPanel(event) {
+    console.log(event.target);
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
 
