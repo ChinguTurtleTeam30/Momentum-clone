@@ -69,6 +69,31 @@ class App extends Component {
     }
   }
 
+  // storage functions
+  store(prop, val) {
+    if (this.state.localStorageAvailable) {
+      const storage = window.localStorage;
+      return storage.setItem(prop, val ? val : this.state[prop]);
+    }
+    else return;
+  }
+
+  unstore(prop) {
+    if (this.state.localStorageAvailable) {
+      const storage = window.localStorage;
+      return storage.removeItem(prop);
+    }
+    else return;
+  }
+
+  checkStorage(type, key) {
+    const storage = window[type];
+    // this is problematic because key: val might be 0, null, etc.
+    return Boolean(storage.getItem(key));
+  }
+
+  // checking for availability of storage only seems to work with compWillMt()
+  // not within the constructor
   componentWillMount() {
     this.setState({ localStorageAvailable: this.storageAvailable('localStorage'),
                     sessionStorageAvailable: this.storageAvailable('sessionStorage')
@@ -93,18 +118,16 @@ class App extends Component {
   }
 
   render() {
-    const displayable = this.state.show; //is this a reference to show, or a copy of it?
-    let [mainCenter, topLeft, topRight, bottomLeft, bottomRight, bottomCenter] =
-      Array(3).fill(null);
     return (
       <div className="App">
         <div className="container main center">
           { this.state.show.Clock ? <Clock /> : null }
           { this.state.show.Timer ? <Timer /> : null }
-          { this.state.show.Goal ?
-            <Goal checkStorage={
-              (key) => this.checkStorage('localStorage', key)
-            }/> :
+          { this.state.show.Goal ? <Goal
+              localStorageAvailable={ this.state.localStorageAvailable }
+              store={ (key, val) => this.store(key,val) }
+              unstore={ (key, val) => this.unstore(key) }
+            /> :
             null }
         </div>
         <div className="top left corner">
