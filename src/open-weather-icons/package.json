@@ -1,0 +1,65 @@
+{
+  "_args": [
+    [
+      "open-weather-icons@0.0.7",
+      "/Users/ckingbailey/Sites/git/momentum-clone"
+    ]
+  ],
+  "_from": "open-weather-icons@0.0.7",
+  "_id": "open-weather-icons@0.0.7",
+  "_inBundle": false,
+  "_integrity": "sha512-0Wx03HROSKh7MbN1VGFv2NwPhLTzgjTdQqiMw1YrvPEz1LZA+tUzAOezm05k/Wj06qX0c1O3yr5337o3ClvsZA==",
+  "_location": "/open-weather-icons",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "open-weather-icons@0.0.7",
+    "name": "open-weather-icons",
+    "escapedName": "open-weather-icons",
+    "rawSpec": "0.0.7",
+    "saveSpec": null,
+    "fetchSpec": "0.0.7"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/open-weather-icons/-/open-weather-icons-0.0.7.tgz",
+  "_spec": "0.0.7",
+  "_where": "/Users/ckingbailey/Sites/git/momentum-clone",
+  "author": {
+    "name": "Ivan Vilanculo"
+  },
+  "bugs": {
+    "url": "https://github.com/isneezy/open-weather-icons/issues"
+  },
+  "description": "Weather icons font designed specialy for the Open Weather Map API",
+  "devDependencies": {
+    "webpack": "^2.3.3",
+    "webpack-webfont": "0.0.1-alpha.7"
+  },
+  "homepage": "https://github.com/isneezy/open-weather-icons#readme",
+  "keywords": [
+    "Open",
+    "weather",
+    "map",
+    "api",
+    "font",
+    "icon",
+    "symbols",
+    "owfont",
+    "font-awesome"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "open-weather-icons",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isneezy/open-weather-icons.git"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "test": "test"
+  },
+  "version": "0.0.7"
+}

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+// can we put all the css in one folder and have App import the whole folder?
 import './App.css';
 import './clock.css';
+import './weather.css';
+import './open-weather-icons/dist/css/open-weather-icons.css';
+// same question for our separate components:
+// one folder, one import?
 import Clock from './clock';
-//import Timer from './timer';
+import Weather from './weather';
 
 class App extends Component {
   //test for availability of Storage
@@ -37,6 +42,7 @@ class App extends Component {
         <div className="main">
           <Clock localStorageAvailable={ this.state.locStorAvail }/>
         </div>
+        <Weather />
       </div>
     );
   }
