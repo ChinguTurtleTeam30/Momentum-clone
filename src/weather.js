@@ -112,7 +112,7 @@ class Weather extends Component {
     return (
       <div className="weather corner top right">
         <p className="weatherData">
-          <i className={ this.state.icon }></i>
+          <i className={ "weather-icon " + this.state.icon }></i>
           <span className="temperature">
             { this.state.temperature + this.state.degrees }
           </span>

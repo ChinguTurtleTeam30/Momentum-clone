@@ -8,9 +8,10 @@
   margin: 0;
 }
 
-.weather i.owi {
+.weather i.weather-icon.owi {
   display: inline;
   margin: .25rem;
+  vertical-align: text-top;
 }
 
 .weather .temperature {
