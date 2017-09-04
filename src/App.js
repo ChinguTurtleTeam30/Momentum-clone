@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './clock.css';
 import './weather.css';
-import '../node_modules/open-weather-icons/dist/css/open-weather-icons.css';
+import './open-weather-icons/dist/css/open-weather-icons.css';
 // same question for our separate components:
 // one folder, one import?
 import Clock from './clock';
