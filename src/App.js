@@ -13,31 +13,33 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '' ,
-      show: {
-        Links: false,
-        Bookmarks: false,
-        MostVisited: false,
-        RecentlyVisited: false,
-        Weather: true,
-        Todo: false,
-        Quote: false,
-        Greeting: false,
-        Clock: true,
-        Timer: true,
-        Goal: true,
+      settings: {
+        username: '' ,
+        show: {
+          Links: false,
+          Bookmarks: false,
+          MostVisited: false,
+          RecentlyVisited: false,
+          Weather: true,
+          Todo: false,
+          Quote: false,
+          Greeting: false,
+          Clock: true,
+          Timer: true,
+          Goal: true,
+          staticBG: false,
+        },
+        weatherUnits: 'imperial',
+        weatherLocation: '',
+        setLocationAsDefault: false,
+        clockFormat: '12hr',
+        showAM_PM: false,
+        timezone: '',
+        setTimezoneAsDefault: false,
+        timerFormat: '12hr',
+        timerInputFormat: 'calendar',
+        saveCountdown: true,
       },
-      staticBG: false,
-      weatherUnits: 'imperial',
-      weatherLocation: '',
-      setLocationAsDefault: false
-      clockFormat: '12hr',
-      showAM_PM: false,
-      timezone: '',
-      setTimezoneAsDefault: false,
-      timerFormat: '12hr',
-      timerInputFormat: 'calendar',
-      saveCountdown: true,
       currentTime: new Date(),
       endTime: null,
       countdown: 0,
@@ -100,18 +102,19 @@ class App extends Component {
 
   // event handlers
   handleClick(event) {
-    // currently uses the parentEl, which seems cheesy
+    // currently uses the parentEl, which seems clumsy and fraught
     // find a way to make click target desired element
     if (event.target.dataset.settingsrole === 'toggle' ||
         event.target.parentElement.dataset.settingsrole === 'toggle') {
       const target = event.target.dataset.togglefor ? event.target :
-                    event.target.parentElement;
-      const setting = target.dataset.togglefor;
+                    event.target.parentElement,
+            setting = target.dataset.togglefor;
       //console.log(setting);
       this.setState((prevState) => {
-        const prevShow = prevState.show;
-        Object.assign(prevShow, { [setting]: !prevShow[setting] })
-        return prevShow
+        const prevSettings = setting in prevState.settings ?
+          prevState.settings : prevState.settings.show;
+        Object.assign(prevSettings, { [setting]: !prevSettings[setting] });
+        return prevSettings;
       });
     }
   }
@@ -141,11 +144,11 @@ class App extends Component {
     return (
       <div className="App">
         <div className="main center">
-          { this.state.show.Clock ? <Clock
+          { this.state.settings.show.Clock ? <Clock
               currentTime={ this.state.currentTime }
             /> : null }
-          { this.state.show.Timer ? <Timer /> : null }
-          { this.state.show.Goal ? <Goal
+          { this.state.settings.show.Timer ? <Timer /> : null }
+          { this.state.settings.show.Goal ? <Goal
               localStorageAvailable={ this.state.localStorageAvailable }
               store={ (key, val) => this.store(key,val) }
               unstore={ (key, val) => this.unstore(key) }

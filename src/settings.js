@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import './settings.css';
 
 function SettingsToggle(props) {
+  const toggleIsOn = props.togglefor in props.settingsState ?
+    props.settingsState[props.togglefor] :
+    props.settingsState.show[props.togglefor];
   return (
-    <li id={ "show" + props.toggleFor }
-        data-settingsrole="toggle"
-        data-togglefor={ props.toggleFor }
-        data-toggleon={ props.toggleon }
+    <li data-settingsrole="toggle"
+        data-togglefor={ props.togglefor }
+        //data-toggleOn={ props.toggleOn }
         onClick={ (event) => props.handleClick(event) }
         className="settingsToggle">
-      <span className="settingsToggleLabel">{ "show " + props.toggleFor }</span>
+      <span className="settingsToggleLabel">{ "show " + props.togglefor }</span>
       <i className={ "toggleIcon fa" +
-                      (props.activeWidgets[props.toggleFor] ?
+                      (props.settingsState[props.togglefor] ?
                         " fa-toggle-on toggleOn" : " fa-toggle-off toggleOff")
                    }></i>
     </li>
@@ -19,18 +21,41 @@ function SettingsToggle(props) {
 }
 
 function SettingsTab(props) {
-  return (
+  // different returns for the different tabOpen values
+  if (props.tabOpen === 'clock & timer') {
+    return (
+      <ul id="clock & timer" className="settingsTab">
+        <SettingsToggle settingsState={ props.settingsState } togglefor="clockFormat" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="showAM_PM" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="timezone" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="setTimezoneAsDefault" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="timerFormat" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="timerInputFormat" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="saveCountdown" />
+      </ul>
+    );
+  }
+  else if (props.tabOpen === 'weather') {
+    return (
+      <ul id="weather" className="settingsTab">
+        <SettingsToggle settingsState={ props.settingsState } togglefor="weatherUnits" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="weatherLocation" />
+        <SettingsToggle settingsState={ props.settingsState } togglefor="setLocationAsDefault" />
+      </ul>
+    );
+  }
+  else return (
     <ul id="general" className="settingsTab">
-      <SettingsToggle toggleFor="Clock" activeWidgets={ props.activeWidgets }
+      <SettingsToggle togglefor="Clock" settingsState={ props.settingsState }
           handleClick={ (event) => props.handleClick(event) }
       />
-      <SettingsToggle toggleFor="Timer" activeWidgets={ props.activeWidgets }
+      <SettingsToggle togglefor="Timer" settingsState={ props.settingsState }
           handleClick={ (event) => props.handleClick(event) }
       />
-      <SettingsToggle toggleFor="Goal" activeWidgets={ props.activeWidgets }
+      <SettingsToggle togglefor="Goal" settingsState={ props.settingsState }
           handleClick={ (event) => props.handleClick(event) }
       />
-      <SettingsToggle toggleFor="Weather" activeWidgets={ props.activeWidgets }
+      <SettingsToggle togglefor="Weather" settingsState={ props.settingsState }
           handleClick={ (event) => props.handleClick(event) }
       />
     </ul>
@@ -41,8 +66,8 @@ function SettingsHeading(props) {
   if (props.tabOpen) {
     return (
       <li
-        onClick={ (event) => props.onClick(event) }
-        name={ props.name }
+        onClick={ (event) => props.handleClick(event) }
+        data-settingsrole="selectSettingsCategory"
         id={ props.name }
         className="tabOpen"
       >
@@ -53,8 +78,8 @@ function SettingsHeading(props) {
   else {
     return (
       <li
-        onClick={ (event) => props.onClick(event) }
-        name={ props.name }
+        onClick={ (event) => props.handleClick(event) }
+        data-settingsrole="selectSettingsCategory"
         id={ props.name }
       >
         { props.name }
@@ -77,13 +102,33 @@ function SettingsTab(props) {
 }
 
 class SettingsPanel extends Component {
-  renderSettingsHeading(name) {
-    if (this.props.tabOpen === name) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tabOpen: 'general',
+    }
+  }
+
+  handleClick(event) {
+    const target = event.target,
+          action = target.dataset.settingsrole;
+    console.log(target, ':', action);
+    if (action === 'selectSettingsCategory') {
+      if (this.state.tabOpen !== target.id) { // try [] instead
+        return this.setState({ tabOpen: target.id });
+      }
+      else return;
+    }
+    else return;
+  }
+
+  renderSettingsCategory(name) {
+    if (this.state.tabOpen === name) {
       return (
         <SettingsHeading
           name={ name }
           tabOpen
-          onClick={ (event) => this.props.handleClickTab(event)}
+          handleClick={ (event) => this.handleClick(event) }
         />
       );
     }
@@ -91,7 +136,7 @@ class SettingsPanel extends Component {
       return (
         <SettingsHeading
           name={ name }
-          onClick={ (event) => this.props.handleClickTab(event)}
+          handleClick={ (event) => this.handleClick(event) }
         />
       );
     }
@@ -107,7 +152,8 @@ class SettingsPanel extends Component {
         </ul>
         <SettingsTab
           handleClick={ (event) => this.props.handleClick(event) }
-          activeWidgets={ this.props.activeWidgets }
+          tabOpen={ this.state.tabOpen }
+          settingsState={ this.props.settingsState }
         />
       </div>
     );
@@ -119,7 +165,9 @@ function SettingsButton(props) {
     return (
       <i
         tabIndex="0"
-        className="settingsButton active fa fa-cog"
+        className="toggleSettingsPanelOpen active fa fa-cog"
+        id="toggleSettingsPanelOpen"
+        data-settingsrole="toggleSettingsPanelOpen"
         onClick={ (event) => props.handleClick(event) }
       ></i>
     )
@@ -127,7 +175,9 @@ function SettingsButton(props) {
   else return (
     <i
       tabIndex="0"
-      className="settingsButton fa fa-cog"
+      className="toggleSettingsPanelOpen fa fa-cog"
+      id="toggleSettingsPanelOpen"
+      data-settingsrole="toggleSettingsPanelOpen"
       onClick={ (event) => props.handleClick(event) }
     ></i>
   );
@@ -141,7 +191,20 @@ class Settings extends Component {
     }
   }
 
-  selectSettingsHeading(event) {
+  handleClick(event) {
+    const target = event.target,
+          action = target.dataset.settingsrole;
+    if (action === 'toggleSettingsPanelOpen') {
+      console.log(target);
+      return this.setState({ panelOpen: !this.state.panelOpen });
+    }
+    else return;
+  }
+
+/*---------- Refactor Zone -------------
+make these functions more generally applicable
+--------------------------------------*/
+  selectSettingsCategory(event) {
     const target = event.target.id;
     if (!this.state.hasOwnProperty('tabOpen')) {
       return this.setState({ tabOpen: target });
@@ -153,16 +216,15 @@ class Settings extends Component {
     //console.log(event.target);
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
+/*----------------------------------------*/
 
   render() {
     if (this.state.panelOpen) {
       return (
         <div className="settings bottom left corner">
           <SettingsPanel
-            tabOpen={ this.state.tabOpen }
-            handleClickTab={ (event) => this.selectSettingsCategory(event) }
             handleClick={ (event) => this.props.handleClick(event) }
-            activeWidgets={ this.props.activeWidgets }
+            settingsState={ this.props.settingsState }
           />
           <SettingsButton
             handleClick={ (event) => this.toggleSettingsPanel(event) }
