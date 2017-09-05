@@ -30,6 +30,9 @@ function SettingsTab(props) {
       <SettingsToggle toggleFor="Goal" activeWidgets={ props.activeWidgets }
           handleClick={ (event) => props.handleClick(event) }
       />
+      <SettingsToggle toggleFor="Weather" activeWidgets={ props.activeWidgets }
+          handleClick={ (event) => props.handleClick(event) }
+      />
     </ul>
   );
 }
@@ -147,7 +150,7 @@ class Settings extends Component {
   }
 
   toggleSettingsPanel(event) {
-    console.log(event.target);
+    //console.log(event.target);
     return this.setState({ panelOpen: !this.state.panelOpen });
   }
 

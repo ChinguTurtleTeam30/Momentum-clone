@@ -14,18 +14,20 @@ class App extends Component {
     super(props);
     this.state = {
       username: '' ,
-      showLinks: true,
-      showBookmarks: false,
-      showMostVisited: false,
-      showRecentlyVisited: false,
-      showWeather: true,
-      showTodo: true,
-      showQuotes: true,
-      showGreeting: true,
-      showClock: true,
-      showTimer: true,
-      showGoal: true,
-      showStaticBG: false,
+      show: {
+        Links: false,
+        Bookmarks: false,
+        MostVisited: false,
+        RecentlyVisited: false,
+        Weather: true,
+        Todo: false,
+        Quote: false,
+        Greeting: false,
+        Clock: true,
+        Timer: true,
+        Goal: true,
+      },
+      staticBG: false,
       weatherUnits: 'imperial',
       weatherLocation: '',
       setLocationAsDefault: false
@@ -105,8 +107,7 @@ class App extends Component {
       const target = event.target.dataset.togglefor ? event.target :
                     event.target.parentElement;
       const setting = target.dataset.togglefor;
-      console.log(setting);
-      //  /[A-Z]{1}[a-z]+/)[0];
+      //console.log(setting);
       this.setState((prevState) => {
         const prevShow = prevState.show;
         Object.assign(prevShow, { [setting]: !prevShow[setting] })
@@ -164,6 +165,7 @@ class App extends Component {
         <Settings handleClick={ (event) => this.handleClick(event) }
                   localStorageAvailable={ this.state.localStorageAvailable }
                   sessionStorageAvailable={ this.state.sessionStorageAvailable }
+                  activeWidgets={ this.state.show }
         />
         <Art />
       </div>
