@@ -42,11 +42,19 @@ function SettingsRadio(props) {
         onClick={ (event) => props.handleClick(event) }
     >
       <span className="settingsToggleLabel">{ props.label }</span>
-      { options.map(function(item) {
+      { options.map(function(item, i) {
         return (
           item === active ?
-            <span className="settingsListOption settingActive">{ item }</span> :
-            <span className="settingsListOption">{ item }</span>
+            <span className="settingsListOption settingActive"
+                  key={ props.togglefor + "option" + i }
+            >
+              { item }
+            </span> :
+            <span className="settingsListOption"
+                  key={ props.togglefor + "option" + i }
+            >
+              { item }
+            </span>
         )
       }) }
     </li>
@@ -79,7 +87,7 @@ function SettingsTab(props) {
           <SettingsRadio settingsState={ props.settingsState }
                         togglefor={ setting }
                         label={ text && typeof text !== 'object' ? text : setting }
-                        options={ props.options }
+                        options={ options }
                         handleClick={ (event) => props.handleClick(event) }
           /> :
           type === 'bool' ?
@@ -94,9 +102,9 @@ function SettingsTab(props) {
   if (props.tabOpen === 'clock & timer') {
     return (
       <ul id="clock & timer" className="settingsTab">
-        { renderSettingChooser('list', 'clockFormat', 'clock format') }
+        { renderSettingChooser('list', 'clockFormat', 'clock format', ['12hr', '24hr']) }
         { renderSettingChooser('bool', 'showAM_PM', 'show am/pm') }
-        { renderSettingChooser('search', 'timezone', 'timezone') }
+        { renderSettingChooser('search', 'timezone') }
         <SettingsToggle settingsState={ props.settingsState } togglefor="setTimezoneAsDefault" />
         <SettingsToggle settingsState={ props.settingsState } togglefor="timerFormat" />
         <SettingsToggle settingsState={ props.settingsState } togglefor="timerInputFormat" />
