@@ -31,7 +31,10 @@ function SettingsToggle(props) {
 }
 
 function SettingsRadio(props) {
-  const options = props.options || ['itemA', 'itemB'];
+  const options = props.options || ['itemA', 'itemB'],
+        active = props.togglefor in props.settingsState ? props.settingsState[props.togglefor] :
+                  props.togglefor in props.settingState.show ? props.settingState.show[props.togglefor] :
+                  null;
   return (
     <li className="settingsToggle" //subject to change
         data-settingsrole="toggle" //subject to change
@@ -39,8 +42,12 @@ function SettingsRadio(props) {
         onClick={ (event) => props.handleClick(event) }
     >
       <span className="settingsToggleLabel">{ props.label }</span>
-      { props.options.map(function(item) {
-        return <span className="settingsListOption">{ item }</span>
+      { options.map(function(item) {
+        return (
+          item === active ?
+            <span className="settingsListOption settingActive">{ item }</span> :
+            <span className="settingsListOption">{ item }</span>
+        )
       }) }
     </li>
   );
@@ -62,11 +69,25 @@ function SettingsSearchable(props) {
 function SettingsTab(props) {
   function renderSettingChooser(type, setting, text, options) {
     return (
-      <SettingsToggle settingsState={ props.settingsState }
-                      togglefor={ setting }
-                      label={ text && typeof text !== 'object' ? text : setting }
-                      toggleType={ type }
-      />
+      type === 'search' ?
+        <SettingsSearchable settingsState={ props.settingsState }
+                            togglefor={ setting }
+                            label={ text && typeof text !== 'object' ? text : setting }
+                            handleClick={ (event) => props.handleClick(event) }
+        /> :
+        type === 'list' ?
+          <SettingsRadio settingsState={ props.settingsState }
+                        togglefor={ setting }
+                        label={ text && typeof text !== 'object' ? text : setting }
+                        options={ props.options }
+                        handleClick={ (event) => props.handleClick(event) }
+          /> :
+          type === 'bool' ?
+            <SettingsToggle settingsState={ props.settingsState }
+                            togglefor={ setting }
+                            label={ text && typeof text !== 'object' ? text : setting }
+                            handleClick={ (event) => props.handleClick(event) }
+            /> : null
     );
   }
   // different returns for the different tabOpen values
