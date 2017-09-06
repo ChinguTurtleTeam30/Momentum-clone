@@ -2,32 +2,80 @@ import React, { Component } from 'react';
 import './settings.css';
 
 function SettingsToggle(props) {
-  const toggleIsOn = props.togglefor in props.settingsState ?
-    props.settingsState[props.togglefor] :
-    props.settingsState.show[props.togglefor];
+  const bool = props.toggleType === 'bool' ?
+    props.togglefor in props.settingsState ?
+      props.settingsState[props.togglefor] :
+      props.settingsState.show[props.togglefor] :
+    null;
   return (
     <li data-settingsrole="toggle"
         data-togglefor={ props.togglefor }
         //data-toggleOn={ props.toggleOn }
         onClick={ (event) => props.handleClick(event) }
         className="settingsToggle">
-      <span className="settingsToggleLabel">{ "show " + props.togglefor }</span>
-      <i className={ "toggleIcon fa" +
-                      (props.settingsState[props.togglefor] ?
-                        " fa-toggle-on toggleOn" : " fa-toggle-off toggleOff")
-                   }></i>
+      <span className="settingsToggleLabel">{ props.label }</span>
+      { props.toggleType === 'bool' ?
+          <i className={ "toggleIcon fa" + ( bool ?
+                        " fa-toggle-on boolToggleOn" :
+                        " fa-toggle-off boolToggleOff" )
+                        }
+          ></i> :
+          props.toggleType === 'list' ?
+            <span>itemA | itemB</span> :
+            props.toggleType === 'search' ?
+              <input type="text" /> :
+        <span>Where's the option, bub?</span>
+      }
     </li>
   );
 }
 
+function SettingsRadio(props) {
+  const options = props.options || ['itemA', 'itemB'];
+  return (
+    <li className="settingsToggle" //subject to change
+        data-settingsrole="toggle" //subject to change
+        data-togglefor={ props.togglefor } //that prop name is bad
+        onClick={ (event) => props.handleClick(event) }
+    >
+      <span className="settingsToggleLabel">{ props.label }</span>
+      { props.options.map(function(item) {
+        return <span className="settingsListOption">{ item }</span>
+      }) }
+    </li>
+  );
+}
+
+function SettingsSearchable(props) {
+  return(
+    <li className="settingsToggle" //should be changed
+        data-settingsrole="toggle" //should be changed
+        data-togglefor={ props.togglefor } //that's a bad prop name
+        onClick={ (event) => props.handleClick(event) }
+    >
+      <span className="settingsToggleLabel">{ props.label }</span>
+      <input type="text" />
+    </li>
+  )
+}
+
 function SettingsTab(props) {
+  function renderSettingChooser(type, setting, text, options) {
+    return (
+      <SettingsToggle settingsState={ props.settingsState }
+                      togglefor={ setting }
+                      label={ text && typeof text !== 'object' ? text : setting }
+                      toggleType={ type }
+      />
+    );
+  }
   // different returns for the different tabOpen values
   if (props.tabOpen === 'clock & timer') {
     return (
       <ul id="clock & timer" className="settingsTab">
-        <SettingsToggle settingsState={ props.settingsState } togglefor="clockFormat" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="showAM_PM" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="timezone" />
+        { renderSettingChooser('list', 'clockFormat', 'clock format') }
+        { renderSettingChooser('bool', 'showAM_PM', 'show am/pm') }
+        { renderSettingChooser('search', 'timezone', 'timezone') }
         <SettingsToggle settingsState={ props.settingsState } togglefor="setTimezoneAsDefault" />
         <SettingsToggle settingsState={ props.settingsState } togglefor="timerFormat" />
         <SettingsToggle settingsState={ props.settingsState } togglefor="timerInputFormat" />
@@ -112,7 +160,6 @@ class SettingsPanel extends Component {
   handleClick(event) {
     const target = event.target,
           action = target.dataset.settingsrole;
-    console.log(target, ':', action);
     if (action === 'selectSettingsCategory') {
       if (this.state.tabOpen !== target.id) { // try [] instead
         return this.setState({ tabOpen: target.id });
