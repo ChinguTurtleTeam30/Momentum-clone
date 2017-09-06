@@ -7,6 +7,7 @@ import './open-weather-icons/dist/css/open-weather-icons.css';
 // same question for our separate components:
 // one folder, one import?
 import Clock from './clock';
+import Todo from './todo';
 import Weather from './weather';
 
 class App extends Component {
@@ -43,6 +44,9 @@ class App extends Component {
           <Clock localStorageAvailable={ this.state.locStorAvail }/>
         </div>
         <Weather />
+        <div className="bottom right corner">
+          <Todo />
+        </div>
       </div>
     );
   }
