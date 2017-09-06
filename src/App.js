@@ -37,7 +37,7 @@ class App extends Component {
         timezone: '',
         setTimezoneAsDefault: false,
         timerFormat: '12hr',
-        timerInputFormat: 'calendar',
+        timerInputType: 'calendar',
         saveCountdown: true,
       },
       currentTime: new Date(),

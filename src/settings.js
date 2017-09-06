@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import './settings.css';
 
 function SettingsToggle(props) {
-  const bool = props.toggleType === 'bool' ?
-    props.togglefor in props.settingsState ?
+  const toggleIsOn = props.togglefor in props.settingsState ?
       props.settingsState[props.togglefor] :
-      props.settingsState.show[props.togglefor] :
-    null;
+      props.settingsState.show[props.togglefor];
   return (
     <li data-settingsrole="toggle"
         data-togglefor={ props.togglefor }
@@ -14,18 +12,11 @@ function SettingsToggle(props) {
         onClick={ (event) => props.handleClick(event) }
         className="settingsToggle">
       <span className="settingsToggleLabel">{ props.label }</span>
-      { props.toggleType === 'bool' ?
-          <i className={ "toggleIcon fa" + ( bool ?
+        <i className={ "toggleIcon fa" + ( toggleIsOn ?
                         " fa-toggle-on boolToggleOn" :
                         " fa-toggle-off boolToggleOff" )
                         }
-          ></i> :
-          props.toggleType === 'list' ?
-            <span>itemA | itemB</span> :
-            props.toggleType === 'search' ?
-              <input type="text" /> :
-        <span>Where's the option, bub?</span>
-      }
+        ></i>
     </li>
   );
 }
@@ -47,14 +38,10 @@ function SettingsRadio(props) {
           item === active ?
             <span className="settingsListOption settingActive"
                   key={ props.togglefor + "option" + i }
-            >
-              { item }
-            </span> :
+            >{ item }</span> :
             <span className="settingsListOption"
                   key={ props.togglefor + "option" + i }
-            >
-              { item }
-            </span>
+            >{ item }</span>
         )
       }) }
     </li>
@@ -104,37 +91,40 @@ function SettingsTab(props) {
       <ul id="clock & timer" className="settingsTab">
         { renderSettingChooser('list', 'clockFormat', 'clock format', ['12hr', '24hr']) }
         { renderSettingChooser('bool', 'showAM_PM', 'show am/pm') }
-        { renderSettingChooser('search', 'timezone') }
-        <SettingsToggle settingsState={ props.settingsState } togglefor="setTimezoneAsDefault" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="timerFormat" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="timerInputFormat" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="saveCountdown" />
+        { renderSettingChooser('search', 'timezone', 'time zone') }
+        { renderSettingChooser('bool', 'setTimezoneAsDefault', 'set time zone as default') }
+        { renderSettingChooser('list', 'timerFormat', 'timer format', ['12hr', '24hr']) }
+        { renderSettingChooser('list', 'timerInputType', 'timer input type', ['calendar', 'drop-down', 'text field']) }
+        { renderSettingChooser('bool', 'saveCountdown', 'save timer countdown') }
       </ul>
     );
   }
   else if (props.tabOpen === 'weather') {
     return (
       <ul id="weather" className="settingsTab">
-        <SettingsToggle settingsState={ props.settingsState } togglefor="weatherUnits" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="weatherLocation" />
-        <SettingsToggle settingsState={ props.settingsState } togglefor="setLocationAsDefault" />
+        { renderSettingChooser('list', 'weatherUnits', 'temperature units', ['\xb0F', '\xb0C']) }
+        { renderSettingChooser('search', 'weatherLocation', 'weather location') }
+        { renderSettingChooser('bool', 'setLocationAsDefault', 'set this location as default') }
       </ul>
     );
   }
   else return (
     <ul id="general" className="settingsTab">
-      <SettingsToggle togglefor="Clock" settingsState={ props.settingsState }
-          handleClick={ (event) => props.handleClick(event) }
-      />
-      <SettingsToggle togglefor="Timer" settingsState={ props.settingsState }
-          handleClick={ (event) => props.handleClick(event) }
-      />
-      <SettingsToggle togglefor="Goal" settingsState={ props.settingsState }
-          handleClick={ (event) => props.handleClick(event) }
-      />
-      <SettingsToggle togglefor="Weather" settingsState={ props.settingsState }
-          handleClick={ (event) => props.handleClick(event) }
-      />
+      <li className="usernameEntry">
+        <label>enter user name</label>
+        <input name='enterUsername' id='enterUsername' type='text' />
+      </li>
+      { renderSettingChooser('bool', 'Clock', 'show clock') }
+      { renderSettingChooser('bool', 'Timer', 'show timer') }
+      { renderSettingChooser('bool', 'Greeting', 'show greeting') }
+      { renderSettingChooser('bool', 'Goal', 'show goal') }
+      { renderSettingChooser('bool', 'Links', 'show links') }
+      { renderSettingChooser('bool', 'Bookmarks', 'show bookmarks') }
+      { renderSettingChooser('bool', 'RecentlyVisited', 'show recently visited') }
+      { renderSettingChooser('bool', 'MostVisited', 'show most visited') }
+      { renderSettingChooser('bool', 'Weather', 'show weather') }
+      { renderSettingChooser('bool', 'Todo', 'show todo') }
+      { renderSettingChooser('bool', 'Quote', 'show quote') }
     </ul>
   );
 }

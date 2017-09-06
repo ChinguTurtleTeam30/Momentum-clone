@@ -31,7 +31,7 @@
 .settingsPanel {
   background-color: rgba(20,20,20,.8);
   padding: .5rem;
-  height: 12rem;
+  //height: 12rem;
   width: max-content;
   box-sizing: border-box;
   position: absolute;
