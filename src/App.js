@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import './App.css';
 import './clock.css';
 import './weather.css';
+import './art.css';
 import './open-weather-icons/dist/css/open-weather-icons.css';
 // same question for our separate components:
 // one folder, one import?
 import Clock from './clock';
 import Weather from './weather';
+import { Art } from './art';
 
 class App extends Component {
   //test for availability of Storage
@@ -43,6 +45,7 @@ class App extends Component {
           <Clock localStorageAvailable={ this.state.locStorAvail }/>
         </div>
         <Weather />
+        <Art />
       </div>
     );
   }

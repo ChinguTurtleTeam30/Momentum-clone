@@ -50,7 +50,9 @@ class Art extends Component {
 
 	render() {
 		if (this.state.img) {
-			return <div id="art" className="art overlay" style={{backgroundImage: 'url('+ this.state.img + ')'}} />
+			var background = 'url("'+this.state.img;
+			document.getElementById("root").style.backgroundImage = background;
+			return <div id="art" />
 		}
 		return <div>Getting art...</div>;
 	}
