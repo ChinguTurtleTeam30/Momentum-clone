@@ -1,0 +1,98 @@
+.time {
+  font-size: 10rem;
+  margin: 0;
+}
+
+#setGoal>label {
+  display: block;
+  font-size: 2rem;
+}
+
+#goalInput {
+  margin: .5rem;
+  font-size: 2rem;
+  text-align: center;
+  width: 20rem;
+  border-top: none; border-left: none; border-right: none;
+  border-bottom: 2px solid black;
+}
+
+#goalInput:focus {
+  border-top: none; border-left: none; border-right: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  box-shadow: none;
+}
+
+.displayGoal {
+  font-size: 2rem;
+}
+
+#goalLine {
+  display: inline-block;
+  margin: .5rem;
+}
+
+#goalComplete {
+  -webkit-appearance: none;
+  position: relative;
+  top: .1rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+  border-radius: .25rem;
+  border: 3px solid black;
+  color: black;
+  cursor: pointer;
+}
+
+#goalComplete:before {
+  position: absolute;
+  top: -.05ex;
+  left: -.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  line-height: 1rem;
+  content: '';
+  text-align: center;
+  cursor: pointer;
+}
+
+#goalComplete:checked:before {
+  position: absolute;
+  top: -.05rem;
+  left: -.25rem;
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: 2rem;
+  line-height: 1rem;
+  content: '\00d7';
+  text-align: center;
+}
+
+#xGoal{
+  position: relative;
+  bottom: .3rem;
+  -webkit-appearance: none;
+  box-shadow: none;
+  outline: none;
+  border: 2px solid black;
+  border-radius: 50%;
+  background-color: transparent;
+  height: 1.5rem;
+  width: 1.5rem;
+  box-sizing: border-box;
+  line-height: 1rem;
+  font-size: .75rem;
+  margin: 0;
+  padding: 0;
+  color: black;
+  cursor: pointer;
+}
+
+.strike {
+  text-decoration: line-through;
+}
