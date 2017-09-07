@@ -9,6 +9,13 @@ function TodoPanel(props) {
         <input id="todoTextInput"
               name="todoTextInput"
               type="text"
+              className="todoTextInput"
+        />
+        <input id="clearTodoList"
+              name="clearTodoList"
+              className="clearTodoList"
+              type="button"
+              value="clear"
         />
       </form>
       <ul id="todoList" className="todoList">
