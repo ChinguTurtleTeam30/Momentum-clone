@@ -16,12 +16,17 @@ function TodoPanel(props) {
               className="clearTodoList"
               type="button"
               value="clear"
+              onClick={ (event) => props.handleClick(event) }
         />
       </form>
       <ul id="todoList" className="todoList">
         {
           props.todoItems.map(function(item, i) {
-            return <li className="todoItem" key={ "todoItem" + i }>{ item }</li>
+            return <li className="todoItem"
+                      key={ "todoItem" + i }
+                      data-todoitem={ i }
+                      onClick={ (event) => props.handleClick(event) }
+                  >{ item }</li>
           })
         }
       </ul>
@@ -44,13 +49,25 @@ export default class Todo extends Component {
       const todoItem = event.target['todoTextInput'].value;
       this.setState((prevState) => {
         return prevState.todo.push(todoItem);
-      })
+      });
+      return event.target['todoTextInput'].value = null;
     }
   }
 
   handleClick(event) {
     if (event.target.id.includes('togglePanel')) {
       this.setState({ todoPanelOpen: !this.state.todoPanelOpen });
+    }
+    else if (event.target.id === 'clearTodoList') {
+      this.setState({ todo: [] });
+    }
+    //else console.log(event.target.dataset.todoitem);
+    else if (event.target.dataset.todoitem) {
+      const item = event.target.dataset.todoitem;
+      this.setState((prevState) => {
+        prevState.todo.splice(+item, 1);
+        return prevState.todo;
+      })
     }
   }
 
@@ -59,6 +76,7 @@ export default class Todo extends Component {
       <div className="todo">
         { this.state.todoPanelOpen ?
           <TodoPanel handleSubmit={ (event) => this.handleSubmit(event) }
+                    handleClick={ (event) => this.handleClick(event) }
                     todoItems={ this.state.todo }
           /> :
           null
