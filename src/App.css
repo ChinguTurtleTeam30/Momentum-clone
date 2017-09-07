@@ -44,6 +44,7 @@
   padding: 1rem;
   box-sizing: border-box;
   margin-bottom: .25rem;
+  overflow-y: hidden;
 }
 
 @keyframes App-logo-spin {

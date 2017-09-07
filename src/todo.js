@@ -3,8 +3,10 @@ import './todo.css';
 import './font-awesome/css/font-awesome.min.css';
 
 function TodoPanel(props) {
-  const todoItems = window.localStorage.getItem('todoList') ||
+  const todoItems = window.localStorage.getItem('todoList') ?
+    JSON.parse(window.localStorage.getItem('todoList')) :
     props.todoItems;
+  console.log('render(Panel): todoItems:', typeof todoItems, ':', todoItems);
   return (
     <div className="panel todoPanel">
       <form id="todoForm" name="todoForm" onSubmit={ (event) => props.handleSubmit(event) }>
@@ -22,15 +24,16 @@ function TodoPanel(props) {
         />
       </form>
       <ul id="todoList" className="todoList">
-        {
-          todoItems.map(function(item, i) {
+        { todoItems.map(function(item, i, arr) {
+            if (i === arr.length-1) {
+              console.log('<todoList />', arr)
+            }
             return <li className="todoItem"
                       key={ "todoItem" + i }
                       data-todoitem={ i }
                       onClick={ (event) => props.handleClick(event) }
                   >{ item }</li>
-          })
-        }
+          }) }
       </ul>
     </div>
   );
@@ -49,13 +52,13 @@ export default class Todo extends Component {
     event.preventDefault();
     if (event.target.name === 'todoForm') {
       const todoItem = event.target['todoTextInput'].value;
+      //console.log('handleSubmit: todoItem:', todoItem)
       this.setState((prevState) => {
-        return prevState.todo.push(todoItem);
+        prevState.todo.push(todoItem);
+        console.log('handleSubmit: prevState after push:', prevState.todo);
+        this.props.store('todoList', JSON.stringify(prevState.todo));
+        return prevState.todo;
       });
-      if (this.props.localStorageAvailable) {
-        this.props.unstore('todoList');
-        this.props.store('todoList', this.state.todo);
-      }
       return event.target['todoTextInput'].value = null;
     }
   }
@@ -66,20 +69,16 @@ export default class Todo extends Component {
     }
     else if (event.target.id === 'clearTodoList') {
       this.setState({ todo: [] });
+      this.props.unstore('todoList');
     }
-    //else console.log(event.target.dataset.todoitem);
     else if (event.target.dataset.todoitem) {
       const item = event.target.dataset.todoitem;
       this.setState((prevState) => {
         prevState.todo.splice(+item, 1);
+        console.log('handleClick: prevState after splice', prevState.todo);
+        this.props.store('todoList', JSON.stringify(prevState.todo));
         return prevState.todo;
       });
-      if (this.props.localStorageAvailable) {
-        const prevStor = window.localStorage.getItem('todoList') ||
-          this.state.todo;
-        prevStor.splice(+item, 1);
-        this.props.store('todoList', prevStor);
-      }
     }
   }
 
