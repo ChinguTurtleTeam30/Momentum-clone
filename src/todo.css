@@ -2,7 +2,8 @@
   text-align: right;
 }
 
-.toggleTodoPanelOpen {
+.togglePanelTodo {
+  cursor: pointer;
 }
 
 .todoPanel {
