@@ -35,7 +35,6 @@ export default class Todo extends Component {
     event.preventDefault();
     if (event.target.name === 'todoForm') {
       const todoItem = event.target['todoTextInput'].value;
-      //console.log(todoItem);
       this.setState((prevState) => {
         return prevState.todo.push(todoItem);
       })
