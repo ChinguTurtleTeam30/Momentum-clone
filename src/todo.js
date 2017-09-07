@@ -3,6 +3,8 @@ import './todo.css';
 import './font-awesome/css/font-awesome.min.css';
 
 function TodoPanel(props) {
+  const todoItems = window.localStorage.getItem('todoList') ||
+    props.todoItems;
   return (
     <div className="panel todoPanel">
       <form id="todoForm" name="todoForm" onSubmit={ (event) => props.handleSubmit(event) }>
@@ -21,7 +23,7 @@ function TodoPanel(props) {
       </form>
       <ul id="todoList" className="todoList">
         {
-          props.todoItems.map(function(item, i) {
+          todoItems.map(function(item, i) {
             return <li className="todoItem"
                       key={ "todoItem" + i }
                       data-todoitem={ i }
@@ -50,6 +52,10 @@ export default class Todo extends Component {
       this.setState((prevState) => {
         return prevState.todo.push(todoItem);
       });
+      if (this.props.localStorageAvailable) {
+        this.props.unstore('todoList');
+        this.props.store('todoList', this.state.todo);
+      }
       return event.target['todoTextInput'].value = null;
     }
   }
@@ -67,7 +73,13 @@ export default class Todo extends Component {
       this.setState((prevState) => {
         prevState.todo.splice(+item, 1);
         return prevState.todo;
-      })
+      });
+      if (this.props.localStorageAvailable) {
+        const prevStor = window.localStorage.getItem('todoList') ||
+          this.state.todo;
+        prevStor.splice(+item, 1);
+        this.props.store('todoList', prevStor);
+      }
     }
   }
 
