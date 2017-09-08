@@ -3,9 +3,15 @@ import './todo.css';
 import './font-awesome/css/font-awesome.min.css';
 
 function TodoPanel(props) {
-  const todoItems = window.localStorage.getItem('todoList') ?
-    JSON.parse(window.localStorage.getItem('todoList')) :
-    props.todoItems;
+  const todoItems = props.todoItems.map(function(item, i) {
+    return (
+      <li className="todoItem"
+                key={ "todoItem" + i }
+                data-todoitem={ i }
+                onClick={ (event) => props.handleClick(event) }
+            >{ item }</li>
+    )
+  });
   return (
     <div className="panel todoPanel">
       <form id="todoForm"
@@ -26,15 +32,7 @@ function TodoPanel(props) {
         />
       </form>
       <ul id="todoList" className="todoList">
-        { todoItems.map(function(item, i, arr) {
-            if (i === arr.length-1) {
-            }
-            return <li className="todoItem"
-                      key={ "todoItem" + i }
-                      data-todoitem={ i }
-                      onClick={ (event) => props.handleClick(event) }
-                  >{ item }</li>
-          }) }
+        { todoItems }
       </ul>
     </div>
   );
@@ -45,7 +43,7 @@ export default class Todo extends Component {
     super(props);
     this.state = {
       todoPanelOpen: false,
-      todo: [],
+      todo: JSON.parse(window.localStorage.getItem('todoList')) || [],
     }
   }
 
@@ -53,14 +51,14 @@ export default class Todo extends Component {
     event.preventDefault();
     if (event.target.name === 'todoForm') {
       const todoItem = event.target['todoTextInput'].value;
-      //console.log('handleSubmit: todoItem:', todoItem)
       this.setState((prevState) => {
         prevState.todo.push(todoItem);
         this.props.store('todoList', JSON.stringify(prevState.todo));
-        return prevState.todo;
+        return { todo: prevState.todo };
       });
       return event.target['todoTextInput'].value = null;
     }
+    else return;
   }
 
   handleClick(event) {
@@ -76,9 +74,10 @@ export default class Todo extends Component {
       this.setState((prevState) => {
         prevState.todo.splice(+item, 1);
         this.props.store('todoList', JSON.stringify(prevState.todo));
-        return prevState.todo;
+        return { todo: prevState.todo };
       });
     }
+    else return;
   }
 
   render() {

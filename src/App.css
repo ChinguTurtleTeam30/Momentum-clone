@@ -1,3 +1,5 @@
+@import 'colors.css';
+
 .App {
   text-align: center;
 }
@@ -47,9 +49,17 @@
   overflow-y: hidden;
 }
 
-input[type='button'] {
+input[type='button'], input[type='submit'] {
+  -webkit-appearance: none;
   display: inline-block;
   padding: 1px .3rem;
+  border-radius: .7rem;
+  line-height: 1.25rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: var(--dk-text-color);
+  background-color: var(--md-bg-color);
+  border: 1px solid var(--lt-text-color);
 }
 
 @keyframes App-logo-spin {

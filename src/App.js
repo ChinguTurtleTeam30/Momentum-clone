@@ -48,7 +48,7 @@ class App extends Component {
   store(prop, val) {
     if (this.state.localStorageAvailable) {
       const storage = window.localStorage;
-      return storage.setItem(prop, val ? val : this.state[prop]);
+      return storage.setItem(prop, val);
     }
     else return;
   }
