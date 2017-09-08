@@ -1,5 +1,12 @@
+@import 'App.css';
+@import 'colors.css';
+
 .todo {
   text-align: right;
+}
+
+.todo :focus {
+  outline: none;
 }
 
 .togglePanelTodo {
@@ -8,30 +15,36 @@
 
 .todoPanel {
   text-align: left;
-  min-width: 15rem;
-  height: 18rem;
+  width: 18rem;
+  height: 21rem;
+}
+
+.todoForm {
+  position: relative;
 }
 
 .todoTextInput {
   padding-left: .5rem;
-  margin-right: .5rem;
+  //margin-right: .5rem;
   -webkit-appearance: none;
   color: grey;
   border-radius: .7rem;
   border: 1px solid gainsboro;
   background: none;
   line-height: 1.25rem;
+  width: calc(100% - 3rem - 1rem);
 }
 
 .todoTextInput:focus {
-  outline: none;
+  color: var(--dk-text-color);
   background-color: gainsboro;
 }
 
 .clearTodoList {
   -webkit-appearance: none;
+  position: absolute;
+  right: 0;
   color: #333;
-  padding: 0 .3rem;
   border-radius: .7rem;
   border: 1px solid gainsboro;
   background-color: darkGrey;
@@ -39,19 +52,17 @@
   text-transform: uppercase;
 }
 
-.clearTodoList:focus {
-  outline: none;
-}
-
 .todoList {
-  padding: .5rem 0 0 0;
+  --todoList-pad-top: .5rem;
+  --todoList-marg-top: .5rem;
+  padding: var(--todoList-pad-top) 0 0 0;
   margin: 0;
-  margin-top: .5rem;
+  margin-top: var(--todoList-marg-top);
   border: none;
   border-top: 1px solid grey;
   font-weight: lighter;
   font-size: medium;
-  height: 100%;
+  height: calc(100% - (var(--panel-pad) * 2) - var(--todoList-marg-top) - .25rem);
   overflow-y: scroll;
 }
 
@@ -59,6 +70,18 @@
   width: .5rem;
   background-color: grey;
 }
+
+.todoList::-webkit-scrollbar-button,
+.todoList::-webkit-scrollbar-thumb {
+  color: var(--lt-text-color);
+  background-color: var(--lt-text-color);
+}
+
+::-webkit-scrollbar-track        { /* 3 */ }
+::-webkit-scrollbar-track-piece  { /* 4 */ }
+::-webkit-scrollbar-thumb        { /* 5 */ }
+::-webkit-scrollbar-corner       { /* 6 */ }
+::-webkit-resizer                { /* 7 */ }
 
 .todoItem {
   list-style-type: none;

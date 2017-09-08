@@ -6,10 +6,12 @@ function TodoPanel(props) {
   const todoItems = window.localStorage.getItem('todoList') ?
     JSON.parse(window.localStorage.getItem('todoList')) :
     props.todoItems;
-  console.log('render(Panel): todoItems:', typeof todoItems, ':', todoItems);
   return (
     <div className="panel todoPanel">
-      <form id="todoForm" name="todoForm" onSubmit={ (event) => props.handleSubmit(event) }>
+      <form id="todoForm"
+            name="todoForm"
+            className="todoForm"
+            onSubmit={ (event) => props.handleSubmit(event) }>
         <input id="todoTextInput"
               name="todoTextInput"
               type="text"
@@ -26,7 +28,6 @@ function TodoPanel(props) {
       <ul id="todoList" className="todoList">
         { todoItems.map(function(item, i, arr) {
             if (i === arr.length-1) {
-              console.log('<todoList />', arr)
             }
             return <li className="todoItem"
                       key={ "todoItem" + i }
@@ -55,7 +56,6 @@ export default class Todo extends Component {
       //console.log('handleSubmit: todoItem:', todoItem)
       this.setState((prevState) => {
         prevState.todo.push(todoItem);
-        console.log('handleSubmit: prevState after push:', prevState.todo);
         this.props.store('todoList', JSON.stringify(prevState.todo));
         return prevState.todo;
       });
@@ -75,7 +75,6 @@ export default class Todo extends Component {
       const item = event.target.dataset.todoitem;
       this.setState((prevState) => {
         prevState.todo.splice(+item, 1);
-        console.log('handleClick: prevState after splice', prevState.todo);
         this.props.store('todoList', JSON.stringify(prevState.todo));
         return prevState.todo;
       });
