@@ -5,13 +5,17 @@ import './font-awesome/css/font-awesome.min.css';
 function LinksPanel(props) {
   return (
     <div className="panel linksPanel">
-      <p>New blank tab</p>
-      <ul className="chromeLinks">
-        <li>Apps</li>
+      <ul className="linksCategories">
+        <li>Open new blank tab</li>
+        <li>
+          <ul className="chromeLinks">
+            <li>Apps</li>
+          </ul>
+        </li>
+        <li><ul className="bookmarks"></ul></li>
+        <li><ul className="mostVistied"></ul></li>
+        <li><ul className="recentlyVisited"></ul></li>
       </ul>
-      <ul className="bookmarks"></ul>
-      <ul className="mostVistied"></ul>
-      <ul className="recentlyVisited"></ul>
     </div>
   )
 }
@@ -28,7 +32,6 @@ export default class Links extends Component {
     if (event.target.id.includes('togglePanelOpen')) {
       const key = event.target.parentElement.id + 'PanelOpen';
       this.setState((prevState) => {
-        console.log(key, prevState);
         return { [key]: !prevState[key] };
       });
     }
@@ -42,7 +45,7 @@ export default class Links extends Component {
           id="togglePanelOpenLinks"
           tabIndex='0'
           onClick={ (event) => this.handleClick(event) }
-        ></i>
+        ></i><span className="togglePanelLabel">Links</span>
         { this.state.linksPanelOpen ?
           <LinksPanel /> :
           null
