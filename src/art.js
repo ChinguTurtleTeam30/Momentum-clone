@@ -51,10 +51,10 @@ export default class Art extends Component {
 
 	render() {
 		if (this.state.img) {
-			var background = 'url("'+this.state.img;
-			document.getElementById("root").style.backgroundImage = background;
-			return <div id="art" />
+			var background = 'url("' + this.state.img + '")';
+			//document.getElementById("root").style.backgroundImage = background;
+			return <div id="art" className="artBG" style={{ backgroundImage: background }} />
 		}
-		return <div>Getting art...</div>;
+		else return <div>Getting art...</div>;
 	}
 };
