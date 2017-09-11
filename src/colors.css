@@ -1,8 +1,8 @@
 :root {
   --panel-bg-color: rgba(20,20,20,.8);
-  --lt-text-color: gainsboro;
+  --lt-text-color: #eee;
   --dk-text-color: #333;
-  --main-text-color: var(--lt-text-color);
+  --main-text-color: var(--dk-text-color);
   --md-bg-color: #bbb;
   --lt-bg-color: lightGrey;
 }
