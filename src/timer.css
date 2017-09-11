@@ -1,0 +1,15 @@
+.timer-form {
+  line-height: 4.5rem;
+}
+
+.timer-form input {
+  vertical-align: middle;
+}
+
+.timer-form input[type="datetime-local"] {
+  font-family: sans-serif;
+}
+
+.countdown {
+  font-size: 4rem;
+}

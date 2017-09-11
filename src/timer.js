@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import './timer.css';
 
-class Timer extends Component {
+export default class Timer extends Component {
   constructor() {
     super();
     this.state = {
-      countdown: '00:00',
+      countdown: null,
       endTime: new Date(),
     };
 
@@ -47,41 +48,101 @@ class Timer extends Component {
     return htmlDateStr
   }
 
+  runTimer() {
+    //const count = Math.round(this.state.countdown - 1);
+    this.setState((prevState) => {
+      const count = Math.round(prevState.countdown - 1) > 0 ?
+        Math.round(prevState.countdown - 1) : 0;
+      return { countdown: Math.round(prevState.countdown - 1) };
+    });
+  }
+
+  renderCountdown(count) {
+    const s = count%60;
+    count = (count - s)/60;
+    const m = count%60;
+    count = (count - m)/60;
+    const h = count%24,
+          d = (count - h) / 24,
+          displayCount = [d, h, m, Math.round(s)].map(function(val, i, arr) {
+            if(val) {
+              if(arr[i - 1]) {
+                return val < 10 ? '0' + val : val;
+              }
+              else return val;
+            }
+            else if(arr[i - 1]) {
+              return '00';
+            }
+            else return null;
+          }).filter(function(val) {
+            return val && val >= 0;
+          });
+
+    return displayCount.join(':');
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    if(!this.intervalID) {
+      if(!this.state.countdown) {
+        if(this.props.currentTime > this.state.endTime) {
+          return;
+        }
+        else this.setState({
+          countdown: Math.round((this.state.endTime - this.props.currentTime)/1000)
+        });
+      }
+      return this.intervalID = setInterval(() => this.runTimer(), 1000);
+    }
+    else return;
+  }
+
   handleChange(event) {
     this.setState({ endTime: this.jsFormatDate(event.target.value) });
   }
 
-  handleClick() {
-
+  handleClick(event) {
+    clearInterval(this.intervalID);
+    this.intervalID = null;
+    if(event.target.name === 'reset-timer') {
+      this.setState({ countdown: null });
+    }
   }
+
 
   render() {
     return (
       <div className="timer">
-        <p className="countdown"></p>
-        <form className="timer-form">
-          <input type="datetime-local"
-                defaultValue={ this.state.endTime }
+        <form className="timer-form" onSubmit={ (event) => this.handleSubmit(event) }>
+          { this.state.countdown ?
+            <span className="countdown">
+              { this.renderCountdown(this.state.countdown) }
+            </span> :
+            <input type="datetime-local"
+                defaultValue={ this.htmlFormatDate(this.state.endTime) }
                 onChange={ (event) => this.handleChange(event) }
-          />
+            />
+          }
           <input id="start-timer"
                 name="start-timer"
                 type="submit"
-                onClick={ this.handleClick }/>
+                value="start"
+                />
           <input id="stop-timer"
                 name="stop-timer"
                 type="button"
                 value="stop"
+                onClick={ (event) => this.handleClick(event) }
           />
           <input id="reset-timer"
                 name="reset-timer"
                 type="button"
                 value="reset"
+                onClick={ (event) => this.handleClick(event) }
           />
         </form>
       </div>
     )
   }
 }
-
-export default Timer
