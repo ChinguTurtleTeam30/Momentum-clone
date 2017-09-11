@@ -9,10 +9,18 @@ import './open-weather-icons/dist/css/open-weather-icons.css';
 // one folder, one import?
 import Clock from './clock';
 import Links from './links';
+import Todo from './todo';
 import Weather from './weather';
 import { Art } from './art';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      localStorageAvailable: this.storageAvailable(localStorage),
+      sessionStorageAvailable: this.storageAvailable(sessionStorage),
+    }
+  }
   //test for availability of Storage
   storageAvailable(type) {
     const storage = window[type];
@@ -34,21 +42,47 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.setState({ locStorAvail: this.storageAvailable('localStorage'),
-                    sessStorAvail: this.storageAvailable('sessionStorage')
+    this.setState({ localStorageAvailable: this.storageAvailable('localStorage'),
+                    sessionStorageAvailable: this.storageAvailable('sessionStorage')
                   });
+  }
+
+  // storage functions
+  store(prop, val) {
+    if (this.state.localStorageAvailable) {
+      const storage = window.localStorage;
+      return storage.setItem(prop, val);
+    }
+    else return;
+  }
+
+  unstore(prop) {
+    if (this.state.localStorageAvailable) {
+      const storage = window.localStorage;
+      return storage.removeItem(prop);
+    }
+    else return;
   }
 
   render() {
     return (
       <div className="App">
         <div className="main">
-          <Clock localStorageAvailable={ this.state.locStorAvail }/>
+          <Clock localStorageAvailable={ this.state.localStorageAvailable }
+                store={ this.store }
+                unstore={ this.unstore }
+          />
         </div>
         <div className="top left corner">
           <Links />
         </div>
         <Weather />
+        <div className="bottom right corner">
+          <Todo localStorageAvailable={ this.state.localStorageAvailable }
+                store={ (key, val) => this.store(key, val) }
+                unstore={ (key) => this.unstore(key) }
+          />
+        </div>
         <Art />
       </div>
     );
