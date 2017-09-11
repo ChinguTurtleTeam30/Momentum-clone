@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Demo React-Chrome extension",
-  "description": "This extension shows how to run a React app as a Chrome extension",
+  "name": "MomentArt",
+  "description": "Override new tabs with everything you need to focus: todo list, weather, time, bookmark link, and Artsy powered background image.",
   "version": "1.0",
 
   "chrome_url_overrides": {
@@ -10,6 +10,5 @@
   },
   "permissions": [
     "geolocation",
-    "https://*/*"
   ]  
 }
