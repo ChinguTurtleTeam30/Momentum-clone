@@ -111,7 +111,7 @@ class Weather extends Component {
 
   render() {
     return (
-      <div className="weather corner top right">
+      <div className="weather">
         <p className="weatherData">
           <i className={ "weather-icon " + this.state.icon }></i>
           <span className="temperature">

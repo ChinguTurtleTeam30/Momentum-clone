@@ -129,7 +129,7 @@ function SettingsTab(props) {
   );
 }
 
-function SettingsHeading(props) {
+function SettingsCategory(props) {
   if (props.tabOpen) {
     return (
       <li
@@ -155,19 +155,6 @@ function SettingsHeading(props) {
   }
 }
 
-function SettingsTab(props) {
-  return (
-    <ul className="settingsTab">
-      <li className="fa fa-toggle-on">toggle something
-      </li>
-      <li className="fa fa-toggle-on">toggle something else
-      </li>
-      <li className="fa fa-toggle-off">make another choice
-      </li>
-    </ul>
-  );
-}
-
 class SettingsPanel extends Component {
   constructor(props) {
     super(props);
@@ -191,7 +178,7 @@ class SettingsPanel extends Component {
   renderSettingsCategory(name) {
     if (this.state.tabOpen === name) {
       return (
-        <SettingsHeading
+        <SettingsCategory
           name={ name }
           tabOpen
           handleClick={ (event) => this.handleClick(event) }
@@ -200,7 +187,7 @@ class SettingsPanel extends Component {
     }
     else {
       return (
-        <SettingsHeading
+        <SettingsCategory
           name={ name }
           handleClick={ (event) => this.handleClick(event) }
         />
@@ -212,9 +199,9 @@ class SettingsPanel extends Component {
     return (
       <div className="settingsPanel">
         <ul className="settingsNav">
-          { this.renderSettingsHeading('general') }
-          { this.renderSettingsHeading('clock & timer') }
-          { this.renderSettingsHeading('weather') }
+          { this.renderSettingsCategory('general') }
+          { this.renderSettingsCategory('clock & timer') }
+          { this.renderSettingsCategory('weather') }
         </ul>
         <SettingsTab
           handleClick={ (event) => this.props.handleClick(event) }
@@ -251,7 +238,7 @@ function SettingsButton(props) {
 
 class Settings extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       panelOpen: false,
     }
@@ -287,7 +274,7 @@ make these functions more generally applicable
   render() {
     if (this.state.panelOpen) {
       return (
-        <div className="settings bottom left corner">
+        <div className="settings">
           <SettingsPanel
             handleClick={ (event) => this.props.handleClick(event) }
             settingsState={ this.props.settingsState }
@@ -300,7 +287,7 @@ make these functions more generally applicable
       );
     }
     else return (
-      <div className="settings bottom left corner">
+      <div className="settings">
         <SettingsButton
           handleClick={ (event) => this.toggleSettingsPanel(event) }
         />

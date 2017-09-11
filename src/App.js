@@ -5,11 +5,12 @@ import './open-weather-icons/dist/css/open-weather-icons.css'
 import './font-awesome/css/font-awesome.min.css'
 import Art from './art';
 import Clock from './clock';
+import Goal from './goal';
 import Links from './links';
+import Timer from './timer';
 import Todo from './todo';
 import Settings from './settings';
 import Weather from './weather';
-import { Art } from './art';
 
 class App extends Component {
   constructor(props) {
@@ -160,18 +161,22 @@ class App extends Component {
         <div className="top left corner">
           <Links />
         </div>
-        <Weather />
+        <div className="top right corner">
+          <Weather />
+        </div>
         <div className="bottom right corner">
           <Todo localStorageAvailable={ this.state.localStorageAvailable }
                 store={ (key, val) => this.store(key, val) }
                 unstore={ (key) => this.unstore(key) }
           />
         </div>
-        <Settings handleClick={ (event) => this.handleClick(event) }
-                  localStorageAvailable={ this.state.localStorageAvailable }
-                  sessionStorageAvailable={ this.state.sessionStorageAvailable }
-                  activeWidgets={ this.state.show }
-        />
+        <div className="bottom left corner">
+          <Settings handleClick={ (event) => this.handleClick(event) }
+                    localStorageAvailable={ this.state.localStorageAvailable }
+                    sessionStorageAvailable={ this.state.sessionStorageAvailable }
+                    settingsState={ this.state.settings }
+          />
+        </div>
         <Art />
       </div>
     );

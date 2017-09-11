@@ -43,7 +43,11 @@ export default class Goal extends Component {
            name="goalForm"
            onSubmit={ (event) => this.handleSubmit(event) }
          >
-           <input id="goalInput" name="goalInput" type="text" />
+           <input id="goalInput"
+                 name="goalInput"
+                 className="goalInput"
+                 type="text"
+           />
            <label htmlFor="goalInput">What is your goal?</label>
          </form> :
          <div className="displayGoal">
