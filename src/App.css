@@ -20,6 +20,10 @@
   font-size: large;
 }
 
+:focus {
+  outline: none;
+}
+
 .corner {
   position: absolute;
 }
@@ -34,19 +38,53 @@
 
 .left {
   left: 1rem;
+  text-align: left;
 }
 
 .right {
   right: 1rem;
+  text-align: right;
+}
+
+.togglePanelLabel {
+  text-transform: uppercase;
+  font-size: small;
+}
+
+.left .togglePanelLabel {
+  margin: 0 0 0 .4rem;
+}
+
+.rigth .togglePanelLabel {
+  margin: 0 .4rem 0 0;
+}
+
+.top .togglePanelLabel {
+  vertical-align: top;
+}
+
+.bottom .togglePanelLabel {
+  vertical-align: bottom;
 }
 
 .panel {
   --panel-pad: 1rem;
+  color: var(--lt-text-color);
   background-color: rgba(20,20,20,.8);
   padding: var(--panel-pad);
   box-sizing: border-box;
   margin-bottom: .25rem;
   overflow-y: hidden;
+}
+
+.panel ul {
+  list-style-type: none;
+}
+
+.panel ul {
+  --panel-ul-marg-bottom: .5rem;
+  padding: 0;
+  margin: 0 0 var(--panel-ul-marg-bottom) 0;
 }
 
 input[type='button'], input[type='submit'] {
