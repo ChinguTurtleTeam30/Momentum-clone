@@ -1,3 +1,5 @@
+@import './colors.css';
+
 .settings {
   font-size: 1.5rem;
   text-align: left;
@@ -8,6 +10,7 @@
   width: 1.5rem;
   border-radius: 50%;
   transition: all linear .15s;
+  text-align: center;
 }
 
 .toggleSettingsPanelOpen:hover {
@@ -21,8 +24,8 @@
 .toggleSettingsPanelOpen.active {
   color: rgba(20,20,20,.8);
   transform: scale(1.1);
-  box-shadow: 0 0 4px 1px rgba(128,128,128,.4);
-  background-color: rgba(128,128,128,.4);
+  box-shadow: 0 0 4px 1px var(--highlight-blue);
+  background-color: var(--highlight-blue);
   transition: all linear .15s;
 }
 
@@ -90,6 +93,16 @@ ul.settingsTab {
   font-weight: lighter;
   font-size: medium;
   margin-right: 1rem;
+}
+
+.settingsListOption {
+  margin: 0 .25rem;
+}
+
+.futureFeature {
+  color: rgba(100,100,100,.6);
+  font-style: italic;
+  text-decoration: line-through;
 }
 
 .toggleIcon {

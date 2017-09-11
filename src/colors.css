@@ -5,4 +5,5 @@
   --main-text-color: var(--dk-text-color);
   --md-bg-color: #bbb;
   --lt-bg-color: lightGrey;
+  --highlight-blue: rgba(20, 75, 150, .4);
 }

@@ -6,11 +6,11 @@ function SettingsToggle(props) {
       props.settingsState[props.togglefor] :
       props.settingsState.show[props.togglefor];
   return (
-    <li data-settingsrole="toggle"
+    <li className={ (props.inactive ? "futureFeature " : null) + "settingsToggle" }
+        data-settingsrole="toggle"
         data-togglefor={ props.togglefor }
-        //data-toggleOn={ props.toggleOn }
         onClick={ (event) => props.handleClick(event) }
-        className="settingsToggle">
+    >
       <span className="settingsToggleLabel">{ props.label }</span>
         <i className={ "toggleIcon fa" + ( toggleIsOn ?
                         " fa-toggle-on boolToggleOn" :
@@ -27,7 +27,7 @@ function SettingsRadio(props) {
                   props.togglefor in props.settingState.show ? props.settingState.show[props.togglefor] :
                   null;
   return (
-    <li className="settingsToggle" //subject to change
+    <li className={ (props.inactive ? "futureFeature " : null) + "settingsToggle" } //subject to change
         data-settingsrole="toggle" //subject to change
         data-togglefor={ props.togglefor } //that prop name is bad
         onClick={ (event) => props.handleClick(event) }
@@ -50,7 +50,7 @@ function SettingsRadio(props) {
 
 function SettingsSearchable(props) {
   return(
-    <li className="settingsToggle" //should be changed
+    <li className={ (props.inactive ? "futureFeature " : null) + "settingsToggle" } //should be changed
         data-settingsrole="toggle" //should be changed
         data-togglefor={ props.togglefor } //that's a bad prop name
         onClick={ (event) => props.handleClick(event) }
@@ -62,13 +62,14 @@ function SettingsSearchable(props) {
 }
 
 function SettingsTab(props) {
-  function renderSettingChooser(type, setting, text, options) {
+  function renderSettingChooser(type, setting, text, options, inactive) {
     return (
       type === 'search' ?
         <SettingsSearchable settingsState={ props.settingsState }
                             togglefor={ setting }
                             label={ text && typeof text !== 'object' ? text : setting }
                             handleClick={ (event) => props.handleClick(event) }
+                            inactive={ inactive }
         /> :
         type === 'list' ?
           <SettingsRadio settingsState={ props.settingsState }
@@ -76,12 +77,14 @@ function SettingsTab(props) {
                         label={ text && typeof text !== 'object' ? text : setting }
                         options={ options }
                         handleClick={ (event) => props.handleClick(event) }
+                        inactive={ inactive }
           /> :
           type === 'bool' ?
             <SettingsToggle settingsState={ props.settingsState }
                             togglefor={ setting }
                             label={ text && typeof text !== 'object' ? text : setting }
                             handleClick={ (event) => props.handleClick(event) }
+                            inactive={ inactive }
             /> : null
     );
   }
@@ -89,42 +92,38 @@ function SettingsTab(props) {
   if (props.tabOpen === 'clock & timer') {
     return (
       <ul id="clock & timer" className="settingsTab">
-        { renderSettingChooser('list', 'clockFormat', 'clock format', ['12hr', '24hr']) }
-        { renderSettingChooser('bool', 'showAM_PM', 'show am/pm') }
-        { renderSettingChooser('search', 'timezone', 'time zone') }
-        { renderSettingChooser('bool', 'setTimezoneAsDefault', 'set time zone as default') }
-        { renderSettingChooser('list', 'timerFormat', 'timer format', ['12hr', '24hr']) }
-        { renderSettingChooser('list', 'timerInputType', 'timer input type', ['calendar', 'drop-down', 'text field']) }
-        { renderSettingChooser('bool', 'saveCountdown', 'save timer countdown') }
+        { renderSettingChooser('list', 'clockFormat', 'clock format', ['12hr', '24hr'], 'inactive') }
+        { renderSettingChooser('bool', 'showAM_PM', 'show am/pm', null, 'inactive') }
+        { renderSettingChooser('search', 'timezone', 'time zone', null, 'inactive') }
+        { renderSettingChooser('bool', 'setTimezoneAsDefault', 'set time zone as default', null, 'inactive') }
+        { renderSettingChooser('list', 'timerFormat', 'timer format', ['12hr', '24hr'], 'inactive') }
+        { renderSettingChooser('list', 'timerInputType', 'timer input type', ['calendar', 'drop-down', 'text field'], 'inactive') }
+        { renderSettingChooser('bool', 'saveCountdown', 'save timer countdown', null, 'inactive') }
       </ul>
     );
   }
   else if (props.tabOpen === 'weather') {
     return (
       <ul id="weather" className="settingsTab">
-        { renderSettingChooser('list', 'weatherUnits', 'temperature units', ['\xb0F', '\xb0C']) }
-        { renderSettingChooser('search', 'weatherLocation', 'weather location') }
-        { renderSettingChooser('bool', 'setLocationAsDefault', 'set this location as default') }
+        { renderSettingChooser('list', 'weatherUnits', 'temperature units', ['\xb0F', '\xb0C'], 'inactive') }
+        { renderSettingChooser('search', 'weatherLocation', 'weather location', null, 'inactive') }
+        { renderSettingChooser('bool', 'setLocationAsDefault', 'set this location as default', null, 'inactive') }
       </ul>
     );
   }
   else return (
     <ul id="general" className="settingsTab">
-      <li className="usernameEntry">
-        <label>enter user name</label>
-        <input name='enterUsername' id='enterUsername' type='text' />
-      </li>
       { renderSettingChooser('bool', 'Clock', 'show clock') }
       { renderSettingChooser('bool', 'Timer', 'show timer') }
-      { renderSettingChooser('bool', 'Greeting', 'show greeting') }
+      { renderSettingChooser('bool', 'Greeting', 'show greeting', null, 'inactive') }
       { renderSettingChooser('bool', 'Goal', 'show goal') }
       { renderSettingChooser('bool', 'Links', 'show links') }
-      { renderSettingChooser('bool', 'Bookmarks', 'show bookmarks') }
-      { renderSettingChooser('bool', 'RecentlyVisited', 'show recently visited') }
-      { renderSettingChooser('bool', 'MostVisited', 'show most visited') }
+      { renderSettingChooser('bool', 'Bookmarks', 'show bookmarks', null, 'inactive') }
+      { renderSettingChooser('bool', 'RecentlyVisited', 'show recently visited', null, 'inactive') }
+      { renderSettingChooser('bool', 'MostVisited', 'show most visited', null, 'inactive') }
       { renderSettingChooser('bool', 'Weather', 'show weather') }
       { renderSettingChooser('bool', 'Todo', 'show todo') }
-      { renderSettingChooser('bool', 'Quote', 'show quote') }
+      { renderSettingChooser('bool', 'Quote', 'show quote', null, 'inactive') }
     </ul>
   );
 }

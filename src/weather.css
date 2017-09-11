@@ -18,7 +18,6 @@
 }
 
 .weather .location {
-  color: grey;
   text-transform: uppercase;
   margin: 0;
   text-align: right;
