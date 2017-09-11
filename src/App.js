@@ -134,10 +134,14 @@ class App extends Component {
     return (
       <div className="App">
         <div className="main center">
-          { this.state.settings.show.Clock ? <Clock
+          { this.state.settings.show.Clock ?
+            <Clock
               currentTime={ this.state.currentTime }
             /> : null }
-          { this.state.settings.show.Timer ? <Timer /> : null }
+          { this.state.settings.show.Timer ?
+            <Timer
+              currentTime={ this.state.currentTime }
+            /> : null }
           { this.state.settings.show.Goal ? <Goal
               localStorageAvailable={ this.state.localStorageAvailable }
               store={ (key, val) => this.store(key,val) }
