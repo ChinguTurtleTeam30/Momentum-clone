@@ -1,7 +1,5 @@
 .settings {
-  padding: 1rem;
   font-size: 1.5rem;
-  color: dimGrey;
   text-align: left;
 }
 
@@ -97,55 +95,3 @@ ul.settingsTab {
 .toggleIcon {
   display: inline;
 }
-/*
-ul.settingsNav {
-  margin: 0;
-  padding: 0 .5rem;
-  height: 100%;
-  //width: 20%;
-  font-size: large;
-  border-right: 2px solid darkGrey;
-}
-
-.settingsNav li, .settingsTab li {
-  display: list-item;
-  margin: .125rem;
-  cursor: pointer;
-}
-
-.settingsNav li {
-  font-size: 1.05rem;
-}
-
-.settingsNav li.tabOpen {
-  color: white;
-}
-
-ul.settingsTab {
-  color: rgb(235,235,235);
-  font-size: medium;
-  font-weight: 100;
-  margin: 0;
-  padding: 0 .5rem;
-  height: 100%;
-  //width: 65%;
-  list-style-type: none;
-}
-
-.settingsTab li {
-  display: list-item;
-}
-<<<<<<< HEAD
-*/
-=======
-
-.settingsToggleLabel {
-  font-weight: lighter;
-  font-size: medium;
-  margin-right: 1rem;
-}
-
-.toggleIcon {
-  display: inline;
-}
->>>>>>> d9b470d... settingsToggle now uses data- attribute to toggle components
