@@ -90,6 +90,9 @@ export default class Todo extends Component {
           /> :
           null
         }
+        <span className="togglePanelLabel">
+          todo
+        </span>
         <i className="fa fa-list-ul togglePanelTodo"
           id="togglePanelTodo"
           tabIndex="0"

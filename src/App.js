@@ -19,12 +19,12 @@ class App extends Component {
       settings: {
         username: '' ,
         show: {
-          Links: false,
+          Links: true,
           Bookmarks: false,
           MostVisited: false,
           RecentlyVisited: false,
           Weather: true,
-          Todo: false,
+          Todo: true,
           Quote: false,
           Greeting: false,
           Clock: true,
@@ -89,18 +89,19 @@ class App extends Component {
     else return;
   }
 
-  checkStorage(type, key) {
-    const storage = window[type];
-    // this is problematic because key: val might be 0, null, etc.
-    return Boolean(storage.getItem(key));
-  }
-
   // checking for availability of storage only seems to work with compWillMt()
   // not within the constructor
   componentWillMount() {
     this.setState({ localStorageAvailable: this.storageAvailable('localStorage'),
                     sessionStorageAvailable: this.storageAvailable('sessionStorage')
                   });
+  }
+
+  componentDidMount() {
+    this.runClock();
+    if (window.localStorage.getItem('goal')) {
+      this.setState({ goal: window.localStorage.getItem('goal') });
+    }
   }
 
   // event handlers
@@ -129,20 +130,6 @@ class App extends Component {
     }, 1000);
   }
 
-  componentDidMount() {
-    this.runClock();
-    if (window.localStorage.getItem('goal')) {
-      this.setState({ goal: window.localStorage.getItem('goal') });
-    }
-  }
-  /*<Center localStorageAvailable={ this.state.localStorageAvailable }
-          handleClick={ (event) => this.handleClick(event) }
-          username={ this.state.username }
-          store={ (key, val) => this.store(key,val) }
-          unstore={ (key) => this.unstore(key) }
-          checkStorage={ (key) => this.checkStorage('localStorage', key) }
-  />*/
-
   render() {
     return (
       <div className="App">
@@ -159,16 +146,19 @@ class App extends Component {
             null }
         </div>
         <div className="top left corner">
-          <Links />
+          { this.state.settings.show.Links ? <Links /> : null }
         </div>
         <div className="top right corner">
-          <Weather />
+          { this.state.settings.show.Weather ? <Weather /> : null }
         </div>
         <div className="bottom right corner">
-          <Todo localStorageAvailable={ this.state.localStorageAvailable }
+          { this.state.settings.show.Todo ?
+            <Todo localStorageAvailable={ this.state.localStorageAvailable }
                 store={ (key, val) => this.store(key, val) }
                 unstore={ (key) => this.unstore(key) }
-          />
+            /> :
+            null
+          }
         </div>
         <div className="bottom left corner">
           <Settings handleClick={ (event) => this.handleClick(event) }

@@ -34,7 +34,7 @@ export default class Art extends Component {
 				}}).then(function(response) {
 					return response.json();
 				}).then(function(data) {
-					console.log("WOW arts",data);
+					//console.log("WOW arts",data);
 					artsyRandomArtUrl = data._links.image.href.replace('{image_version}','large');
 					this.setState ( {img: artsyRandomArtUrl, artsyToken: artsyToken} );
 				}.bind(this));
