@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './art.css';
 
 // Initial variables for API configuration
 var clientID = '7c49150d5697e33be871',
@@ -17,7 +18,7 @@ fetch(apiUrl, {method: 'POST', body: appKeys}).then(function(response) {
 	localStorage.setItem('artsyToken', artsyToken);
 });
 
-class Art extends Component {
+export default class Art extends Component {
 
 	constructor(props) {
 		super(props);
@@ -57,5 +58,3 @@ class Art extends Component {
 		return <div>Getting art...</div>;
 	}
 };
-
-export { Art };

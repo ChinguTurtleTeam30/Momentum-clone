@@ -2,6 +2,7 @@
   --panel-bg-color: rgba(20,20,20,.8);
   --lt-text-color: gainsboro;
   --dk-text-color: #333;
+  --main-text-color: var(--lt-text-color);
   --md-bg-color: #bbb;
   --lt-bg-color: lightGrey;
 }
