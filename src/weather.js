@@ -33,7 +33,7 @@ class Weather extends Component {
   }
 
   getLoc = (obj, callback) => {
-    if ('geolocation' in navigator) {
+    if ('geolocation' in navigator) { //should have ip-sniffer fallback
       navigator.geolocation.getCurrentPosition(
         function(pos) {
           return (
