@@ -6,17 +6,28 @@ var clientID = '7c49150d5697e33be871',
     clientSecret = process.env.REACT_APP_CLIENTSECRET || '204d8604bbc71c2038192655565f01f8',
     apiUrl = 'https://api.artsy.net/api/tokens/xapp_token',
     resourceUrl = 'https://api.artsy.net/api/artworks?&sample=1',
-    artsyToken = localStorage.getItem('artsyToken') || null,
+    artsyToken = localStorage.getItem('artsyToken'),
+    artsyTokenExpiration = localStorage.getItem('artsyTokenExpiration'),
     appKeys = JSON.stringify({ client_id: clientID, client_secret: clientSecret }),
     artsyRandomArtUrl;
 
+// if artsyTokenExpiration < date.now 
+// fetch token-server.glitch
+// then response set token variable
+// localStorage.setItem('artsyToken', artsyToken);
+// else continue do nothing, artsyToken is correct :)
+
 // Get artsy access token and set in localStorage for next pageload
-fetch(apiUrl, {method: 'POST', body: appKeys}).then(function(response) {
-	return response.json();
-}).then(function(data) {
-	artsyToken = data.token;
-	localStorage.setItem('artsyToken', artsyToken);
-});
+
+if (Date.now() >= artsyTokenExpiration || !artsyTokenExpiration) {
+	fetch("https://token-machine.glitch.me/artsy-token", {method: 'GET'}).then(function(response) {
+		return response.json();
+		console.log(response.json())
+	}).then(function(data) {
+		localStorage.setItem('artsyToken', data.artsyToken);
+		localStorage.setItem('artsyTokenExpiration', data.artsyTokenExpiration);
+	});	
+}
 
 export default class Art extends Component {
 
