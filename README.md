@@ -1,6 +1,7 @@
 # A clone of Momentum Dashboard with fine art for the background
-This project is in development
-__There is a fully functioning prototype available for your fun & enjoyment!__
+_This project is in development._
+
+**There is a fully functioning prototype available for your fun & enjoyment!**
 1. Download the project
 2. Install Create React App on the command line: `npm install -g create-react-app`
 3. Find the project folder, cd into it, and on the command line do `npm run build`
