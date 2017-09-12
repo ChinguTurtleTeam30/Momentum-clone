@@ -60,8 +60,8 @@ export default class Art extends Component {
   }
 
 	componentDidMount() {
-    const now = new Date();
-    let artExpiry = window.localStorage.getItem('artExpiry') &&
+    let now = new Date(),
+		    artExpiry = window.localStorage.getItem('artExpiry') &&
 	        new Date(window.localStorage.getItem('artExpiry')) > now ?
 					new Date(window.localStorage.getItem('artExpiry')) :
 					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
@@ -77,7 +77,6 @@ export default class Art extends Component {
     else if (tokenExpiry > now) {
       this.getNewArt(this.artsyStaticData.artReq, (data) => {
 				const newArt = data._links.image.href.replace('{image_version}','large');
-        console.log(data);
         this.props.store({ artExpiry: artExpiry, bgImg: newArt });
         return (
           this.setState({
@@ -96,7 +95,6 @@ export default class Art extends Component {
         url: this.artsyStaticData.artReq.url
         }, (data) => {
           const newArt = data._links.image.href.replace('{image_version}','large');
-          console.log(newArt, '\n', data);
           this.props.store({ artExpiry: artExpiry, bgImg: newArt });
           return (
             this.setState({
