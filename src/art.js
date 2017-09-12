@@ -1,34 +1,97 @@
 import React, { Component } from 'react';
 import './art.css';
 
-// Initial variables for API configuration
-var clientID = '7c49150d5697e33be871',
-    clientSecret = process.env.REACT_APP_CLIENTSECRET || '204d8604bbc71c2038192655565f01f8',
-    apiUrl = 'https://api.artsy.net/api/tokens/xapp_token',
-    resourceUrl = 'https://api.artsy.net/api/artworks?&sample=1',
-    artsyToken = localStorage.getItem('artsyToken') || null,
-    appKeys = JSON.stringify({ client_id: clientID, client_secret: clientSecret }),
-    artsyRandomArtUrl;
-
-// Get artsy access token and set in localStorage for next pageload
-fetch(apiUrl, {method: 'POST', body: appKeys}).then(function(response) {
-	return response.json();
-}).then(function(data) {
-	artsyToken = data.token;
-	localStorage.setItem('artsyToken', artsyToken);
-});
-
 export default class Art extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { img: null, artsyToken: null };
+		this.state = {
+      img: null,
+      artsyToken: null
+    };
 	}
 
+  artsyStaticData = {
+    tokenReq: {
+      clientID: '7c49150d5697e33be871',
+      key: process.env.REACT_APP_CLIENTSECRET || '204d8604bbc71c2038192655565f01f8',
+      url: 'https://api.artsy.net/api/tokens/xapp_token'
+    },
+    artReq: {
+      url: 'https://api.artsy.net/api/artworks?&sample=1',
+      token: window.localStorage.getItem('artsyToken') || null
+    }
+  }
+
+  getNewToken(reqObj, callback) {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        client_id: reqObj.clientID,
+        client_secret: reqObj.key
+      })
+    };
+
+    fetch(reqObj.url, options)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      return callback(data);
+    });
+  }
+
+  getNewArt(reqObj, callback) {
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-Xapp-Token': reqObj.token,
+        Accept: 'application/vnd.artsy-v2+json'
+      }
+    }
+
+    fetch(reqObj.url, options)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      return callback(data);
+    });
+  }
+
 	componentDidMount() {
-		if (artsyToken) {
+    if (window.localStorage['bgImg'] && window.localStorage['artExpiry'] < Date()) {
+      this.setState({ img: window.LocalStorage['bgImg'] });
+    }
+		else {
+      // Get artsy access token and set in localStorage for next pageload
+      this.getNewToken(this.artsyStaticData.tokenReq, (res) => {
+        console.log(res);
+      })
+      /*fetch(
+        this.artsyStaticData.tokenReq.url,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            client_id: this.artsyStaticData.tokenReq.clientID,
+            client_secret: this.artsyStaticData.tokenReq.key
+          })
+        }
+      ).then((response) => {
+        return console.log(response.json());
+      	//return response.json();
+      });
+      .then((data) => {
+        const now = new Date(),
+              expiry = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      	this.setState({ artsyToken: data.token });
+      	localStorage.setItem('artsyToken', data.token);
+        localStorage.setItem('artsyExpiry', expiry);
+        return data.token;
+      });*/
+    }
 			// Get a random artsy image
-			fetch(resourceUrl, {method: 'GET', headers: {
+			/*fetch(resourceUrl, {method: 'GET', headers: {
 					'X-Xapp-Token': artsyToken,
 					'Accept': 'application/vnd.artsy-v2+json'
 				}}).then(function(response) {
@@ -46,7 +109,7 @@ export default class Art extends Component {
 				var objectURL = URL.createObjectURL(response);
 				this.setState( {img: objectURL});
 			}.bind(this));
-		}
+		}*/
 	}
 
 	render() {
