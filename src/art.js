@@ -3,7 +3,7 @@ import './art.css';
 
 // Initial variables for API configuration
 var clientID = '7c49150d5697e33be871',
-    clientSecret = process.env.REACT_APP_CLIENTSECRET,
+    clientSecret = process.env.REACT_APP_CLIENTSECRET || '204d8604bbc71c2038192655565f01f8',
     apiUrl = 'https://api.artsy.net/api/tokens/xapp_token',
     resourceUrl = 'https://api.artsy.net/api/artworks?&sample=1',
     artsyToken = localStorage.getItem('artsyToken') || null,
