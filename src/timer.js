@@ -53,7 +53,7 @@ export default class Timer extends Component {
     this.setState((prevState) => {
       const count = Math.round(prevState.countdown - 1) > 0 ?
         Math.round(prevState.countdown - 1) : 0;
-      return { countdown: Math.round(prevState.countdown - 1) };
+      return { countdown: count };
     });
   }
 
