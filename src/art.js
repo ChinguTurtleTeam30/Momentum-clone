@@ -61,10 +61,14 @@ export default class Art extends Component {
 
 	componentDidMount() {
     const now = new Date(),
-          artExpiry = new Date(window.localStorage.getItem('artExpiry')) ||
-            new Date(),
-          tokenExpiry = new Date(window.localStorage.getItem('artsyTokenExpiry')) ||
-            null;
+          artExpiry = window.localStorage.getItem('artExpiry') &&
+            new Date(window.localStorage.getItem('artExpiry')) > now ?
+						new Date(window.localStorage.getItem('artExpiry')) :
+						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+          tokenExpiry = window.localStorage.getItem('artsyTokenExpiry') &&
+            new Date(window.localStorage.getItem('artsyTokenExpiry')) > now ?
+						new Date(window.localStorage.getItem('artsyTokenExpiry')) : null;
+		console.log('art component mounted', now, '\n', artExpiry);
 
     //if art is in localStorage and it's fresh, load it up
     if (window.localStorage['bgImg'] && artExpiry > now) {
@@ -84,18 +88,7 @@ export default class Art extends Component {
     }
     //if art and token are both stale, get new token and art
 		else {
-      /*this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
-        this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
-        return data.token
-      }).then((token) => {
-        this.getNewArt({
-          token: token,
-          url: this.artsyStaticData.artReq.url
-        }, (data) => {
-          console.log(data);
-        })
-      });*/
-      this.getNewArt({
+	    this.getNewArt({
         token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
           this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
           return data.token;
