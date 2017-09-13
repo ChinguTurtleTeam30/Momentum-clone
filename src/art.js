@@ -60,56 +60,59 @@ export default class Art extends Component {
   }
 
 	componentDidMount() {
-    if (window.localStorage['bgImg'] && window.localStorage['artExpiry'] < Date()) {
-      this.setState({ img: window.LocalStorage['bgImg'] });
+    const now = new Date(),
+          artExpiry = new Date(window.localStorage.getItem('artExpiry')) ||
+            new Date(),
+          tokenExpiry = new Date(window.localStorage.getItem('artsyTokenExpiry')) ||
+            null;
+
+    //if art is in localStorage and it's fresh, load it up
+    if (window.localStorage['bgImg'] && artExpiry > now) {
+      return this.setState({ img: window.LocalStorage['bgImg'] });
     }
-		else {
-      // Get artsy access token and set in localStorage for next pageload
-      this.getNewToken(this.artsyStaticData.tokenReq, (res) => {
-        console.log(res);
-      })
-      /*fetch(
-        this.artsyStaticData.tokenReq.url,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            client_id: this.artsyStaticData.tokenReq.clientID,
-            client_secret: this.artsyStaticData.tokenReq.key
+    //if access token is fresh, get new art
+    else if (tokenExpiry > now) {
+      this.getNewArt(this.artsyStaticData.artReq, (data) => {
+        console.log(data);
+        this.props.store('artExpiry', artExpiry);
+        return (
+          this.setState({
+            img: data._links.image.href.replace('{image_version}','large')
           })
-        }
-      ).then((response) => {
-        return console.log(response.json());
-      	//return response.json();
+        );
       });
-      .then((data) => {
-        const now = new Date(),
-              expiry = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      	this.setState({ artsyToken: data.token });
-      	localStorage.setItem('artsyToken', data.token);
-        localStorage.setItem('artsyExpiry', expiry);
-        return data.token;
-      });*/
     }
-			// Get a random artsy image
-			/*fetch(resourceUrl, {method: 'GET', headers: {
-					'X-Xapp-Token': artsyToken,
-					'Accept': 'application/vnd.artsy-v2+json'
-				}}).then(function(response) {
-					return response.json();
-				}).then(function(data) {
-					//console.log("WOW arts",data);
-					artsyRandomArtUrl = data._links.image.href.replace('{image_version}','large');
-					this.setState ( {img: artsyRandomArtUrl, artsyToken: artsyToken} );
-				}.bind(this));
-		} else {
-			// fetch imgur image as a backup
-			fetch('https://i.imgur.com/A2osoec.jpg').then(function(response) {
-				return response.blob();
-			}).then(function(response) {
-				var objectURL = URL.createObjectURL(response);
-				this.setState( {img: objectURL});
-			}.bind(this));
-		}*/
+    //if art and token are both stale, get new token and art
+		else {
+      /*this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
+        this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
+        return data.token
+      }).then((token) => {
+        this.getNewArt({
+          token: token,
+          url: this.artsyStaticData.artReq.url
+        }, (data) => {
+          console.log(data);
+        })
+      });*/
+      this.getNewArt({
+        token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
+          this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
+          return data.token;
+        }),
+        url: this.artsyStaticData.artReq.url
+        }, (data) => {
+          const newArt = data._links.image.href.replace('{image_version}','large');
+          console.log(data);
+          this.props.store({ artExpiry: artExpiry, bgImg: newArt });
+          return (
+            this.setState({
+              img: newArt
+            })
+          );
+        }
+      );
+    }
 	}
 
 	render() {

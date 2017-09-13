@@ -73,15 +73,30 @@ class App extends Component {
   }
 
   // storage functions
-  store(prop, val) {
+  store(prop, val, which) {
+    const type = which || 'localStorage',
+          storage = window[type];
     if (this.state.localStorageAvailable) {
-      const storage = window.localStorage;
-      return storage.setItem(prop, val ? val : this.state[prop]);
+      if (typeof prop === 'object') {
+        for (var key in prop) {
+          if (prop.hasOwnProperty(key)) {
+            storage.setItem(key, prop[key])
+          }
+        }
+      }
+      else {
+        storage.setItem(prop, val ?
+                          val :
+                          this.state[prop] ?
+                          this.state[prop] :
+                          prop
+                        )
+      }
     }
-    else return;
+    else return console.warn(type + ' unavailable');
   }
 
-  unstore(prop) {
+  unstore(prop, which) {
     if (this.state.localStorageAvailable) {
       const storage = window.localStorage;
       return storage.removeItem(prop);
@@ -171,7 +186,7 @@ class App extends Component {
                     settingsState={ this.state.settings }
           />
         </div>
-        <Art />
+        <Art store={ (key, val) => this.store(key, val) }/>
       </div>
     );
   }
