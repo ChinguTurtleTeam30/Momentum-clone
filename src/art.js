@@ -60,25 +60,25 @@ export default class Art extends Component {
   }
 
 	componentDidMount() {
-    const now = new Date(),
-          artExpiry = window.localStorage.getItem('artExpiry') &&
-            new Date(window.localStorage.getItem('artExpiry')) > now ?
-						new Date(window.localStorage.getItem('artExpiry')) :
-						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
-          tokenExpiry = window.localStorage.getItem('artsyTokenExpiry') &&
-            new Date(window.localStorage.getItem('artsyTokenExpiry')) > now ?
-						new Date(window.localStorage.getItem('artsyTokenExpiry')) : null;
-		console.log('art component mounted', now, '\n', artExpiry);
+    const now = new Date();
+    let artExpiry = window.localStorage.getItem('artExpiry') &&
+	        new Date(window.localStorage.getItem('artExpiry')) > now ?
+					new Date(window.localStorage.getItem('artExpiry')) :
+					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+        tokenExpiry = window.localStorage.getItem('artsyTokenExpiry') &&
+          new Date(window.localStorage.getItem('artsyTokenExpiry')) > now ?
+					new Date(window.localStorage.getItem('artsyTokenExpiry')) : null;
 
     //if art is in localStorage and it's fresh, load it up
     if (window.localStorage['bgImg'] && artExpiry > now) {
-      return this.setState({ img: window.LocalStorage['bgImg'] });
+      return this.setState({ img: window.localStorage.getItem('bgImg') });
     }
     //if access token is fresh, get new art
     else if (tokenExpiry > now) {
       this.getNewArt(this.artsyStaticData.artReq, (data) => {
+				const newArt = data._links.image.href.replace('{image_version}','large');
         console.log(data);
-        this.props.store('artExpiry', artExpiry);
+        this.props.store({ artExpiry: artExpiry, bgImg: newArt });
         return (
           this.setState({
             img: data._links.image.href.replace('{image_version}','large')
@@ -96,7 +96,7 @@ export default class Art extends Component {
         url: this.artsyStaticData.artReq.url
         }, (data) => {
           const newArt = data._links.image.href.replace('{image_version}','large');
-          console.log(data);
+          console.log(newArt, '\n', data);
           this.props.store({ artExpiry: artExpiry, bgImg: newArt });
           return (
             this.setState({
