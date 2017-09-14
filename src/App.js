@@ -141,8 +141,11 @@ class App extends Component {
           { this.state.settings.show.Timer ?
             <Timer
               currentTime={ this.state.currentTime }
+              store={ (key, val) => this.store(key, val) }
+              unstore={ (key) => this.unstore(key) }
             /> : null }
-          { this.state.settings.show.Goal ? <Goal
+          { this.state.settings.show.Goal ?
+            <Goal
               localStorageAvailable={ this.state.localStorageAvailable }
               store={ (key, val) => this.store(key,val) }
               unstore={ (key, val) => this.unstore(key) }

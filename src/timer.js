@@ -12,6 +12,12 @@ export default class Timer extends Component {
     //this.handleChange = this.handleChange.bind(this);
   }
 
+  componentDidMount() {
+    if (window.localStorage.getItem('timerEnd')) {
+      this.setState({ endTime: window.localStorage.getItem('timerEnd') });
+    }
+  }
+
   jsFormatDate(htmlDateFormat) {
     //split up html date string
     //into format [yyyy, mm, dd, hh, mm]
@@ -53,7 +59,7 @@ export default class Timer extends Component {
     this.setState((prevState) => {
       const count = Math.round(prevState.countdown - 1) > 0 ?
         Math.round(prevState.countdown - 1) : 0;
-      return { countdown: Math.round(prevState.countdown - 1) };
+      return { countdown: count };
     });
   }
 
@@ -82,6 +88,7 @@ export default class Timer extends Component {
     return displayCount.join(':');
   }
 
+  //-------- Handlers --------:
   handleSubmit(event) {
     event.preventDefault();
     if(!this.intervalID) {
@@ -93,13 +100,14 @@ export default class Timer extends Component {
           countdown: Math.round((this.state.endTime - this.props.currentTime)/1000)
         });
       }
-      return this.intervalID = setInterval(() => this.runTimer(), 1000);
+      this.intervalID = setInterval(() => this.runTimer(), 1000);
+      return this.props.store('timerEnd', this.state.endTime);
     }
     else return;
   }
 
   handleChange(event) {
-    this.setState({ endTime: this.jsFormatDate(event.target.value) });
+    return this.setState({ endTime: this.jsFormatDate(event.target.value) });
   }
 
   handleClick(event) {
@@ -107,7 +115,9 @@ export default class Timer extends Component {
     this.intervalID = null;
     if(event.target.name === 'reset-timer') {
       this.setState({ countdown: null });
+      return this.props.unstore('timerEnd');
     }
+    else return;
   }
 
 
