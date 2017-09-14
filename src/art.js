@@ -69,20 +69,27 @@ export default class Art extends Component {
 
     // if art is in localStorage and it's fresh, load it up
     if (window.localStorage['bgImg'] && artExpiry > now) {
-      return this.setState({ img: window.localStorage.getItem('bgImg') });
+			console.log('trigger 1st cDM condition\n', artExpiry, '\n', window.localStorage['bgImg']);
+      return this.setState({
+				img: window.localStorage.getItem('bgImg'),
+				artData: JSON.parse(window.localStorage.getItem('artData'))
+			});
     }
     // if access token is fresh, get new art
     else if (tokenExpiry > now) {
       this.getNewArt(this.artsyStaticData.artReq, (data) => {
 				const newArt = data._links.image.href.replace('{image_version}','large'),
-					artistsName = data.slug.match(/(\w+)(?:-\w+)/),
-					artData = {
-						artist: artistsName,
-						title: data.title,
-						date: data.date,
-						collection: data.image_rights,
-						medium: data.medium
-					};
+							titleRE = RegExp(
+								'[^-' + data.title.match(/\w+/g).join('-') + '-\.*]', 'i'
+							),
+							artistsName = data.slug.match(titleRE),
+							artData = {
+								artist: artistsName,
+								title: data.title,
+								date: data.date,
+								collection: data.image_rights,
+								medium: data.medium
+							};
 				console.log(data, '\n', artData);
 				// if artExpiry is expired, set a new one in localStorage
 				artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
@@ -109,7 +116,10 @@ export default class Art extends Component {
         url: this.artsyStaticData.artReq.url
         }, (data) => {
           const newArt = data._links.image.href.replace('{image_version}','large'),
-								artistsName = data.slug.match(/(\w+)(?:-\w+)/),
+								titleRE = RegExp(
+									'[^-' + data.title.match(/\w+/g).join('-') + '-\.*]', 'i'
+								),
+								artistsName = data.slug.match(titleRE),
 								artData = {
 									artist: artistsName,
 									title: data.title,
@@ -117,7 +127,6 @@ export default class Art extends Component {
 									collection: data.image_rights,
 									medium: data.medium
 								};
-					console.log(data, '\n', artData);
 					// if artExpiry is expired, set a new one in localStorage
 					artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
@@ -140,15 +149,19 @@ export default class Art extends Component {
 	renderArtData() {
 		const artData = this.state.artData;
 		let dataArr = ['artist', 'title', 'medium', 'date', 'collection'];
+		//console.log(artData);
 		for (let key in artData) {
-			dataArr = dataArr.map(function(el) {
+			//console.log('dataArr FORIN:', dataArr);
+			dataArr = dataArr.map(function(el, i) {
+				//console.log('dataArr MAP:', key + ':', i + ':', el + ':', dataArr);
 				return (
 					key === el ?
-						<li>{ artData[key] }</li> :
+						<li className={ key } >{ artData[key] }</li> :
 						el
 				);
 			});
 		}
+		return dataArr;
 	}
 
 	render() {
@@ -157,7 +170,9 @@ export default class Art extends Component {
 			//document.getElementById("root").style.backgroundImage = background;
 			return (
 				<div id="art" className="artBG" style={{ backgroundImage: background }}>
-					<ul id="byline" className="byline bottom left corner"></ul>
+					<ul id="byline" className="byline bottom left corner">
+						{ this.renderArtData() }
+					</ul>
 				</div>
 			);
 		}
