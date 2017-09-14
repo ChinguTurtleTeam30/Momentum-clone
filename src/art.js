@@ -7,7 +7,6 @@ export default class Art extends Component {
 		super(props);
 		this.state = {
       img: null,
-      artsyToken: null
     };
 	}
 
@@ -75,12 +74,24 @@ export default class Art extends Component {
     // if access token is fresh, get new art
     else if (tokenExpiry > now) {
       this.getNewArt(this.artsyStaticData.artReq, (data) => {
-				const newArt = data._links.image.href.replace('{image_version}','large');
+				const newArt = data._links.image.href.replace('{image_version}','large'),
+					artistsName = data.slug.match(/(\w+)(?:-\w+)/),
+					artData = {
+						artist: artistsName,
+						title: data.title,
+						date: data.date,
+						collection: data.image_rights,
+						medium: data.medium
+					};
+				console.log(data, '\n', artData);
 				// if artExpiry is expired, set a new one in localStorage
 				artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
 					new Date(window.localStorage.get('artExpiry'));
-        this.props.store({ artExpiry: artExpiry, bgImg: newArt });
+				this.props.store({ artExpiry: artExpiry,
+													bgImg: newArt,
+													artData: JSON.stringify(artData)
+													});
         return (
           this.setState({
             img: data._links.image.href.replace('{image_version}','large')
@@ -97,15 +108,28 @@ export default class Art extends Component {
         }),
         url: this.artsyStaticData.artReq.url
         }, (data) => {
-          const newArt = data._links.image.href.replace('{image_version}','large');
+          const newArt = data._links.image.href.replace('{image_version}','large'),
+								artistsName = data.slug.match(/(\w+)(?:-\w+)/),
+								artData = {
+									artist: artistsName,
+									title: data.title,
+									date: data.date,
+									collection: data.image_rights,
+									medium: data.medium
+								};
+					console.log(data, '\n', artData);
 					// if artExpiry is expired, set a new one in localStorage
 					artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
 						new Date(window.localStorage.get('artExpiry'));
-          this.props.store({ artExpiry: artExpiry, bgImg: newArt });
+          this.props.store({ artExpiry: artExpiry,
+														bgImg: newArt,
+														artData: JSON.stringify(artData)
+													});
           return (
             this.setState({
-              img: newArt
+              img: newArt,
+							artData: artData
             })
           );
         }
@@ -113,11 +137,29 @@ export default class Art extends Component {
     }
 	}
 
+	renderArtData() {
+		const artData = this.state.artData;
+		let dataArr = ['artist', 'title', 'medium', 'date', 'collection'];
+		for (let key in artData) {
+			dataArr = dataArr.map(function(el) {
+				return (
+					key === el ?
+						<li>{ artData[key] }</li> :
+						el
+				);
+			});
+		}
+	}
+
 	render() {
 		if (this.state.img) {
 			var background = 'url("' + this.state.img + '")';
 			//document.getElementById("root").style.backgroundImage = background;
-			return <div id="art" className="artBG" style={{ backgroundImage: background }} />
+			return (
+				<div id="art" className="artBG" style={{ backgroundImage: background }}>
+					<ul id="byline" className="byline bottom left corner"></ul>
+				</div>
+			);
 		}
 		else return <div>Getting art...</div>;
 	}
