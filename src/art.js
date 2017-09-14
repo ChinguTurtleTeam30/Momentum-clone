@@ -69,7 +69,7 @@ export default class Art extends Component {
 
     // if art is in localStorage and it's fresh, load it up
     if (window.localStorage['bgImg'] && artExpiry > now) {
-			console.log('trigger 1st cDM condition\n', artExpiry, '\n', window.localStorage['bgImg']);
+			console.log('trigr 1ST cDM condn\n', artExpiry, '\n', window.localStorage['bgImg']);
       return this.setState({
 				img: window.localStorage.getItem('bgImg'),
 				artData: JSON.parse(window.localStorage.getItem('artData'))
@@ -77,10 +77,11 @@ export default class Art extends Component {
     }
     // if access token is fresh, get new art
     else if (tokenExpiry > now) {
+			console.log('trigr 2ND cDM condn', '\n', tokenExpiry);
       this.getNewArt(this.artsyStaticData.artReq, (data) => {
 				const newArt = data._links.image.href.replace('{image_version}','large'),
 							titleRE = RegExp(
-								'[^-' + data.title.match(/\w+/g).join('-') + '-\.*]', 'i'
+								'[^-' + data.title.match(/\w+/g).join('\\-') + '\\-\\.*]$', 'i'
 							),
 							artistsName = data.slug.match(titleRE),
 							artData = {
@@ -90,7 +91,7 @@ export default class Art extends Component {
 								collection: data.image_rights,
 								medium: data.medium
 							};
-				console.log(data, '\n', artData);
+				console.log(titleRE, '\n', data, '\n', artData);
 				// if artExpiry is expired, set a new one in localStorage
 				artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
@@ -101,13 +102,15 @@ export default class Art extends Component {
 													});
         return (
           this.setState({
-            img: data._links.image.href.replace('{image_version}','large')
+            img: data._links.image.href.replace('{image_version}','large'),
+						artData: artData
           })
         );
       });
     }
     // if token is expired and art is expired or absent, get new token and art
 		else {
+			console.log('trigr 3RD cDM condn', '\n');
 	    this.getNewArt({
         token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
           this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
@@ -117,7 +120,7 @@ export default class Art extends Component {
         }, (data) => {
           const newArt = data._links.image.href.replace('{image_version}','large'),
 								titleRE = RegExp(
-									'[^-' + data.title.match(/\w+/g).join('-') + '-\.*]', 'i'
+									'[^-' + data.title.match(/\w+/g).join('\\-') + '\\-\\.*]$', 'i'
 								),
 								artistsName = data.slug.match(titleRE),
 								artData = {
@@ -127,6 +130,7 @@ export default class Art extends Component {
 									collection: data.image_rights,
 									medium: data.medium
 								};
+					console.log(titleRE, '\n', data, '\n', artData);
 					// if artExpiry is expired, set a new one in localStorage
 					artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
@@ -147,21 +151,19 @@ export default class Art extends Component {
 	}
 
 	renderArtData() {
-		const artData = this.state.artData;
-		let dataArr = ['artist', 'title', 'medium', 'date', 'collection'];
-		//console.log(artData);
-		for (let key in artData) {
-			//console.log('dataArr FORIN:', dataArr);
-			dataArr = dataArr.map(function(el, i) {
-				//console.log('dataArr MAP:', key + ':', i + ':', el + ':', dataArr);
-				return (
-					key === el ?
-						<li className={ key } >{ artData[key] }</li> :
-						el
-				);
-			});
+		const artDataObj = this.state.artData,
+					dataFields = ['artist', 'title', 'medium', 'date', 'collection'];
+		let artDataDisplay = Array(3).fill(null);
+		console.log(artDataObj);
+
+		for (let key in artDataObj) {
+			if (dataFields.indexOf(key)) {
+				artDataDisplay[dataFields.indexOf(key)] =
+					<li className={ key } key={ "artData-" + dataFields.indexOf(key) }>{ artDataObj[key] }</li>
+			}
 		}
-		return dataArr;
+		console.log(artDataDisplay);
+		return artDataDisplay;
 	}
 
 	render() {
