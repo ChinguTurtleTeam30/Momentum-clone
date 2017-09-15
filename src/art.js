@@ -6,7 +6,6 @@ export default class Art extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-      img: null,
     };
 	}
 
@@ -63,12 +62,12 @@ export default class Art extends Component {
 	handleNewArt(data, time) {
 		console.log('res Object', data);
 		const newArt = data._links.image.href.replace('{image_version}','large'),
-					titleSlug = data.title.match(/\w+/g).join('-'),
+					titleSlug = data.title.match(/\w+/g).join('-').toLowerCase(),
 					artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
 					artistName = artistSlug.split('-').map(function(el) {
 						const word = el.split('');
 						word[0] = word[0].toUpperCase();
-						return word.join(' ');
+						return word.join('');
 					}).join(' '),
 					artData = {
 						artist: artistName,
@@ -79,13 +78,17 @@ export default class Art extends Component {
 					},
 					storeThis = {
 						bgImg: newArt,
-						artData: JSON.stringify(artData)
+						artData: artData
 					},
 					timestamp = new Date(
 						time.getFullYear(), time.getMonth(), time.getDate() + 1, 0, 1
 					);
+		console.log('slug', data.slug + '\n', 'title', data.title + '\n', 'titleSlug',
+			titleSlug + '\n', 'indexOf', data.slug.indexOf(titleSlug) + '\n',
+			'artistSlug', artistSlug + '\n', 'artistName', artistName);
 
-		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis));
+		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis,
+			{ artData: JSON.stringify(artData) }));
 
 		return this.setState(Object.assign({}, storeThis));
 
@@ -94,7 +97,7 @@ export default class Art extends Component {
 	renderArtData() {
 		const artDataObj = this.state.artData,
 					dataFields = ['artist', 'title', 'medium', 'date', 'collection'];
-		let artDataDisplay = Array(3).fill(null);
+		let artDataDisplay = Array(5).fill(null);
 
 		for (let key in artDataObj) {
 			if (dataFields.indexOf(key)) {
