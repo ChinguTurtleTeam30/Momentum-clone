@@ -64,13 +64,12 @@ export default class Art extends Component {
 		const newArt = data._links.image.href.replace('{image_version}','large'),
 					titleSlug = data.title.match(/\w+/g).join('-').toLowerCase(),
 					artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
-					artistName = artistSlug.split('-').map(function(el) {
-						const word = el.split('');
-						word[0] = word[0].toUpperCase();
-						return word.join('');
-					}).join(' '),
 					artData = {
-						artist: artistName,
+						artist: artistSlug.split('-').map((el) => {
+							const word = el.split('');
+							word[0] = word[0].toUpperCase();
+							return word.join('');
+						}).join(' '),
 						title: data.title,
 						date: data.date,
 						collection: data.image_rights,
@@ -83,9 +82,8 @@ export default class Art extends Component {
 					timestamp = new Date(
 						time.getFullYear(), time.getMonth(), time.getDate() + 1, 0, 1
 					);
-		console.log('slug', data.slug + '\n', 'title', data.title + '\n', 'titleSlug',
-			titleSlug + '\n', 'indexOf', data.slug.indexOf(titleSlug) + '\n',
-			'artistSlug', artistSlug + '\n', 'artistName', artistName);
+
+		console.log(artistSlug, '\n', data.slug, '\n', titleSlug, '\n', artData);
 
 		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis,
 			{ artData: JSON.stringify(artData) }));
