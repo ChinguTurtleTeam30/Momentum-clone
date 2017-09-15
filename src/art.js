@@ -60,12 +60,13 @@ export default class Art extends Component {
     });
   }
 
-	handleNewArt(data) {
+	handleNewArt(data, time) {
+		console.log('res Object', data);
 		const newArt = data._links.image.href.replace('{image_version}','large'),
 					titleSlug = data.title.match(/\w+/g).join('-'),
-					artistSlug = data.slug.slice(0, artist.slug.indexOf(titleSlug) - 1),
+					artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
 					artistName = artistSlug.split('-').map(function(el) {
-						word = el.split('');
+						const word = el.split('');
 						word[0] = word[0].toUpperCase();
 						return word.join(' ');
 					}).join(' '),
@@ -75,113 +76,19 @@ export default class Art extends Component {
 						date: data.date,
 						collection: data.image_rights,
 						medium: data.medium
-					};
-		// if artExpiry is expired, set a new one in localStorage
-		artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
-			new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
-			new Date(window.localStorage.get('artExpiry'));
-		this.props.store({ artExpiry: artExpiry,
-											bgImg: newArt,
-											artData: JSON.stringify(artData)
-											});
-		return (
-			this.setState({
-				img: newArt,
-				artData: artData
-			})
-		);
-	}
+					},
+					storeThis = {
+						bgImg: newArt,
+						artData: JSON.stringify(artData)
+					},
+					timestamp = new Date(
+						time.getFullYear(), time.getMonth(), time.getDate() + 1, 0, 1
+					);
 
-	componentDidMount() {
-    let now = new Date(),
-		    artExpiry = new Date(window.localStorage.getItem('artExpiry')),
-        tokenExpiry = window.localStorage.getItem('artsyTokenExpiry') &&
-          new Date(window.localStorage.getItem('artsyTokenExpiry')) > now ?
-					new Date(window.localStorage.getItem('artsyTokenExpiry')) : null;
+		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis));
 
-    // if art is in localStorage and it's fresh, load it up
-    if (window.localStorage['bgImg'] && artExpiry > now) {
-			console.log('trigr 1ST cDM condn\n', artExpiry, '\n', window.localStorage['bgImg']);
-      return this.setState({
-				img: window.localStorage.getItem('bgImg'),
-				artData: JSON.parse(window.localStorage.getItem('artData'))
-			});
-    }
-    // if access token is fresh, get new art
-    else if (tokenExpiry > now) {
-			console.log('trigr 2ND cDM condn', '\n', tokenExpiry);
-      this.getNewArt(this.artsyStaticData.artReq, (data) => {
-				const newArt = data._links.image.href.replace('{image_version}','large'),
-							titleRE = RegExp(
-								'[^-' + data.title.match(/\w+/g).join('\\-') + '\\-\\.*]$', 'i'
-							),
-							artistsName = data.slug.match(titleRE),
-							artData = {
-								artist: artistsName,
-								title: data.title,
-								date: data.date,
-								collection: data.image_rights,
-								medium: data.medium
-							},
-							storeThis = {
-								bgImg: newArt,
-								artData: JSON.stringify(artData)
-							};
-				// if artExpiry is expired, set a new one in localStorage
-				artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
-					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
-					new Date(window.localStorage.get('artExpiry'));
-				this.props.store({ artExpiry: artExpiry,
-													bgImg: newArt,
-													artData: JSON.stringify(artData)
-													});
-        return (
-          this.setState({
-            img: data._links.image.href.replace('{image_version}','large'),
-						artData: artData
-          })
-        );
-      });
-    }
-    // if token is expired and art is expired or absent, get new token and art
-		else {
-			console.log('trigr 3RD cDM condn', '\n');
-	    this.getNewArt({
-        token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
-          this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
-          return data.token;
-        }),
-        url: this.artsyStaticData.artReq.url
-        }, (data) => {
-          const newArt = data._links.image.href.replace('{image_version}','large'),
-								titleRE = RegExp(
-									'[^-' + data.title.match(/\w+/g).join('\\-') + '\\-\\.*]$', 'i'
-								),
-								artistsName = data.slug.match(titleRE),
-								artData = {
-									artist: artistsName,
-									title: data.title,
-									date: data.date,
-									collection: data.image_rights,
-									medium: data.medium
-								};
-					// if artExpiry is expired, set a new one in localStorage
-					artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
-						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
-						new Date(window.localStorage.get('artExpiry'));
-          this.props.store({ artExpiry: artExpiry,
-														bgImg: newArt,
-														artData: JSON.stringify(artData)
-													});
-          return (
-            this.setState({
-              img: newArt,
-							artData: artData
-            })
-          );
-        }
-      );
-    }
+		return this.setState(Object.assign({}, storeThis));
+
 	}
 
 	renderArtData() {
@@ -198,9 +105,45 @@ export default class Art extends Component {
 		return artDataDisplay;
 	}
 
+	componentDidMount() {
+    let now = new Date(),
+		    artExpiry = new Date(window.localStorage.getItem('artExpiry')),
+        tokenExpiry = window.localStorage.getItem('artsyTokenExpiry') &&
+          new Date(window.localStorage.getItem('artsyTokenExpiry')) > now ?
+					new Date(window.localStorage.getItem('artsyTokenExpiry')) : null;
+
+    // if art is in localStorage and it's fresh, load it up
+    if (window.localStorage['bgImg'] && artExpiry > now) {
+			console.log('trigr 1ST cDM condn\n', artExpiry, '\n', window.localStorage['bgImg']);
+      return this.setState({
+				bgImg: window.localStorage.getItem('bgImg'),
+				artData: JSON.parse(window.localStorage.getItem('artData'))
+			});
+    }
+    // if access token is fresh, get new art
+    else if (tokenExpiry > now) {
+			console.log('trigr 2ND cDM condn', '\n', tokenExpiry);
+      this.getNewArt(this.artsyStaticData.artReq, (data) =>
+				this.handleNewArt(data, now)
+			);
+    }
+    // if token is expired and art is expired or absent, get new token and art
+		else {
+			console.log('trigr 3RD cDM condn');
+	    this.getNewArt({
+        token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
+          this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
+          return data.token;
+        }),
+        url: this.artsyStaticData.artReq.url
+			}, (data) => this.handleNewArt(data, now)
+      );
+    }
+	}
+
 	render() {
-		if (this.state.img) {
-			var background = 'url("' + this.state.img + '")';
+		if (this.state.bgImg) {
+			var background = 'url("' + this.state.bgImg + '")';
 			//document.getElementById("root").style.backgroundImage = background;
 			return (
 				<div id="art" className="artBG" style={{ backgroundImage: background }}>
