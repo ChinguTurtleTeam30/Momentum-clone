@@ -60,6 +60,38 @@ export default class Art extends Component {
     });
   }
 
+	handleNewArt(data) {
+		const newArt = data._links.image.href.replace('{image_version}','large'),
+					titleSlug = data.title.match(/\w+/g).join('-'),
+					artistSlug = data.slug.slice(0, artist.slug.indexOf(titleSlug) - 1),
+					artistName = artistSlug.split('-').map(function(el) {
+						word = el.split('');
+						word[0] = word[0].toUpperCase();
+						return word.join(' ');
+					}).join(' '),
+					artData = {
+						artist: artistName,
+						title: data.title,
+						date: data.date,
+						collection: data.image_rights,
+						medium: data.medium
+					};
+		// if artExpiry is expired, set a new one in localStorage
+		artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
+			new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
+			new Date(window.localStorage.get('artExpiry'));
+		this.props.store({ artExpiry: artExpiry,
+											bgImg: newArt,
+											artData: JSON.stringify(artData)
+											});
+		return (
+			this.setState({
+				img: newArt,
+				artData: artData
+			})
+		);
+	}
+
 	componentDidMount() {
     let now = new Date(),
 		    artExpiry = new Date(window.localStorage.getItem('artExpiry')),
@@ -90,8 +122,11 @@ export default class Art extends Component {
 								date: data.date,
 								collection: data.image_rights,
 								medium: data.medium
+							},
+							storeThis = {
+								bgImg: newArt,
+								artData: JSON.stringify(artData)
 							};
-				console.log(titleRE, '\n', data, '\n', artData);
 				// if artExpiry is expired, set a new one in localStorage
 				artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 					new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
@@ -130,7 +165,6 @@ export default class Art extends Component {
 									collection: data.image_rights,
 									medium: data.medium
 								};
-					console.log(titleRE, '\n', data, '\n', artData);
 					// if artExpiry is expired, set a new one in localStorage
 					artExpiry = new Date(window.localStorage.getItem('artExpiry')) < now ?
 						new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 1) :
@@ -154,7 +188,6 @@ export default class Art extends Component {
 		const artDataObj = this.state.artData,
 					dataFields = ['artist', 'title', 'medium', 'date', 'collection'];
 		let artDataDisplay = Array(3).fill(null);
-		console.log(artDataObj);
 
 		for (let key in artDataObj) {
 			if (dataFields.indexOf(key)) {
@@ -162,7 +195,6 @@ export default class Art extends Component {
 					<li className={ key } key={ "artData-" + dataFields.indexOf(key) }>{ artDataObj[key] }</li>
 			}
 		}
-		console.log(artDataDisplay);
 		return artDataDisplay;
 	}
 
