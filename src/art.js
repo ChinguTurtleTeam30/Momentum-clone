@@ -98,9 +98,11 @@ export default class Art extends Component {
 		let artDataDisplay = Array(5).fill(null);
 
 		for (let key in artDataObj) {
-			if (dataFields.indexOf(key)) {
+			if (dataFields.includes(key)) {
 				artDataDisplay[dataFields.indexOf(key)] =
-					<li className={ key } key={ "artData-" + dataFields.indexOf(key) }>{ artDataObj[key] }</li>
+					<li className={ key } key={ "artData-" + dataFields.indexOf(key) }>
+						{ artDataObj[key] }
+					</li>
 			}
 		}
 		return artDataDisplay;
