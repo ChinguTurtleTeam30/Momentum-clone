@@ -156,7 +156,7 @@ export default class Art extends Component {
 					url: data._links.artists.href,
 					token: this.artsyQryData.artReq.token
 				}, (res) => {
-					console.log(res);
+					//console.log(res);
 					this.setState((prevState) => {
 						const prevArtData = prevState.artData,
 									newArtData = Object.assign(prevArtData,
