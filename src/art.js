@@ -9,7 +9,7 @@ export default class Art extends Component {
     };
 	}
 
-  artsyStaticData = {
+  artsyQryData = {
     tokenReq: {
       clientID: '7c49150d5697e33be871',
       key: process.env.REACT_APP_CLIENTSECRET || '204d8604bbc71c2038192655565f01f8',
@@ -17,7 +17,7 @@ export default class Art extends Component {
     },
     artReq: {
       url: 'https://api.artsy.net/api/artworks?&sample=1',
-      token: window.localStorage.getItem('artsyToken') || null
+      token: window.localStorage.getItem('artsyToken') || null,
     }
   }
 
@@ -59,21 +59,40 @@ export default class Art extends Component {
     });
   }
 
+	getArtist(reqObj, callback) {
+		const options = {
+			method: 'GET',
+			headers: {
+				'X-Xapp-Token': reqObj.token,
+				Accept: 'application/vnd.artsy-v2+json'
+			}
+		};
+
+		fetch(reqObj.url, options)
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			return callback(data);
+		});
+	}
+
 	handleNewArt(data, time) {
 		console.log('res Object', data);
 		const newArt = data._links.image.href.replace('{image_version}','large'),
-					titleSlug = data.title.match(/\w+/g).join('-').toLowerCase(),
-					artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
+					//titleSlug = data.title.match(/\w+/g).join('-').toLowerCase(),
+					//artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
 					artData = {
-						artist: artistSlug.split('-').map((el) => {
+						/*artist: artistSlug.split('-').map((el) => {
 							const word = el.split('');
 							word[0] = word[0].toUpperCase();
 							return word.join('');
-						}).join(' '),
+						}).join(' '),*/
 						title: data.title,
 						date: data.date,
 						collection: data.image_rights,
-						medium: data.medium
+						medium: data.medium,
+						artID: data.id
 					},
 					storeThis = {
 						bgImg: newArt,
@@ -82,8 +101,6 @@ export default class Art extends Component {
 					timestamp = new Date(
 						time.getFullYear(), time.getMonth(), time.getDate() + 1, 0, 1
 					);
-
-		console.log(artistSlug, '\n', data.slug, '\n', titleSlug, '\n', artData);
 
 		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis,
 			{ artData: JSON.stringify(artData) }));
@@ -117,7 +134,6 @@ export default class Art extends Component {
 
     // if art is in localStorage and it's fresh, load it up
     if (window.localStorage['bgImg'] && artExpiry > now) {
-			console.log('trigr 1ST cDM condn\n', artExpiry, '\n', window.localStorage['bgImg']);
       return this.setState({
 				bgImg: window.localStorage.getItem('bgImg'),
 				artData: JSON.parse(window.localStorage.getItem('artData'))
@@ -125,20 +141,27 @@ export default class Art extends Component {
     }
     // if access token is fresh, get new art
     else if (tokenExpiry > now) {
-			console.log('trigr 2ND cDM condn', '\n', tokenExpiry);
-      this.getNewArt(this.artsyStaticData.artReq, (data) =>
-				this.handleNewArt(data, now)
-			);
+      this.getNewArt(this.artsyQryData.artReq, (data) => {
+				this.getArtist({
+					url: data._links.artists.href,
+					token: this.artsyQryData.artReq.token
+				}, (res) => {
+					this.setState((prevState) => {
+						const prevArtData = prevState.artData;
+						return { artData: Object.assign({}, prevArtData, { artist: res.name }});
+					})
+				});
+				return this.handleNewArt(data, now);
+			});
     }
     // if token is expired and art is expired or absent, get new token and art
 		else {
-			console.log('trigr 3RD cDM condn');
 	    this.getNewArt({
-        token: this.getNewToken(this.artsyStaticData.tokenReq, (data) => {
+        token: this.getNewToken(this.artsyQryData.tokenReq, (data) => {
           this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
           return data.token;
         }),
-        url: this.artsyStaticData.artReq.url
+        url: this.artsyQryData.artReq.url
 			}, (data) => this.handleNewArt(data, now)
       );
     }
