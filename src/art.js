@@ -6,6 +6,14 @@ export default class Art extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			artData: JSON.parse(window.localStorage.getItem('artData')) ||
+				{
+					artist: '',
+					title: '',
+					medium: '',
+					date: '',
+					collection: ''
+				}
     };
 	}
 
@@ -78,7 +86,7 @@ export default class Art extends Component {
 	}
 
 	handleNewArt(data, time) {
-		console.log('res Object', data);
+		//console.log('res Object', data);
 		const newArt = data._links.image.href.replace('{image_version}','large'),
 					//titleSlug = data.title.match(/\w+/g).join('-').toLowerCase(),
 					//artistSlug = data.slug.slice(0, data.slug.indexOf(titleSlug) - 1),
@@ -92,21 +100,23 @@ export default class Art extends Component {
 						date: data.date,
 						collection: data.image_rights,
 						medium: data.medium,
-						artID: data.id
-					},
-					storeThis = {
-						bgImg: newArt,
-						artData: artData
 					},
 					timestamp = new Date(
 						time.getFullYear(), time.getMonth(), time.getDate() + 1, 0, 1
 					);
 
-		this.props.store(Object.assign({ artExpiry: timestamp }, storeThis,
-			{ artData: JSON.stringify(artData) }));
-
-		return this.setState(Object.assign({}, storeThis));
-
+		return this.setState((prevState) => {
+			const prevArtData = prevState.artData,
+						newArtData = Object.assign(prevArtData, artData),
+						storeThis = {
+							bgImg: newArt,
+							artData: newArtData,
+							artExpiry: timestamp
+						};
+			this.props.store(Object.assign({}, storeThis,
+				{ artData: JSON.stringify(newArtData) }));
+			return storeThis;
+		});
 	}
 
 	renderArtData() {
@@ -146,9 +156,14 @@ export default class Art extends Component {
 					url: data._links.artists.href,
 					token: this.artsyQryData.artReq.token
 				}, (res) => {
+					console.log(res);
 					this.setState((prevState) => {
-						const prevArtData = prevState.artData;
-						return { artData: Object.assign({}, prevArtData, { artist: res.name }});
+						const prevArtData = prevState.artData,
+									newArtData = Object.assign(prevArtData,
+										{ artist: res._embedded.artists["0"].name });
+
+						this.props.store({ artData: JSON.stringify(newArtData) });
+						return { artData: newArtData };
 					})
 				});
 				return this.handleNewArt(data, now);
