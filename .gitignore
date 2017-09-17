@@ -1,5 +1,5 @@
-iNEEDtHESEcOMMITS.txt
 # See https://help.github.com/ignore-files/ for more about ignoring files.
+/mockup
 
 # dependencies
 /node_modules
@@ -11,7 +11,7 @@ iNEEDtHESEcOMMITS.txt
 /build
 
 # misc
-.DS_Store
+**/.DS_Store
 .env.local
 .env.development.local
 .env.test.local
