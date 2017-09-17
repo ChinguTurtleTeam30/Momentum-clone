@@ -188,9 +188,11 @@ export default class Art extends Component {
 			//document.getElementById("root").style.backgroundImage = background;
 			return (
 				<div id="art" className="artBG" style={{ backgroundImage: background }}>
-					<ul id="byline" className="byline bottom left corner">
-						{ this.renderArtData() }
-					</ul>
+					<aside className="bannerBG">
+						<ul id="byline" className="byline bottom left corner">
+							{ this.renderArtData() }
+						</ul>
+					</aside>
 				</div>
 			);
 		}
