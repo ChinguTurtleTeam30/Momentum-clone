@@ -8,9 +8,10 @@ class Weather extends Component {
       temperature: '',
       degrees: '',
       units: '',
+      // fallback locs: Bermuda Triangle or null island
       location: null,
       weatherType: null,
-      apiSrc: 'http://api.openweathermap.org/data/2.5/',
+      apiURL: 'http://api.openweathermap.org/data/2.5/',
       qryType: 'weather',
       qryUnits: 'imperial',
       apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
@@ -18,11 +19,24 @@ class Weather extends Component {
     }
   }
 
-  getWeather(obj, callback) {
-    const src = obj.state;
-    let qryUrl = src.apiSrc + src.qryType + '?units=' + src.qryUnits +
-      '&lat=' + src.coords[0] +
-      '&lon=' + src.coords[1] + '&' + src.apiKey;
+  weatherQryData = {
+    apiURL: 'http://api.openweathermap.org/data/2.5/',
+    qryType: 'weather',
+    qryUnits: 'imperial',
+    apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
+    iconSrc: 'http://openweathermap.org/img/w/',
+  }
+
+  locQryData = {
+    apiURL: 'http://ip-api.com/',
+    format: 'json',
+  }
+
+  getWeather = (reqObj, callback) => {
+    // call getLoc in here
+    const qryUrl = reqObj.apiURL + reqObj.qryType + '?units=' + reqObj.qryUnits +
+      '&lat=' + reqObj.coords[0] +
+      '&lon=' + reqObj.coords[1] + '&' + reqObj.apiKey;
     fetch(qryUrl)
     .then(function(res) {
       return res.json();
@@ -32,14 +46,12 @@ class Weather extends Component {
     })
   }
 
-  getLoc = (obj, callback) => {
+  getLoc = (reqObj, callback) => {
     if ('geolocation' in navigator) { //should have ip-sniffer fallback
       navigator.geolocation.getCurrentPosition(
         function(pos) {
           return (
-            obj.setState({ coords: [pos.coords.latitude.toFixed(2),
-              pos.coords.longitude.toFixed(2)] }),
-            callback(obj)
+            callback(pos)
           );
         },
         function(err) {
@@ -51,15 +63,15 @@ class Weather extends Component {
       );
     }
     else {
-      let noGeo = new Error(Error('navigator.geolocation unavailable'));
-      return (
-        console.error(noGeo),
-        alert(noGeo)
-      );
+      fetch(reqObj.fallbackURL)
+      .then((res) => {
+        return callback(res);
+      });
     }
   }
 
-  convertTemp(tempIn, tempOut, num) {
+//I think this has become unnecessary
+/*  convertTemp(tempIn, tempOut, num) {
     const rat = 5/9;
     const adj = {
       k: 273.15,
@@ -84,9 +96,40 @@ class Weather extends Component {
             num
     );
   }
+  */
 
   componentWillMount() {
-    this.getLoc(this, function(comp) {
+    this.getLoc({
+      fallbackURL: this.locQryData.apiURL + this.locQryData.format
+    }, (data) => {
+      if (data.__proto__ === 'Position') {
+        return {
+          lat: data.coords.latitutde,
+          lon: data.coords.longitude
+        }
+      }
+    });
+    /*this.getWeather({
+      apiURL: weatherQryData.apiURL,
+      qryType: weatherQryData.qryType,
+      qryUnits: weatherQryData.qryUnits,
+      coords: getLoc({
+        fallbackURL: locQryData.apiURL + locQryData.format
+      }, (res) => {
+        return console.log(res):
+      })
+    }, (data) => {
+      const icon = /^50/.test(json.weather[0].icon) ? '50d' :
+                  json.weather[0].icon;
+      this.setState({
+        location: data.name,
+        temperature: data.main.temp.toFixed(0),
+        units: json.main.units,
+        degrees: json.main.degrees,
+        weatherType: json.weather[0].main,
+        icon: 'owi owi-' + icon,
+      })
+    }
       return comp.getWeather(comp, function(json) {
         //only because open-weather-icon's 50-series icons are wrong:
         const icon = /^50/.test(json.weather[0].icon) ? '50d' :
@@ -106,7 +149,7 @@ class Weather extends Component {
           })
         );
       });
-    });
+    });*/
   }
 
   render() {
