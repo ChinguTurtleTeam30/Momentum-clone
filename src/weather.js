@@ -102,10 +102,23 @@ class Weather extends Component {
     this.getLoc({
       fallbackURL: this.locQryData.apiURL + this.locQryData.format
     }, (data) => {
-      if (data.__proto__ === 'Position') {
+      if ('coords' in data) {
         return {
           lat: data.coords.latitutde,
           lon: data.coords.longitude
+        }
+      }
+      else if ('lat' in data && 'lon' in data) {
+        return {
+          lat: data.lat,
+          lon: data.lon
+        }
+      }
+      else {
+        console.warn('browser geolocation unavailable');
+        return {
+          lat: 0,
+          lon: 0
         }
       }
     });
