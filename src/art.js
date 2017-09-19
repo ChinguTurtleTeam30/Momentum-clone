@@ -152,15 +152,17 @@ export default class Art extends Component {
     // if access token is fresh, get new art
     else if (tokenExpiry > now) {
       this.getNewArt(this.artsyQryData.artReq, (data) => {
+				console.log(data);
 				this.getArtist({
 					url: data._links.artists.href,
 					token: this.artsyQryData.artReq.token
 				}, (res) => {
-					//console.log(res);
+					console.log(res);
 					this.setState((prevState) => {
 						const prevArtData = prevState.artData,
+									artist = res._embedded.artists[0].name || 'artist unknown',
 									newArtData = Object.assign(prevArtData,
-										{ artist: res._embedded.artists["0"].name });
+										{ artist: artist });
 
 						this.props.store({ artData: JSON.stringify(newArtData) });
 						return { artData: newArtData };
@@ -172,13 +174,29 @@ export default class Art extends Component {
     // if token is expired and art is expired or absent, get new token and art
 		else {
 	    this.getNewArt({
+				url: this.artsyQryData.artReq.url,
         token: this.getNewToken(this.artsyQryData.tokenReq, (data) => {
           this.props.store({ artsyToken: data.token, artsyTokenExpiry: data.expires_at });
           return data.token;
-        }),
-        url: this.artsyQryData.artReq.url
-			}, (data) => this.handleNewArt(data, now)
-      );
+        })
+			}, (data) => {
+				this.getArtist({
+					url: data._links.artists.href,
+					token: this.artsyQryData.artReq.token
+				}, (res) => {
+					console.log(res);
+					this.setState((prevState) => {
+						const prevArtData = prevState.artData,
+									artist = res._embedded.artists[0].name || 'artist unknown',
+									newArtData = Object.assign(prevArtData,
+										{ artist: artist });
+
+						this.props.store({ artData: JSON.stringify(newArtData) });
+						return { artData: newArtData };
+					})
+				});
+				return this.handleNewArt(data, now)
+			});
     }
 	}
 
