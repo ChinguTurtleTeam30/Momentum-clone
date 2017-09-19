@@ -34,7 +34,7 @@ class Weather extends Component {
           qryUrl = reqObj.apiURL + reqObj.qryType + '?units=' + units +
             '&lat=' + reqObj.coords.lat +
             '&lon=' + reqObj.coords.lon + '&' + reqObj.apiKey;
-    console.log(qryUrl);
+    //console.log(qryUrl);
     fetch(qryUrl)
     .then(function(res) {
       return res.json();
@@ -50,12 +50,12 @@ class Weather extends Component {
       navigator.geolocation.getCurrentPosition(
         function(pos) {
           key = 'nav.geo';
-          console.log(key, pos);
+          //console.log(key, pos);
           return callback(key, pos)
         },
         function(err) {
           key = 'err';
-          console.log(key, err);
+          //console.log(key, err);
           return callback(key, err);
         }
       );
@@ -63,9 +63,12 @@ class Weather extends Component {
     else {
       fetch(reqObj.fallbackURL)
       .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
         key = 'ip-api';
-        console.log(key, res);
-        return callback(key, res);
+        //console.log(key, json);
+        return callback(key, json);
       });
     }
   }
