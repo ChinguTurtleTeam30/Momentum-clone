@@ -30,16 +30,17 @@ class Weather extends Component {
 
   getWeather = (reqObj, callback) => {
     // call getLoc in here
-    const qryUrl = reqObj.apiURL + reqObj.qryType + '?units=' + reqObj.qryUnits +
-      '&lat=' + reqObj.coords.lat +
-      '&lon=' + reqObj.coords.lon + '&' + reqObj.apiKey;
+    const units = reqObj.qryUnits || 'default',
+          qryUrl = reqObj.apiURL + reqObj.qryType + '?units=' + units +
+            '&lat=' + reqObj.coords.lat +
+            '&lon=' + reqObj.coords.lon + '&' + reqObj.apiKey;
     console.log(qryUrl);
     fetch(qryUrl)
     .then(function(res) {
       return res.json();
     })
     .then(function(res) {
-      return callback(res);
+      return callback(res, units);
     })
   }
 
@@ -113,13 +114,13 @@ class Weather extends Component {
                   { lat: res.lat.toFixed(2),
                     lon: res.lon.toFixed(2) } :
                   { lat: 0, lon: 0 }
-        }, (data) => {
+        }, (data, qryUnits) => {
           //only because open-weather-icon's 50-series icons are wrong:
           const icon = /^50/.test(data.weather[0].icon) ? '50d' :
                         data.weather[0].icon,
-                units = !this.state.qryUnits ? 'K' :
-                          this.state.qryUnits === 'imperial' ? 'F' :
-                            this.state.qryUnits === 'metric' ? 'C' : 'K',
+                units = !qryUnits ? 'K' :
+                          qryUnits === 'imperial' ? 'F' :
+                            qryUnits === 'metric' ? 'C' : 'K',
                 degrees = units === 'C' || units === 'F' ? '\xb0' : '';
 
           this.setState({
@@ -133,47 +134,6 @@ class Weather extends Component {
           //console.log(data)
       })
     });
-    /*this.getWeather({
-      apiURL: weatherQryData.apiURL,
-      qryType: weatherQryData.qryType,
-      qryUnits: weatherQryData.qryUnits,
-      coords: getLoc({
-        fallbackURL: locQryData.apiURL + locQryData.format
-      }, (res) => {
-        return console.log(res):
-      })
-    }, (data) => {
-      const icon = /^50/.test(json.weather[0].icon) ? '50d' :
-                  json.weather[0].icon;
-      this.setState({
-        location: data.name,
-        temperature: data.main.temp.toFixed(0),
-        units: json.main.units,
-        degrees: json.main.degrees,
-        weatherType: json.weather[0].main,
-        icon: 'owi owi-' + icon,
-      })
-    }
-      return comp.getWeather(comp, function(json) {
-        //only because open-weather-icon's 50-series icons are wrong:
-        const icon = /^50/.test(json.weather[0].icon) ? '50d' :
-                      json.weather[0].icon,
-              units = !comp.state.qryUnits ? 'K' :
-                        comp.state.qryUnits === 'imperial' ? 'F' :
-                          comp.state.qryUnits === 'metric' ? 'C' : 'K',
-              degrees = units === 'C' || units === 'F' ? '\xb0' : '';
-        return (
-          comp.setState({
-            location: json.name,
-            temperature: json.main.temp.toFixed(0),
-            units: units,
-            degrees: degrees,
-            weatherType: json.weather[0].main,
-            icon: 'owi owi-' + icon,
-          })
-        );
-      });
-    });*/
   }
 
   render() {
