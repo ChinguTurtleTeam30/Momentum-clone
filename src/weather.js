@@ -9,12 +9,9 @@ class Weather extends Component {
       degrees: '',
       units: '',
       // fallback locs: Bermuda Triangle or null island
+      qryUnits: 'imperial',
       location: null,
       weatherType: null,
-      apiURL: 'http://api.openweathermap.org/data/2.5/',
-      qryType: 'weather',
-      qryUnits: 'imperial',
-      apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
       iconSrc: 'http://openweathermap.org/img/w/',
     }
   }
@@ -22,7 +19,6 @@ class Weather extends Component {
   weatherQryData = {
     apiURL: 'http://api.openweathermap.org/data/2.5/',
     qryType: 'weather',
-    qryUnits: 'imperial',
     apiKey: 'APPID=79aef489883f75aff91f8900796eb1ea',
     iconSrc: 'http://openweathermap.org/img/w/',
   }
@@ -35,8 +31,9 @@ class Weather extends Component {
   getWeather = (reqObj, callback) => {
     // call getLoc in here
     const qryUrl = reqObj.apiURL + reqObj.qryType + '?units=' + reqObj.qryUnits +
-      '&lat=' + reqObj.coords[0] +
-      '&lon=' + reqObj.coords[1] + '&' + reqObj.apiKey;
+      '&lat=' + reqObj.coords.lat +
+      '&lon=' + reqObj.coords.lon + '&' + reqObj.apiKey;
+    console.log(qryUrl);
     fetch(qryUrl)
     .then(function(res) {
       return res.json();
@@ -47,25 +44,27 @@ class Weather extends Component {
   }
 
   getLoc = (reqObj, callback) => {
-    if ('geolocation' in navigator) { //should have ip-sniffer fallback
+    let key = '';
+    if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         function(pos) {
-          return (
-            callback(pos)
-          );
+          key = 'nav.geo';
+          console.log(key, pos);
+          return callback(key, pos)
         },
         function(err) {
-          return (
-            console.error(err),
-            alert(err)
-          );
+          key = 'err';
+          console.log(key, err);
+          return callback(key, err);
         }
       );
     }
     else {
       fetch(reqObj.fallbackURL)
       .then((res) => {
-        return callback(res);
+        key = 'ip-api';
+        console.log(key, res);
+        return callback(key, res);
       });
     }
   }
@@ -101,26 +100,38 @@ class Weather extends Component {
   componentWillMount() {
     this.getLoc({
       fallbackURL: this.locQryData.apiURL + this.locQryData.format
-    }, (data) => {
-      if ('coords' in data) {
-        return {
-          lat: data.coords.latitutde,
-          lon: data.coords.longitude
-        }
-      }
-      else if ('lat' in data && 'lon' in data) {
-        return {
-          lat: data.lat,
-          lon: data.lon
-        }
-      }
-      else {
-        console.warn('browser geolocation unavailable');
-        return {
-          lat: 0,
-          lon: 0
-        }
-      }
+    }, (key, res) => {
+      this.getWeather({
+        apiURL: this.weatherQryData.apiURL,
+        qryType: this.weatherQryData.qryType,
+        qryUnits: this.state.qryUnits,
+        apiKey: this.weatherQryData.apiKey,
+        coords: 'coords' in res ?
+                { lat: res.coords.latitude.toFixed(2),
+                  lon: res.coords.longitude.toFixed(2) } :
+                'lat' in res && 'lon' in res ?
+                  { lat: res.lat.toFixed(2),
+                    lon: res.lon.toFixed(2) } :
+                  { lat: 0, lon: 0 }
+        }, (data) => {
+          //only because open-weather-icon's 50-series icons are wrong:
+          const icon = /^50/.test(data.weather[0].icon) ? '50d' :
+                        data.weather[0].icon,
+                units = !this.state.qryUnits ? 'K' :
+                          this.state.qryUnits === 'imperial' ? 'F' :
+                            this.state.qryUnits === 'metric' ? 'C' : 'K',
+                degrees = units === 'C' || units === 'F' ? '\xb0' : '';
+
+          this.setState({
+            location: data.name,
+            temperature: data.main.temp.toFixed(0),
+            units: units,
+            degrees: degrees,
+            weatherType: data.weather[0].main,
+            icon: 'owi owi-' + icon
+          });
+          //console.log(data)
+      })
     });
     /*this.getWeather({
       apiURL: weatherQryData.apiURL,
@@ -171,9 +182,11 @@ class Weather extends Component {
         <p className="weatherData">
           <i className={ "weather-icon " + this.state.icon }></i>
           <span className="temperature">
-            { this.state.temperature + this.state.degrees }
+            { this.state.temperature }
           </span>
-          <span className="tempUnits">{ this.state.units }</span>
+          <span className="tempUnits">
+            { this.state.degrees + this.state.units }
+          </span>
         </p>
         <p className="location">{ this.state.location }</p>
       </div>
