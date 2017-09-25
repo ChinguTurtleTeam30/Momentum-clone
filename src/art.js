@@ -34,14 +34,6 @@ export default class Art extends Component {
     const options = {
       method: 'GET'
 		};
-		
-		// if artsyTokenExpiration < date.now 
-		// fetch token-server.glitch
-		// then response set token variable
-		// localStorage.setItem('artsyToken', artsyToken);
-		// else continue do nothing, artsyToken is correct :)
-
-		// Get artsy access token and set in localStorage for next pageload
 
     fetch(reqObj.url, options)
     .then((response) => {
