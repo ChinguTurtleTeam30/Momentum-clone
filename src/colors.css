@@ -1,6 +1,7 @@
 :root {
   --panel-bg-color: rgba(20,20,20,.8);
   --lt-text-color: #eee;
+  --md-text-color: #bbb;  
   --dk-text-color: #333;
   --main-text-color: var(--dk-text-color);
   --md-bg-color: #bbb;
