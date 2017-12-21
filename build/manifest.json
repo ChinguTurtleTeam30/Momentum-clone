@@ -9,6 +9,9 @@
     "newtab": "index.html"
   },
   "permissions": [
-    "geolocation"
+    "geolocation",
+    "bookmarks",
+    "history",
+    "topSites"
   ]
 }

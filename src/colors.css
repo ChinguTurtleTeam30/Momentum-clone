@@ -6,5 +6,6 @@
   --main-text-color: var(--dk-text-color);
   --md-bg-color: #bbb;
   --lt-bg-color: lightGrey;
+  --trans-lt-bg-color: rgba(240,240,240,.7);
   --highlight-blue: rgba(20, 75, 150, .4);
 }
