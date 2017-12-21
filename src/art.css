@@ -1,11 +1,16 @@
+@import 'colors.css';
+
 .overlay {
     background: transparent;
 }
 
 ul.byline {
-  margin: 0;
+  padding: .3rem .6rem .3rem .3rem;
+  margin: 0 0 0 2.5rem;
   font-size: small;
   text-transform: uppercase;
+  background-color: var(--trans-lt-bg-color);
+  box-shadow: 0 0 4px 1px var(--trans-lt-bg-color);
 }
 
 .byline .title {
@@ -26,7 +31,7 @@ ul.byline {
   left: 0;
   background-repeat: no-repeat;
   background-position: top;
-  background-size: cover;
+  background-size: contain;
   opacity: .8;
   transition: opacity .1s linear;
   z-index: -1;
