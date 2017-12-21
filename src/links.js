@@ -1,5 +1,4 @@
 import React, { Component} from 'react';
-import './links.css';
 import './font-awesome/css/font-awesome.min.css';
 
 function Bookmark(props) {

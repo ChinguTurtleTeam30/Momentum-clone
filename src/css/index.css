@@ -1,3 +1,14 @@
+@import 'colors.css';
+@import 'App.css';
+@import 'art.css';
+@import 'clock.css';
+@import 'goal.css';
+@import 'links.css';
+@import 'settings.css';
+@import 'timer.css';
+@import 'todo.css';
+@import 'weather.css';
+
 body {
   margin: 0;
   padding: 0;

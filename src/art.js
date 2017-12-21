@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './art.css';
 
 export default class Art extends Component {
 
