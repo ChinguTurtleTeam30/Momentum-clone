@@ -9,8 +9,7 @@ ul.byline {
   margin: 0 0 0 2.5rem;
   font-size: small;
   text-transform: uppercase;
-  background-color: var(--trans-lt-bg-color);
-  box-shadow: 0 0 4px 1px var(--trans-lt-bg-color);
+  color: var(--lt-text-color);
 }
 
 .byline .title {
@@ -32,6 +31,7 @@ ul.byline {
   background-repeat: no-repeat;
   background-position: top;
   background-size: contain;
+  background-color: #f9ebc6;
   opacity: .8;
   transition: opacity .1s linear;
   z-index: -1;
