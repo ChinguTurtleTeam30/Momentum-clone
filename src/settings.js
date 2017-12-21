@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './settings.css';
 
 function SettingsToggle(props) {
   const toggleIsOn = props.togglefor in props.settingsState ?

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './goal.css';
 
 export default class Goal extends Component {
   constructor(props) {

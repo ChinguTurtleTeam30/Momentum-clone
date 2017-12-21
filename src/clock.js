@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './clock.css';
 
 class Clock extends Component {
   renderTime() {

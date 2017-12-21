@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './todo.css';
 import './font-awesome/css/font-awesome.min.css';
 
 function TodoPanel(props) {
