@@ -1,11 +1,13 @@
 :root {
   --panel-bg-color: rgba(20,20,20,.8);
-  --lt-text-color: #efd3ec;
+  --lt-text-color: #eae8ed;
   --md-text-color: #bbb;
   --dk-text-color: #333;
   --main-text-color: var(--dk-text-color);
   --md-bg-color: #bbb;
   --lt-bg-color: lightGrey;
-  --trans-lt-bg-color: rgba(240,240,240,.7);
-  --highlight-blue: rgba(20, 75, 150, .4);
+  --trans-lt-bg-color: #f0f0f0b3;
+  --trans-dk-stop-1: #110b065c;
+  --trans-dk-stop-2: #070603b3;
+  --highlight-blue: #144b9666;
 }
