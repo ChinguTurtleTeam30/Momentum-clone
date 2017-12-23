@@ -147,7 +147,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="main center">
+        <div className="main flex-bottom flex-center">
+          { this.state.settings.show.Goal ? <Goal
+              localStorageAvailable={ this.state.localStorageAvailable }
+              store={ (key, val) => this.store(key,val) }
+              unstore={ (key, val) => this.unstore(key) }
+            /> :
+            null }
           { this.state.settings.show.Clock ?
             <Clock
               currentTime={ this.state.currentTime }
@@ -156,12 +162,6 @@ class App extends Component {
             <Timer
               currentTime={ this.state.currentTime }
             /> : null }
-          { this.state.settings.show.Goal ? <Goal
-              localStorageAvailable={ this.state.localStorageAvailable }
-              store={ (key, val) => this.store(key,val) }
-              unstore={ (key, val) => this.unstore(key) }
-            /> :
-            null }
         </div>
         <div className="top left corner">
           { this.state.settings.show.Links ? <Links /> : null }

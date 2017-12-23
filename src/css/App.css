@@ -15,6 +15,22 @@
   height: 8rem;
 }
 
+.main {
+  display: flex;
+  flex-flow: column nowrap;
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 2rem 0;
+}
+
+.flex-bottom {
+  align-items: center;
+}
+
+.flex-center {
+  justify-content: flex-end;
+}
+
 .corner {
   position: absolute;
 }
